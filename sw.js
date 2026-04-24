@@ -1,5 +1,5 @@
 /* Shits Creek — offline shell: static assets only (tiles & routing stay network). */
-const PRECACHE = 'shits-creek-static-v1';
+const PRECACHE = 'shits-creek-static-v3';
 const ASSET_URLS = [
   './index.html',
   './shits-creek.html',
