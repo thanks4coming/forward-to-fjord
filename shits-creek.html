@@ -1,0 +1,1804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Shits Creek &mdash; E-Bike Route Planner</title>
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Shits Creek">
+<link rel="manifest" href="shits-creek.webmanifest">
+<link rel="stylesheet" href="vendor/leaflet.css" />
+<script src="vendor/leaflet.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172a;color:#e2e8f0}
+#app{display:flex;height:100vh}
+#sidebar{width:440px;min-width:440px;background:#1e293b;overflow-y:auto;border-right:1px solid #334155;display:flex;flex-direction:column}
+#sidebar-header{padding:20px 24px 16px;background:linear-gradient(135deg,#1e3a5f,#1e293b);border-bottom:1px solid #334155;position:sticky;top:0;z-index:10}
+#sidebar-header h1{font-size:17px;font-weight:700;color:#f8fafc;margin-bottom:4px}
+#sidebar-header .subtitle{font-size:11.5px;color:#94a3b8}
+.totals-bar{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;padding:12px 14px;margin:12px 16px 8px;background:#0f172a;border-radius:10px}
+.total-item{text-align:center}
+.total-item .value{font-size:18px;font-weight:700;color:#60a5fa}
+.total-item .label{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:.5px}
+.schengen-banner{margin:0 16px 10px;padding:12px 14px;background:linear-gradient(135deg,#7f1d1d,#991b1b);border:1px solid #dc2626;border-radius:10px}
+.schengen-banner h3{font-size:12px;color:#fca5a5;margin-bottom:4px}
+.schengen-banner p{font-size:11px;color:#fecaca;line-height:1.5}
+.layer-toggle{display:flex;align-items:center;gap:8px;margin:8px 16px 4px;padding:8px 12px;background:#0f172a;border-radius:8px;cursor:pointer;user-select:none}
+.layer-toggle:hover{background:#1a2640}
+.layer-toggle input{display:none}
+.toggle-track{width:30px;height:16px;background:#334155;border-radius:8px;position:relative;transition:background .2s;flex-shrink:0}
+.toggle-track::after{content:'';position:absolute;top:2px;left:2px;width:12px;height:12px;background:#94a3b8;border-radius:50%;transition:transform .2s,background .2s}
+.layer-toggle input:checked+.toggle-track{background:#dc2626}
+.layer-toggle input:checked+.toggle-track::after{transform:translateX(14px);background:#fff}
+#photo-checkbox:checked+.toggle-track{background:#2563eb}
+.toggle-label{font-size:11px;color:#cbd5e1;font-weight:500}
+.seg{margin:0 12px 8px;background:#0f172a;border-radius:10px;border:1px solid #1e293b;overflow:hidden;cursor:pointer;transition:border-color .2s}
+.seg:hover{border-color:#475569}
+.seg.active{border-color:#60a5fa}
+.seg.seg-hl{border-color:#94a3b8}
+.seg-hdr{display:flex;align-items:center;gap:10px;padding:10px 12px}
+.seg-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.seg-title{font-size:12.5px;font-weight:600;color:#f1f5f9}
+.seg-meta{display:flex;gap:8px;font-size:10px;color:#94a3b8;margin-top:2px;flex-wrap:wrap}
+.badge{display:inline-flex;padding:1px 6px;border-radius:3px;font-size:9px;font-weight:700;text-transform:uppercase}
+.b-bike{background:#1e3a5f;color:#60a5fa}
+.b-train{background:#3b1764;color:#c084fc}
+.b-ferry{background:#134e4a;color:#5eead4}
+.seg-body{padding:0 12px 12px;display:none}
+.seg.active .seg-body{display:block}
+.seg-body .route-name{font-size:11px;color:#60a5fa;font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px}
+.seg-body>p{font-size:11.5px;color:#cbd5e1;line-height:1.55;margin-bottom:8px}
+.stage{background:#1e293b;border-radius:6px;padding:8px 10px;margin-bottom:6px;transition:background .15s}
+.stage:hover{background:#253548}
+.stage-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.stage-name{font-size:11px;font-weight:600;color:#e2e8f0}
+.stage-dist{font-size:10px;color:#64748b;font-weight:600}
+.stage-desc{font-size:10.5px;color:#94a3b8;line-height:1.5}
+.stage-highlights{margin-top:4px;padding:0;list-style:none}
+.stage-highlights li{font-size:10.5px;color:#94a3b8;padding:2px 0;display:flex;align-items:flex-start;gap:5px}
+.stage-highlights li::before{content:'\2022';color:#475569;flex-shrink:0;margin-top:0}
+.detour-card{background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid #f59e0b33;border-radius:6px;padding:8px 10px;margin-bottom:6px}
+.detour-hdr{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.detour-icon{font-size:10px}
+.detour-name{font-size:11px;font-weight:600;color:#fbbf24}
+.detour-meta{font-size:9.5px;color:#92400e;font-weight:600;margin-left:auto}
+.detour-desc{font-size:10.5px;color:#94a3b8;line-height:1.5}
+.detour-verdict{font-size:10px;font-weight:700;margin-top:3px}
+.verdict-must{color:#22c55e}
+.verdict-highly{color:#60a5fa}
+.verdict-nice{color:#94a3b8}
+.budget-section{margin:8px 16px 10px;background:#0a1628;border-radius:10px;border:1px solid #1e3a5f;overflow:hidden}
+.budget-header{padding:12px 14px;background:linear-gradient(135deg,#0a2e1a,#0f172a);border-bottom:1px solid #1e3a5f;cursor:pointer;display:flex;align-items:center;justify-content:space-between}
+.budget-header h3{font-size:12px;font-weight:700;color:#22c55e}
+.budget-header .budget-total{font-size:14px;font-weight:700;color:#86efac}
+.budget-body{padding:12px 14px;display:none}
+.budget-section.open .budget-body{display:block}
+.budget-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:10.5px;border-bottom:1px solid #1e293b11}
+.budget-row .bl{color:#94a3b8}
+.budget-row .bv{color:#e2e8f0;font-weight:600;font-variant-numeric:tabular-nums}
+.budget-row.subtotal{border-top:1px solid #334155;margin-top:4px;padding-top:6px}
+.budget-row.subtotal .bl{color:#cbd5e1;font-weight:600}
+.budget-row.subtotal .bv{color:#60a5fa;font-weight:700}
+.budget-row.grand{border-top:2px solid #22c55e44;margin-top:6px;padding-top:8px}
+.budget-row.grand .bl{color:#f1f5f9;font-weight:700;font-size:11.5px}
+.budget-row.grand .bv{color:#22c55e;font-weight:700;font-size:13px}
+.budget-cat{font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin:10px 0 4px;padding-top:6px;border-top:1px solid #1e293b}
+.budget-cat:first-child{margin-top:0;border:0;padding:0}
+.budget-note{font-size:9.5px;color:#64748b;margin-top:3px;line-height:1.4;font-style:italic}
+.country-bar{display:flex;align-items:center;gap:6px;padding:5px 0;font-size:10.5px}
+.country-bar .cb-name{width:70px;color:#94a3b8;flex-shrink:0}
+.country-bar .cb-bar{flex:1;height:8px;background:#1e293b;border-radius:4px;overflow:hidden}
+.country-bar .cb-fill{height:100%;border-radius:4px}
+.country-bar .cb-val{width:55px;text-align:right;color:#e2e8f0;font-weight:600;font-variant-numeric:tabular-nums}
+.extension-badge{display:inline-block;padding:2px 6px;border-radius:3px;font-size:9px;font-weight:700;background:#f59e0b22;color:#fbbf24;border:1px solid #f59e0b44;margin-left:4px}
+.notes-section{margin:8px 16px 16px;padding:12px 14px;background:#172033;border-radius:10px;border:1px solid #1e3a5f}
+.notes-section h3{font-size:11.5px;font-weight:600;color:#60a5fa;margin-bottom:6px}
+.notes-section ul{padding-left:14px}
+.notes-section li{font-size:11px;color:#94a3b8;line-height:1.55;margin-bottom:3px}
+.camp-section{margin:8px 16px 10px;background:#0a1628;border-radius:10px;border:1px solid #1e3a5f;overflow:hidden}
+.camp-header{padding:12px 14px;background:linear-gradient(135deg,#1a2e0a,#0f172a);border-bottom:1px solid #1e3a5f;cursor:pointer;display:flex;align-items:center;justify-content:space-between}
+.camp-header h3{font-size:12px;font-weight:700;color:#86efac}
+.camp-body{padding:12px 14px;display:none}
+.camp-section.open .camp-body{display:block}
+.camp-group{margin-bottom:10px}
+.camp-group-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #1e293b}
+.camp-entry{padding:6px 0;border-bottom:1px solid #1e293b08}
+.camp-entry .ce-hdr{display:flex;align-items:center;gap:6px;margin-bottom:2px}
+.camp-entry .ce-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.camp-entry .ce-name{font-size:11px;font-weight:600;color:#e2e8f0}
+.camp-entry .ce-law{font-size:9.5px;font-weight:600;margin-left:auto}
+.camp-entry .ce-desc{font-size:10.5px;color:#94a3b8;line-height:1.5}
+.camp-entry .ce-tip{font-size:10px;color:#fbbf24;line-height:1.45;margin-top:3px;padding:4px 6px;background:#f59e0b08;border-radius:4px;border-left:2px solid #f59e0b44}
+#map{flex:1;background:#0f172a}
+.leaflet-popup-content-wrapper{background:#1e293b;color:#e2e8f0;border-radius:8px;border:1px solid #334155}
+.leaflet-popup-tip{background:#1e293b}
+.leaflet-popup-content{font-family:'Segoe UI',system-ui,sans-serif;font-size:11.5px;line-height:1.5;max-width:260px}
+.leaflet-popup-content b{color:#f8fafc}
+.leaflet-popup-content .pt{font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;font-weight:700}
+@media(max-width:900px){
+#app{position:relative}
+#sidebar{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1000;transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);min-width:0;max-height:none;-webkit-overflow-scrolling:touch}
+#sidebar.open{transform:translateY(0)}
+#map{width:100%;height:100vh}
+.mob-toggle{display:flex!important;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:999;background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;border:none;border-radius:28px;padding:14px 28px;font-size:15px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.5);cursor:pointer;align-items:center;gap:8px;white-space:nowrap;-webkit-tap-highlight-color:transparent}
+.mob-toggle:active{transform:translateX(-50%) scale(.95)}
+.mob-toggle.hidden{display:none!important}
+.mob-close{display:flex!important;position:sticky;top:0;background:#0f172a;padding:14px 16px;z-index:11;justify-content:space-between;align-items:center;border-bottom:1px solid #334155}
+.mob-close span{font-size:13px;font-weight:600;color:#94a3b8}
+.mob-close button{background:#334155;color:#f1f5f9;border:none;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.mob-close button:active{background:#475569}
+.seg-hdr{padding:12px 14px}
+.stage{padding:10px 12px}
+.stage-name{font-size:12px}
+.stage-dist{font-size:11px}
+.stage-desc{font-size:11.5px}
+.leaflet-popup-content{max-width:220px;font-size:12px}
+}
+@media(min-width:901px){.mob-toggle,.mob-close{display:none!important}}
+.elev-wrap{margin-top:10px;background:#0a1628;border-radius:6px;padding:10px;border:1px solid #1e3a5f;overflow:hidden}
+.elev-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.elev-label{font-size:10px;font-weight:700;color:#60a5fa}
+.tbadge{padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
+.tb-flat{background:#22c55e22;color:#22c55e}.tb-rolling{background:#60a5fa22;color:#60a5fa}
+.tb-hilly{background:#f59e0b22;color:#f59e0b}.tb-mountain{background:#ef444422;color:#ef4444}
+.elev-stats{display:flex;gap:14px;margin-top:6px;flex-wrap:wrap}
+.elev-stat .ev{font-size:12px;font-weight:700;color:#e2e8f0}
+.elev-stat .el{font-size:8.5px;color:#64748b;text-transform:uppercase;letter-spacing:.3px;margin-top:1px}
+.terrain-note{margin-top:7px;padding:5px 8px;background:#f59e0b08;border-left:2px solid #f59e0b55;border-radius:0 4px 4px 0;font-size:10px;color:#fbbf24;line-height:1.5}
+.elev-pending{font-size:10px;color:#475569;font-style:italic;padding:16px 0;text-align:center}
+.stage-elev{margin-top:6px;padding-top:5px;border-top:1px solid rgba(30,41,59,.8)}
+/* ---- TRIP LIVE STATUS ---- */
+@keyframes here-pulse{0%,100%{opacity:1}50%{opacity:.45}}
+@keyframes yah-expand{0%{transform:scale(1);opacity:.7}100%{transform:scale(2.4);opacity:0}}
+.trip-banner{margin:10px 12px 6px;padding:10px 14px;background:linear-gradient(135deg,#0a2040,#0f2a4a);border:1px solid #1e4a7a;border-radius:10px}
+.trip-banner .tb-top{display:flex;align-items:center;gap:8px;margin-bottom:2px}
+.trip-banner .tb-badge{padding:2px 8px;border-radius:10px;font-size:9px;font-weight:700;background:#22c55e22;color:#22c55e;border:1px solid #22c55e44;flex-shrink:0;animation:here-pulse 2s infinite}
+.trip-banner .tb-city{font-size:13px;font-weight:700;color:#f8fafc}
+.trip-banner .tb-sub{font-size:10px;color:#64748b;line-height:1.5}
+.live-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;margin:0 12px 8px;background:#0f172a;border-radius:8px;overflow:hidden;border:1px solid #1e293b}
+.live-stat{padding:8px 10px;text-align:center;border-right:1px solid #1e293b}
+.live-stat:last-child{border-right:0}
+.live-stat .ls-val{font-size:15px;font-weight:700;color:#22c55e}
+.live-stat .ls-lbl{font-size:8.5px;color:#475569;text-transform:uppercase;letter-spacing:.5px;margin-top:1px}
+.prog-wrap{margin:0 12px 8px;background:#0f172a;border-radius:8px;padding:8px 12px;border:1px solid #1e293b}
+.prog-lbl{display:flex;justify-content:space-between;font-size:9px;color:#64748b;margin-bottom:5px}
+.prog-track{background:#1e293b;border-radius:4px;height:5px;overflow:hidden}
+.prog-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#22c55e,#16a34a);transition:width .5s}
+.updates-section{margin:0 12px 8px;background:#0a1628;border-radius:10px;border:1px solid #1e3a5f;overflow:hidden}
+.updates-hdr{padding:10px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:linear-gradient(135deg,#0a2040,#0a1628);border-bottom:1px solid #1e3a5f}
+.updates-hdr h3{font-size:11.5px;font-weight:700;color:#60a5fa;margin:0}
+.updates-hdr .u-count{font-size:9px;background:#3b82f622;color:#60a5fa;border:1px solid #3b82f644;padding:1px 7px;border-radius:10px}
+.updates-body{padding:10px 12px;display:none;max-height:280px;overflow-y:auto}
+.updates-section.open .updates-body{display:block}
+.update-card{padding:8px 0;border-bottom:1px solid #1e293b}
+.update-card:last-child{border:0;padding-bottom:0}
+.update-card .uc-meta{display:flex;gap:6px;align-items:center;margin-bottom:4px;flex-wrap:wrap}
+.update-card .uc-date{font-size:9px;color:#475569;font-weight:600}
+.update-card .uc-loc{font-size:9.5px;color:#60a5fa;font-weight:700}
+.update-card .uc-text{font-size:11px;color:#cbd5e1;line-height:1.5}
+.update-card .uc-img{margin-top:6px}
+.update-card .uc-img img{width:100%;display:block;max-height:160px;object-fit:cover;border-radius:6px;cursor:pointer}
+.updates-empty{font-size:11px;color:#475569;font-style:italic;text-align:center;padding:14px 0}
+.seg-status{padding:1px 7px;border-radius:3px;font-size:8px;font-weight:700;text-transform:uppercase;flex-shrink:0;align-self:flex-start;margin-top:2px}
+.ss-done{background:#22c55e22;color:#22c55e;border:1px solid #22c55e44}
+.ss-here{background:#3b82f622;color:#60a5fa;border:1px solid #3b82f644;animation:here-pulse 2s infinite}
+.ss-next{background:#f59e0b22;color:#f59e0b;border:1px solid #f59e0b44}
+.seg.seg-done>.seg-hdr{opacity:.55}
+.seg.seg-done>.seg-hdr .seg-num{outline:2px solid #22c55e55;outline-offset:1px}
+.seg.seg-current{border-color:#3b82f688!important;box-shadow:0 0 0 1px #3b82f622}
+.yah-wrap{position:relative;width:22px;height:22px;display:flex;align-items:center;justify-content:center}
+.yah-ring{position:absolute;width:28px;height:28px;border-radius:50%;background:rgba(59,130,246,.25);animation:yah-expand 1.8s ease-out infinite}
+.yah-dot{width:18px;height:18px;background:#3b82f6;border-radius:50%;border:3px solid #fff;box-shadow:0 0 8px rgba(59,130,246,.8);position:relative;z-index:1}
+.photo-pin-wrap{border-radius:5px;overflow:hidden;border:2.5px solid #60a5fa;box-shadow:0 2px 10px rgba(0,0,0,.6);cursor:pointer;background:#1e293b}
+.photo-pin-wrap img{width:60px;height:44px;object-fit:cover;display:block}
+</style>
+</head>
+<body>
+<div id="app">
+<div id="sidebar">
+  <div class="mob-close"><span>Route Plan</span><button onclick="document.getElementById('sidebar').classList.remove('open');document.querySelector('.mob-toggle').classList.remove('hidden')">Close</button></div>
+  <div id="sidebar-header">
+    <h1>Shits Creek</h1>
+    <div class="subtitle">Scandinavia &amp; Baltic e-bike tour &bull; Needle-detail route guide &bull; Every stage, every detour, every must-see</div>
+  </div>
+
+  <div id="trip-status-banner" style="display:none"></div>
+  <div id="live-stats-wrap" style="display:none"></div>
+  <div id="live-prog-wrap" style="display:none"></div>
+
+  <div class="totals-bar">
+    <div class="total-item"><div class="value" id="total-km">~5,025</div><div class="label">Total KM</div></div>
+    <div class="total-item"><div class="value">80&ndash;109</div><div class="label">Total Days</div></div>
+    <div class="total-item"><div class="value">14</div><div class="label">Countries</div></div>
+    <div class="total-item"><div class="value">~&euro;9,250</div><div class="label">Budget</div></div>
+  </div>
+
+  <div class="schengen-banner">
+    <h3>&#9888; Schengen Strategy &mdash; 61&ndash;82 Schengen Days (Continuous Overland Route)</h3>
+    <p><strong>Segments 1&ndash;8</strong> (Gothenburg to Dubrovnik): 61&ndash;82 Schengen days. Includes a Vilnius overnight on the train journey (+1 day vs single-day transit). The Klaip&#x0117;da&rarr;Warsaw train (2 days via Vilnius) saves ~5 days vs cycling to Warsaw, and the Rijeka&rarr;Split ferry saves ~5 more. Warsaw&rarr;Krak&oacute;w direct saves a further ~5 days vs the full Vistula route. At 20 rest days + 58 cycling days: <strong>79 Schengen days used, 11-day buffer remaining</strong>. Worst case (82) still gives 8 days spare. Cross into Bosnia at Dubrovnik and the clock <strong>STOPS</strong>. <strong>Segment 9</strong> (Balkans): 30&ndash;40 non-Schengen days (no time pressure &mdash; 90-day visa-free in every country). All Balkans countries are visa-free for Australians.</p>
+  </div>
+
+  <label class="layer-toggle"><input type="checkbox" id="zone-checkbox" checked><span class="toggle-track"></span><span class="toggle-label">Show Non-Schengen Zones</span></label>
+  <label class="layer-toggle"><input type="checkbox" id="camp-checkbox"><span class="toggle-track"></span><span class="toggle-label">Show Camping Legality</span></label>
+  <label class="layer-toggle"><input type="checkbox" id="wildlife-checkbox"><span class="toggle-track"></span><span class="toggle-label">Show Wildlife Risks</span></label>
+  <label class="layer-toggle"><input type="checkbox" id="photo-checkbox"><span class="toggle-track"></span><span class="toggle-label">Show Photos</span></label>
+
+  <div id="updates-feed-wrap"></div>
+
+  <div id="segments-container"></div>
+
+  <div class="budget-section open" id="budget-section">
+    <div class="budget-header" onclick="this.parentElement.classList.toggle('open')">
+      <h3>Budget Breakdown &mdash; 26,000 AUD (1 AUD &asymp; &euro;0.61)</h3>
+      <span class="budget-total">&euro;15,860 available</span>
+    </div>
+    <div class="budget-body">
+
+      <div class="budget-cat">E-Bike &amp; Gear (One-Time)</div>
+      <div class="budget-row"><span class="bl">Cube Touring Hybrid Pro 800 (Bosch PX, 800Wh)</span><span class="bv">&euro;3,000</span></div>
+      <div class="budget-row"><span class="bl">Bosch PowerMore 250 range extender (1,050Wh total)</span><span class="bv">&euro;400</span></div>
+      <div class="budget-row"><span class="bl">Tent (Naturehike Cloud Up 2P, 1.35kg)</span><span class="bv">&euro;130</span></div>
+      <div class="budget-row"><span class="bl">Sleeping bag (3-season, comfort 5&deg;C)</span><span class="bv">&euro;80</span></div>
+      <div class="budget-row"><span class="bl">Sleeping mat (inflatable insulated)</span><span class="bv">&euro;60</span></div>
+      <div class="budget-row"><span class="bl">Cooking kit (stove, pot, utensils)</span><span class="bv">&euro;50</span></div>
+      <div class="budget-row"><span class="bl">Panniers (Ortlieb Back-Roller style &times;2)</span><span class="bv">&euro;150</span></div>
+      <div class="budget-row"><span class="bl">Handlebar bag + frame bag</span><span class="bv">&euro;50</span></div>
+      <div class="budget-row"><span class="bl">Bike accessories (lights, lock, pump, tubes, mount)</span><span class="bv">&euro;150</span></div>
+      <div class="budget-row"><span class="bl">Misc gear (headlamp, multitool, first aid, dry bags)</span><span class="bv">&euro;100</span></div>
+      <div class="budget-row"><span class="bl">Travel insurance (90 days)</span><span class="bv">&euro;400</span></div>
+      <div class="budget-row"><span class="bl">Phone SIM / data (EU roaming)</span><span class="bv">&euro;50</span></div>
+      <div class="budget-row subtotal"><span class="bl">One-time subtotal</span><span class="bv">&euro;4,620</span></div>
+      <div class="budget-note">Buy the bike at a Cube dealer in Gothenburg. Buy camping gear at Decathlon (locations in Gothenburg, Stockholm, Helsinki, R&imacr;ga, Gda&nacute;sk). Tip: sell the bike at trip end for &euro;1,000&ndash;1,500 recovery.</div>
+
+      <div class="budget-cat">Daily Costs by Country (2 camp : 1 hostel ratio)</div>
+      <div class="budget-note" style="margin-bottom:6px">Wild camping is FREE and legal in Sweden (Allemansr&auml;tten) and Finland (Jokamiehenoikeus). Estonia allows 1-night wild camps. Latvia/Lithuania generally tolerated. Poland &amp; south: use paid campsites.</div>
+      <div class="country-bar"><span class="cb-name">Sweden</span><div class="cb-bar"><div class="cb-fill" style="width:82%;background:#3b82f6"></div></div><span class="cb-val">&euro;36/day</span></div>
+      <div class="country-bar"><span class="cb-name">Finland</span><div class="cb-bar"><div class="cb-fill" style="width:86%;background:#f59e0b"></div></div><span class="cb-val">&euro;38/day</span></div>
+      <div class="country-bar"><span class="cb-name">Estonia</span><div class="cb-bar"><div class="cb-fill" style="width:55%;background:#06b6d4"></div></div><span class="cb-val">&euro;24/day</span></div>
+      <div class="country-bar"><span class="cb-name">Latvia</span><div class="cb-bar"><div class="cb-fill" style="width:64%;background:#ef4444"></div></div><span class="cb-val">&euro;28/day</span></div>
+      <div class="country-bar"><span class="cb-name">Lithuania</span><div class="cb-bar"><div class="cb-fill" style="width:55%;background:#ef4444"></div></div><span class="cb-val">&euro;24/day</span></div>
+      <div class="country-bar"><span class="cb-name">Poland</span><div class="cb-bar"><div class="cb-fill" style="width:52%;background:#f97316"></div></div><span class="cb-val">&euro;23/day</span></div>
+      <div class="country-bar"><span class="cb-name">Czechia</span><div class="cb-bar"><div class="cb-fill" style="width:52%;background:#a855f7"></div></div><span class="cb-val">&euro;23/day</span></div>
+      <div class="country-bar"><span class="cb-name">Austria</span><div class="cb-bar"><div class="cb-fill" style="width:100%;background:#ec4899"></div></div><span class="cb-val">&euro;44/day</span></div>
+      <div class="country-bar"><span class="cb-name">Slovenia</span><div class="cb-bar"><div class="cb-fill" style="width:73%;background:#ec4899"></div></div><span class="cb-val">&euro;32/day</span></div>
+      <div class="country-bar"><span class="cb-name">Croatia</span><div class="cb-bar"><div class="cb-fill" style="width:70%;background:#ec4899"></div></div><span class="cb-val">&euro;31/day</span></div>
+      <div class="budget-note">Daily avg includes: accommodation (2 camp nights + 1 hostel/3), food (self-catering + occasional meal out), misc supplies. Camp = free wild camp or &euro;5&ndash;15 campsite. Hostel = dorm bed or budget guesthouse &euro;15&ndash;35. Austria/Slovenia/Croatia: wild camping is ILLEGAL, must use paid campsites &euro;12&ndash;20.</div>
+
+      <div class="budget-cat">Original Route (~51 days, all bike)</div>
+      <div class="budget-row"><span class="bl">Sweden &mdash; 10 days &times; &euro;36</span><span class="bv">&euro;360</span></div>
+      <div class="budget-row"><span class="bl">Finland &mdash; 10 days &times; &euro;38</span><span class="bv">&euro;380</span></div>
+      <div class="budget-row"><span class="bl">Estonia &mdash; 5 days &times; &euro;24</span><span class="bv">&euro;120</span></div>
+      <div class="budget-row"><span class="bl">Latvia &mdash; 6 days &times; &euro;28</span><span class="bv">&euro;168</span></div>
+      <div class="budget-row"><span class="bl">Lithuania &mdash; 2 days &times; &euro;24</span><span class="bv">&euro;48</span></div>
+      <div class="budget-row"><span class="bl">Poland &mdash; 7 days &times; &euro;23 (Warsaw&rarr;Krak&oacute;w direct)</span><span class="bv">&euro;161</span></div>
+      <div class="budget-row"><span class="bl">Ferry days &mdash; 3 days &times; &euro;30</span><span class="bv">&euro;90</span></div>
+      <div class="budget-row subtotal"><span class="bl">Daily living subtotal</span><span class="bv">&euro;1,442</span></div>
+
+      <div class="budget-cat">Transport</div>
+      <div class="budget-row"><span class="bl">Ferry Grisslehamn &rarr; Ecker&ouml;</span><span class="bv">&euro;35</span></div>
+      <div class="budget-row"><span class="bl">Ferry Mariehamn &rarr; Turku</span><span class="bv">&euro;40</span></div>
+      <div class="budget-row"><span class="bl">Ferry Helsinki &rarr; Tallinn</span><span class="bv">&euro;25</span></div>
+      <div class="budget-row"><span class="bl">Train Klaip&#x0117;da &rarr; Vilnius &rarr; Warsaw + bike</span><span class="bv">&euro;65</span></div>
+      <div class="budget-row"><span class="bl">Vilnius overnight accommodation</span><span class="bv">&euro;35</span></div>
+      <div class="budget-row subtotal"><span class="bl">Transport subtotal</span><span class="bv">&euro;220</span></div>
+
+      <div class="budget-cat">Contingency</div>
+      <div class="budget-row"><span class="bl">Bike repairs, spare parts, tyres</span><span class="bv">&euro;300</span></div>
+      <div class="budget-row"><span class="bl">Museums, attractions, nice dinners</span><span class="bv">&euro;350</span></div>
+      <div class="budget-row"><span class="bl">Emergency buffer</span><span class="bv">&euro;500</span></div>
+      <div class="budget-row subtotal"><span class="bl">Contingency subtotal</span><span class="bv">&euro;1,150</span></div>
+
+      <div class="budget-row grand"><span class="bl">Original Route Total</span><span class="bv">&euro;7,432 &asymp; AUD 12,180</span></div>
+      <div class="budget-row grand" style="border:0;padding-top:2px"><span class="bl">Remaining from AUD 26K</span><span class="bv" style="color:#22c55e">AUD 13,820</span></div>
+
+      <div class="budget-cat">Seg 8: Krak&oacute;w &rarr; Dubrovnik (+30 days)</div>
+      <div class="budget-row"><span class="bl">Czechia &mdash; 3 days &times; &euro;23</span><span class="bv">&euro;69</span></div>
+      <div class="budget-row"><span class="bl">Austria &mdash; 8 days &times; &euro;44</span><span class="bv">&euro;352</span></div>
+      <div class="budget-row"><span class="bl">Slovenia &mdash; 4 days &times; &euro;32</span><span class="bv">&euro;128</span></div>
+      <div class="budget-row"><span class="bl">Croatia &mdash; 13 days &times; &euro;31</span><span class="bv">&euro;403</span></div>
+      <div class="budget-row"><span class="bl">Ferry Rijeka &rarr; Split (Jadrolinija + bike)</span><span class="bv">&euro;55</span></div>
+      <div class="budget-row"><span class="bl">Extra transport &amp; contingency</span><span class="bv">&euro;300</span></div>
+      <div class="budget-row subtotal"><span class="bl">Seg 8 subtotal</span><span class="bv">&euro;1,307</span></div>
+
+      <div class="budget-row grand"><span class="bl">Schengen Route Total (Seg 1&ndash;8)</span><span class="bv">&euro;8,739 &asymp; AUD 14,325</span></div>
+
+      <div class="budget-cat">Balkans Non-Schengen Extension &mdash; Seg 9 (+35 days) <span class="extension-badge">Clock Stops</span></div>
+      <div class="budget-note" style="margin-bottom:6px">The Balkans are Europe&rsquo;s best-value cycling destination. Wild camping widely tolerated. Hostel dorms &euro;8&ndash;15. Full restaurant meal &euro;3&ndash;7. Daily average across the region: &euro;18/day. No time pressure &mdash; visa-free 90 days in every country.</div>
+      <div class="country-bar"><span class="cb-name">Montenegro</span><div class="cb-bar"><div class="cb-fill" style="width:50%;background:#10b981"></div></div><span class="cb-val">&euro;22/day</span></div>
+      <div class="country-bar"><span class="cb-name">Albania</span><div class="cb-bar"><div class="cb-fill" style="width:34%;background:#10b981"></div></div><span class="cb-val">&euro;15/day</span></div>
+      <div class="country-bar"><span class="cb-name">N. Macedonia</span><div class="cb-bar"><div class="cb-fill" style="width:36%;background:#10b981"></div></div><span class="cb-val">&euro;16/day</span></div>
+      <div class="country-bar"><span class="cb-name">Kosovo</span><div class="cb-bar"><div class="cb-fill" style="width:32%;background:#10b981"></div></div><span class="cb-val">&euro;14/day</span></div>
+      <div class="country-bar"><span class="cb-name">Serbia</span><div class="cb-bar"><div class="cb-fill" style="width:38%;background:#10b981"></div></div><span class="cb-val">&euro;17/day</span></div>
+      <div class="country-bar"><span class="cb-name">Bosnia</span><div class="cb-bar"><div class="cb-fill" style="width:36%;background:#10b981"></div></div><span class="cb-val">&euro;16/day</span></div>
+      <div class="budget-row"><span class="bl">Montenegro &mdash; 4 days &times; &euro;22</span><span class="bv">&euro;88</span></div>
+      <div class="budget-row"><span class="bl">Albania &mdash; 9 days &times; &euro;15</span><span class="bv">&euro;135</span></div>
+      <div class="budget-row"><span class="bl">N. Macedonia &mdash; 4 days &times; &euro;16</span><span class="bv">&euro;64</span></div>
+      <div class="budget-row"><span class="bl">Kosovo &mdash; 4 days &times; &euro;14</span><span class="bv">&euro;56</span></div>
+      <div class="budget-row"><span class="bl">Serbia &mdash; 7 days &times; &euro;17</span><span class="bv">&euro;119</span></div>
+      <div class="budget-row"><span class="bl">Bosnia &mdash; 7 days &times; &euro;16</span><span class="bv">&euro;112</span></div>
+      <div class="budget-row"><span class="bl">Extra contingency</span><span class="bv">&euro;200</span></div>
+      <div class="budget-row subtotal"><span class="bl">Balkans subtotal (35 days)</span><span class="bv">&euro;774</span></div>
+      <div class="budget-note">Yes, really. The entire 35-day Balkans journey costs less than 10 days in Scandinavia.</div>
+
+      <div class="budget-row grand"><span class="bl">FULL TRIP TOTAL (Seg 1&ndash;9, continuous overland)</span><span class="bv">&euro;9,513 &asymp; AUD 15,590</span></div>
+      <div class="budget-row grand" style="border:0;padding-top:2px"><span class="bl">Remaining from AUD 26K</span><span class="bv" style="color:#22c55e">AUD 10,410</span></div>
+      <div class="budget-note">Over AUD 10K remaining even with a generous 35-day Balkans leg. Includes Vilnius overnight on train journey (+&euro;50 vs single-day transit &mdash; well worth it). You could: sell the bike at trip end for &euro;1,000&ndash;1,500 recovery, extend into Greece or Turkey, upgrade accommodation, or keep as cushion.</div>
+    </div>
+  </div>
+
+  <div class="notes-section">
+    <h3>E-Bike Essentials</h3>
+    <ul>
+      <li><strong>EU law:</strong> Max 250W motor, 25 km/h assist cutoff. Above = moped (registration + insurance).</li>
+      <li><strong>Range:</strong> Plan 60&ndash;100 km/charge. Carry a spare or plan charging every 80 km at cafes/hostels.</li>
+      <li><strong>Ferries:</strong> Bikes treated as regular bikes. Some charge extra for the battery.</li>
+      <li><strong>Train (Klaip&#x0117;da&rarr;Warsaw via Vilnius overnight):</strong> Day 1: LTG Link to Vilnius (~4.5 hrs) &mdash; book bike space in advance. Overnight in Vilnius Old Town. Day 2: LTG Link to Warsaw (~7.5 hrs) &mdash; get off here and begin the Poland cycling leg directly. No onward connection to Gda&#x0144;sk needed. Total ~&euro;65 inc. bike fees.</li>
+      <li><strong>GPX files:</strong> Download from EuroVelo, Komoot, and Bikemap for each named route. Essential in Latvia/Lithuania/Poland where signage is patchy.</li>
+    </ul>
+  </div>
+
+  <div class="camp-section open" id="camp-section">
+    <div class="camp-header" onclick="this.parentElement.classList.toggle('open')">
+      <h3>&#9978; Free Camping Guide by Country</h3>
+    </div>
+    <div class="camp-body">
+
+      <div class="camp-group">
+        <div class="camp-group-title" style="color:#22c55e">&#10003; Legal &mdash; Right to Roam</div>
+
+        <div class="camp-entry">
+          <div class="ce-hdr"><span class="ce-dot" style="background:#22c55e"></span><span class="ce-name">Sweden</span><span class="ce-law" style="color:#22c55e">Allemansr&auml;tten</span></div>
+          <div class="ce-desc">Camp anywhere for 1&ndash;2 nights except private gardens, cultivated fields, and within sight of dwellings. No permission needed. Fires only where safe and permitted (check local fire bans in summer). The most cyclist-friendly camping law in Europe.</div>
+        </div>
+
+        <div class="camp-entry">
+          <div class="ce-hdr"><span class="ce-dot" style="background:#22c55e"></span><span class="ce-name">Finland / &Aring;land</span><span class="ce-law" style="color:#22c55e">Jokamiehenoikeus</span></div>
+          <div class="ce-desc">Everyman&rsquo;s Right: camp anywhere on uncultivated land, keep 150m from buildings. No fires without landowner permission, but many designated fire pits in forests. RMK-style shelters are less common than Estonia but laavu (lean-to) shelters exist in many national parks.</div>
+        </div>
+
+        <div class="camp-entry">
+          <div class="ce-hdr"><span class="ce-dot" style="background:#22c55e"></span><span class="ce-name">Estonia</span><span class="ce-law" style="color:#22c55e">1-night rule</span></div>
+          <div class="ce-desc">Legal to camp 1 night in forests and public land. RMK (State Forest) shelters are superb &mdash; free wooden shelters with fire pits, dry toilet, and firewood at 60+ locations across the country. Map them at loodusegakoos.ee. The best free camping infrastructure on the route.</div>
+        </div>
+      </div>
+
+      <div class="camp-group">
+        <div class="camp-group-title" style="color:#f59e0b">&#9888; Tolerated &mdash; Grey Area (Use Common Sense)</div>
+
+        <div class="camp-entry">
+          <div class="ce-hdr"><span class="ce-dot" style="background:#f59e0b"></span><span class="ce-name">Latvia</span><span class="ce-law" style="color:#f59e0b">Tolerated</span></div>
+          <div class="ce-desc">No legal right to camp, but widely practiced in forests. Technically need landowner permission. Nobody checks. Stay off private farmland and you&rsquo;ll have zero issues.</div>
+          <div class="ce-tip">Best spots: dense pine forests behind coastal dunes between Saulkrasti and Ventspils. Cape Kolka area is especially wild and empty.</div>
+        </div>
+
+        <div class="camp-entry">
+          <div class="ce-hdr"><span class="ce-dot" style="background:#f59e0b"></span><span class="ce-name">Lithuania</span><span class="ce-law" style="color:#f59e0b">Tolerated</span></div>
+          <div class="ce-desc">Similar to Latvia. Forest camping tolerated. Some forests have free lau&#x17E;aviet&#x0117; (sheltered camping spots with fire pits). Palanga pine forests near the coast are excellent.</div>
+        </div>
+
+        <div class="camp-entry">
+          <div class="ce-hdr"><span class="ce-dot" style="background:#f59e0b"></span><span class="ce-name">Montenegro</span><span class="ce-law" style="color:#f59e0b">Tolerated</span></div>
+          <div class="ce-desc">No specific anti-camping law. Tolerated in mountains and rural areas. Coastal areas are busier &mdash; camp away from beaches and towns.</div>
+          <div class="ce-tip">Best spots: above the Bay of Kotor on Lov&#x0107;en approaches. Lake Skadar north shore has empty stretches. Mountain passes are ideal.</div>
+        </div>
+
+        <div class="camp-entry">
+          <div class="ce-hdr"><span class="ce-dot" style="background:#f59e0b"></span><span class="ce-name">Albania</span><span class="ce-law" style="color:#f59e0b">Tolerated / Welcomed</span></div>
+          <div class="ce-desc">No real enforcement anywhere. Locals often invite you to camp in their yard or field. Albania is arguably the most camping-friendly country in Europe by culture. Extremely safe.</div>
+          <div class="ce-tip">Camp literally anywhere rural. In towns, ask at a caf&eacute; and someone will find you a spot. Albanian hospitality (besa) is legendary.</div>
+        </div>
+
+        <div class="camp-entry">
+          <div class="ce-hdr"><span class="ce-dot" style="background:#f59e0b"></span><span class="ce-name">N. Macedonia / Kosovo</span><span class="ce-law" style="color:#f59e0b">Tolerated</span></div>
+          <div class="ce-desc">No enforcement. Camp in rural/mountain areas without issue. Lake Ohrid lakeshore has some designated spots. Kosovo is very welcoming to travelers.</div>
+        </div>
+
+        <div class="camp-entry">
+          <div class="ce-hdr"><span class="ce-dot" style="background:#f59e0b"></span><span class="ce-name">Serbia / Bosnia</span><span class="ce-law" style="color:#f59e0b">Tolerated</span></div>
+          <div class="ce-desc">Technically need permission, never enforced in rural areas. Mountain camping is completely accepted. Zlatibor and Tara regions (Serbia) are excellent. Bosnia&rsquo;s river valleys and mountain passes are ideal.</div>
+          <div class="ce-tip">Neretva canyon between Sarajevo and Mostar: find a flat spot above the river. Stunning wild camps.</div>
+        </div>
+      </div>
+
+      <div class="camp-group">
+        <div class="camp-group-title" style="color:#ef4444">&#10007; Illegal &mdash; Campsites or Stealth Required</div>
+
+        <div class="camp-entry">
+          <div class="ce-hdr"><span class="ce-dot" style="background:#ef4444"></span><span class="ce-name">Poland</span><span class="ce-law" style="color:#ef4444">Illegal</span></div>
+          <div class="ce-desc">Wild camping prohibited outside designated areas. However, Poland has hundreds of cheap campsites (&euro;5&ndash;12/night) and some forests have designated bivouac spots (biwak). The Vistula riverbanks have many hidden spots cyclists use.</div>
+          <div class="ce-tip">Stealth: dense forest patches along the Vistula between towns. Set up late, leave early. Vistula river islands are excellent &mdash; nobody goes there. App: park4night for spots other cyclists have used.</div>
+        </div>
+
+        <div class="camp-entry">
+          <div class="ce-hdr"><span class="ce-dot" style="background:#ef4444"></span><span class="ce-name">Czech Republic</span><span class="ce-law" style="color:#ef4444">Illegal</span></div>
+          <div class="ce-desc">Camping outside campsites is banned. Some forests have designated bivouac areas (t&aacute;bo&#x0159;i&#x0161;t&#x011B;) marked on mapy.cz. Budget auto-camps &euro;6&ndash;15. Moravia has many small sites near wine cellars.</div>
+          <div class="ce-tip">Stealth: the Moravian forests between Olomouc and Brno. Use mapy.cz (Czech app) to find forest tracks. Camp well off trails.</div>
+        </div>
+
+        <div class="camp-entry">
+          <div class="ce-hdr"><span class="ce-dot" style="background:#ef4444"></span><span class="ce-name">Austria</span><span class="ce-law" style="color:#ef4444">Strictly Illegal</span></div>
+          <div class="ce-desc">FINED if caught. Austria takes this seriously, especially in Tyrol and national parks. Excellent campsite network (&euro;12&ndash;22/night). Some Alm (alpine pasture) farmers allow camping if you ask.</div>
+          <div class="ce-tip">Stealth (risky): deep Styrian forests between Vienna and Graz. NEVER near trails, roads, or villages. Late arrival, early departure essential. Your best bet: negotiate directly with farmers &mdash; many will say yes for &euro;5&ndash;10.</div>
+        </div>
+
+        <div class="camp-entry">
+          <div class="ce-hdr"><span class="ce-dot" style="background:#ef4444"></span><span class="ce-name">Slovenia</span><span class="ce-law" style="color:#ef4444">Illegal</span></div>
+          <div class="ce-desc">Banned except at campsites. Eco-farms (turisti&#x010D;ne kmetije) sometimes allow camping &mdash; check Slovenia tourism site. Budget campsites &euro;10&ndash;18.</div>
+          <div class="ce-tip">Stealth: the Karst region between Ljubljana and Postojna has deep limestone forest. Remote enough that enforcement is nonexistent. Also: some mountain huts (ko&#x010D;a) allow tent camping nearby for a small fee.</div>
+        </div>
+
+        <div class="camp-entry">
+          <div class="ce-hdr"><span class="ce-dot" style="background:#ef4444"></span><span class="ce-name">Croatia</span><span class="ce-law" style="color:#ef4444">Illegal</span></div>
+          <div class="ce-desc">Strictly illegal on the coast (frequent police patrols in summer). Massive auto-camp network &mdash; Croatia has 500+ registered campsites, many directly on the coast from &euro;10&ndash;20/night. Inland Istria and islands are more relaxed.</div>
+          <div class="ce-tip">Stealth: Istrian interior olive groves (ask farmers). Between Split and Dubrovnik: find spots above the road where mountain meets coast &mdash; terraced olive/vine land is often abandoned and usable. Pelje&#x0161;ac peninsula interior is very quiet. The Neretva delta has secluded spots.</div>
+        </div>
+      </div>
+
+      <div style="margin-top:8px;padding:8px;background:#1e293b;border-radius:6px">
+        <div style="font-size:10px;font-weight:700;color:#60a5fa;margin-bottom:4px">Essential Apps for Wild Camping</div>
+        <div style="font-size:10px;color:#94a3b8;line-height:1.6">
+          <b>park4night</b> &mdash; Cyclist/van spots, user-reviewed, works everywhere<br>
+          <b>iOverlander</b> &mdash; Best for Balkans, global camping database<br>
+          <b>Komoot</b> &mdash; Route planning with wild camp spot community notes<br>
+          <b>mapy.cz</b> &mdash; Excellent offline maps, shows Czech/Slovak bivouac areas<br>
+          <b>RMK loodusegakoos.ee</b> &mdash; Estonian free forest shelter locations<br>
+          <b>Camping.info</b> &mdash; European campsite directory with prices and booking
+        </div>
+      </div>
+
+      <!-- WILDLIFE CONSIDERATIONS -->
+      <div style="margin-top:10px;padding-top:10px;border-top:1px solid #1e3a5f">
+        <div style="font-size:11px;font-weight:700;color:#f87171;margin-bottom:8px">&#128024; Wildlife Risks</div>
+
+        <!-- TICKS -->
+        <div style="margin-bottom:10px;padding:8px;background:#1e293b;border-radius:6px;border-left:3px solid #ef4444">
+          <div style="font-size:10.5px;font-weight:700;color:#fca5a5;margin-bottom:3px">TORMENTED BY TICKS &mdash; #1 Threat (Entire Route)</div>
+          <div style="font-size:10px;color:#94a3b8;line-height:1.55">
+            Ticks carrying <b>Lyme disease</b> and <b>TBE (tick-borne encephalitis)</b> are present across your entire route. The highest-risk zones are the Baltics (Estonia, Latvia, Lithuania are among Europe&rsquo;s worst), southern Sweden, Finland, Poland, and Czech Republic.<br><br>
+            <b style="color:#e2e8f0">Prevention:</b> Treat clothing with permethrin before departure. Wear long pants tucked into socks when walking through grass. Full body tick check every evening &mdash; they prefer warm folds (groin, armpits, behind ears, waistband).<br><br>
+            <b style="color:#e2e8f0">TBE Vaccine:</b> <span style="color:#fbbf24;font-weight:600">Get vaccinated before departure.</span> 2-dose course (Encepur or FSME-Immun), available in Australia. Lyme has no vaccine &mdash; rely on tick checks and removal within 24hrs.<br><br>
+            <b style="color:#e2e8f0">Removal:</b> Carry a tick removal tool (O&rsquo;Tom tick twister or fine-point tweezers). Grip at the head, twist gently, pull straight out. Do not squeeze the body. Clean with antiseptic. Monitor for expanding red ring (Lyme indicator) over next 2&ndash;4 weeks.
+          </div>
+        </div>
+
+        <!-- SNAKES -->
+        <div style="margin-bottom:10px;padding:8px;background:#1e293b;border-radius:6px;border-left:3px solid #f59e0b">
+          <div style="font-size:10.5px;font-weight:700;color:#fde68a;margin-bottom:3px">SAVAGED BY SNAKES &mdash; Two Species to Know</div>
+          <div style="font-size:10px;color:#94a3b8;line-height:1.55">
+            <b style="color:#e2e8f0">European Adder (Hugorm/Kyy)</b> &mdash; <span style="color:#86efac">Sweden &rarr; Baltics &rarr; Poland</span><br>
+            The only venomous snake in Scandinavia and the Baltics. Zigzag pattern on back, 50&ndash;70cm. Very shy, bites are rare and almost never fatal. Found in meadows, forest edges, and rocky ground. Risk: low. Stomp your feet when walking through undergrowth and they&rsquo;ll flee.<br><br>
+            <b style="color:#e2e8f0">Nose-Horned Viper (Poskok)</b> &mdash; <span style="color:#ef4444">Slovenia &rarr; Croatia &rarr; all Balkans</span><br>
+            Europe&rsquo;s most dangerous snake. Thick body, triangular head, distinctive horn on snout, up to 90cm. Found in rocky karst terrain, dry stone walls, and sun-warmed rubble &mdash; exactly the type of terrain on the Croatian and Bosnian coast. <b style="color:#fca5a5">This is a genuine concern when choosing camp spots in the Balkans.</b><br><br>
+            <b style="color:#e2e8f0">Camp smart:</b> Clear ground before pitching. Never reach into rock crevices or under stones. Shake out shoes and gear in the morning. In Croatia/Bosnia/Montenegro, prefer grassy clearings over rocky ground. The viper is nocturnal in summer &mdash; use a headtorch walking at night.
+          </div>
+        </div>
+
+        <!-- BEARS -->
+        <div style="margin-bottom:10px;padding:8px;background:#1e293b;border-radius:6px;border-left:3px solid #a78bfa">
+          <div style="font-size:10.5px;font-weight:700;color:#c4b5fd;margin-bottom:3px">BATTERED BY BEARS</div>
+          <div style="font-size:10px;color:#94a3b8;line-height:1.55">
+            Present in <b>Finland</b> (~2,000), <b>Estonia</b> (small population), <b>Slovenia</b> (~1,000 &mdash; highest density in western Europe), <b>Croatia</b> (Gorski Kotar/Velebit), <b>Bosnia</b>, <b>Montenegro</b>, <b>Albania</b>, <b>N. Macedonia</b>, and <b>Kosovo</b>.<br><br>
+            European brown bears are very shy and avoid humans. Attacks on campers are exceptionally rare (&lt;1/year across all of Europe). They are NOT comparable to North American grizzlies.<br><br>
+            <b style="color:#e2e8f0">Camp practice:</b> Store food in panniers away from your tent (hang from a branch or seal in dry bags). Cook and eat 50m+ from your sleeping spot. Never keep food or strong-smelling items (toothpaste, sunscreen) in the tent. In Slovenia&rsquo;s Notranjska forests, bears are common but almost never seen &mdash; they hear you long before you see them. Make noise on forest trails.
+          </div>
+        </div>
+
+        <!-- WILD BOAR -->
+        <div style="margin-bottom:10px;padding:8px;background:#1e293b;border-radius:6px;border-left:3px solid #fb923c">
+          <div style="font-size:10.5px;font-weight:700;color:#fdba74;margin-bottom:3px">BULLDOZED BY BOARS</div>
+          <div style="font-size:10px;color:#94a3b8;line-height:1.55">
+            Common in forests across the <b>entire route</b> from Sweden to Bosnia. The most likely large animal you&rsquo;ll actually encounter. Usually harmless and will run, but a sow with piglets can charge if she feels cornered.<br><br>
+            <b style="color:#e2e8f0">Camp practice:</b> Keep food sealed and away from tent. If you hear grunting/snuffling at night, bang pots or shout &mdash; they&rsquo;ll leave. Don&rsquo;t camp on obvious boar trails (look for churned-up earth and tracks). Most encounters happen at dusk.
+          </div>
+        </div>
+
+        <!-- MOSQUITOES -->
+        <div style="margin-bottom:10px;padding:8px;background:#1e293b;border-radius:6px;border-left:3px solid #38bdf8">
+          <div style="font-size:10.5px;font-weight:700;color:#7dd3fc;margin-bottom:3px">MASSACRED BY MOZZIES</div>
+          <div style="font-size:10px;color:#94a3b8;line-height:1.55">
+            <b style="color:#e2e8f0">Scandinavia &amp; Finland (Jun&ndash;Aug):</b> Can be brutal, especially near lakes and in the Finnish interior. Carry DEET 30%+ or Icaridin repellent. A head net weighs nothing and can save your sanity. Your tent&rsquo;s mesh is your best friend.<br><br>
+            <b style="color:#e2e8f0">Baltics:</b> Coastal marshes in Latvia and Lithuania have heavy mosquitoes in summer. Camp on higher ground or windward coastal spots where breeze keeps them away.<br><br>
+            <b style="color:#e2e8f0">Poland (Vistula):</b> River valleys breed mosquitoes. Camp away from standing water.<br><br>
+            <b style="color:#e2e8f0">Balkans:</b> Less intense than Scandinavia but present near rivers and lakes. Horse flies (obadi) are a nuisance on hot days in Bosnia/Montenegro.
+          </div>
+        </div>
+
+        <!-- MOOSE -->
+        <div style="margin-bottom:10px;padding:8px;background:#1e293b;border-radius:6px;border-left:3px solid #22d3ee">
+          <div style="font-size:10.5px;font-weight:700;color:#67e8f9;margin-bottom:3px">MOWED DOWN BY MOOSE (Sweden &amp; Finland)</div>
+          <div style="font-size:10px;color:#94a3b8;line-height:1.55">
+            Sweden has ~350,000 moose, Finland ~100,000. They are a <b>road hazard, not a camping threat</b>. Most dangerous at dusk and dawn when they cross roads. A moose collision at cycling speed can cause serious injury &mdash; they&rsquo;re 400&ndash;700kg.<br><br>
+            <b style="color:#e2e8f0">Cycling:</b> Be alert at dawn/dusk on forest roads. Use lights. If one crosses in front of you, stop &mdash; where there&rsquo;s one, there&rsquo;s often a second.<br>
+            <b style="color:#e2e8f0">Camping:</b> If a moose wanders into camp, stay calm, give it space, and it will move on. Never approach calves.
+          </div>
+        </div>
+
+        <!-- STRAY DOGS -->
+        <div style="margin-bottom:10px;padding:8px;background:#1e293b;border-radius:6px;border-left:3px solid #e879f9">
+          <div style="font-size:10.5px;font-weight:700;color:#f0abfc;margin-bottom:3px">DEVOURED BY DOGS (Balkans)</div>
+          <div style="font-size:10px;color:#94a3b8;line-height:1.55">
+            The most <b>frequent actual confrontation</b> you&rsquo;ll face. Stray dogs are common in <b>Albania, Kosovo, N. Macedonia, Serbia</b>, and <b>Bosnia</b>. Rural guard dogs (often Sharplaninac or Tornjak breeds) protect livestock and can be territorial.<br><br>
+            <b style="color:#e2e8f0">While cycling:</b> Dogs will chase bikes. Stop pedaling, dismount, and walk slowly. Put the bike between you and the dog. Avoid eye contact. Speak calmly. They almost always lose interest once you stop being a moving target.<br>
+            <b style="color:#e2e8f0">While camping:</b> Keep food sealed. If dogs visit camp at night, a firm loud voice usually works. Carry a stick for confidence. Strays in Albanian towns are generally docile and socialized &mdash; rural livestock guardians are the ones to watch for.<br>
+            <b style="color:#e2e8f0">Gear:</b> Some bikepackers carry a dog deterrent spray (citronella-based, legal in EU). A small ultrasonic dog deterrent device (Dazer II) weighs 70g and works well.
+          </div>
+        </div>
+
+        <!-- SCORPIONS -->
+        <div style="margin-bottom:10px;padding:8px;background:#1e293b;border-radius:6px;border-left:3px solid #fbbf24">
+          <div style="font-size:10.5px;font-weight:700;color:#fde68a;margin-bottom:3px">SKEWERED BY SCORPIONS (Adriatic Coast)</div>
+          <div style="font-size:10px;color:#94a3b8;line-height:1.55">
+            Small Mediterranean scorpions (Euscorpius spp.) are found along the <b>Croatian, Montenegrin, and Albanian coasts</b>. They hide under rocks and in dry stone walls. Sting is painful but not medically dangerous &mdash; similar to a bee sting.<br><br>
+            <b style="color:#e2e8f0">Camp practice:</b> Shake out shoes, clothing, and panniers every morning. Don&rsquo;t place bare hands under rocks. Keep tent zipped at all times.
+          </div>
+        </div>
+
+        <!-- BOSNIA LANDMINE WARNING -->
+        <div style="padding:8px;background:#450a0a;border-radius:6px;border:1px solid #991b1b">
+          <div style="font-size:10.5px;font-weight:700;color:#fca5a5;margin-bottom:3px">&#9888; BLOWN UP IN BOSNIA &mdash; LANDMINE AREAS</div>
+          <div style="font-size:10px;color:#fecaca;line-height:1.55">
+            Not wildlife, but a critical camping safety note. Bosnia has residual landmines from the 1992&ndash;95 war, primarily along former front lines. Affected areas are marked with red signs or red-painted rocks. <b>Never camp off established trails or roads in Bosnia.</b> Stick to paved roads, well-used paths, and cleared areas. The Neretva valley main road corridor is safe. Mountain shortcuts through unmarked forest are not. This is a real and ongoing risk &mdash; casualties still occur.
+          </div>
+        </div>
+
+        <!-- GEAR CHECKLIST -->
+        <div style="margin-top:10px;padding:8px;background:#1e293b;border-radius:6px">
+          <div style="font-size:10px;font-weight:700;color:#60a5fa;margin-bottom:4px">Wildlife Gear Checklist</div>
+          <div style="font-size:10px;color:#94a3b8;line-height:1.7">
+            &#9744; TBE vaccination (2-dose, get before departure)<br>
+            &#9744; Tick removal tool (O&rsquo;Tom tick twister)<br>
+            &#9744; DEET 30%+ or Icaridin repellent<br>
+            &#9744; Permethrin spray (treat clothing pre-trip)<br>
+            &#9744; Head net (ultralight, for Scandinavia/Baltics)<br>
+            &#9744; Small headtorch (snake visibility at night)<br>
+            &#9744; Dog deterrent (citronella spray or Dazer II ultrasonic)<br>
+            &#9744; Dry bags for food storage (bear/boar separation from tent)<br>
+            &#9744; Antiseptic wipes (tick bite, sting, scratch treatment)
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div id="map"></div>
+</div>
+
+<script>
+// ============================================================
+// LIVE TRIP STATUS — update this block each time you check in
+// ============================================================
+const tripStatus = {
+  active: false,               // set true when the trip starts
+  currentSegment: 1,           // which segment you're on (1–9)
+  currentCity: 'Gothenburg',   // most recent city/town name
+  dayNumber: 0,                // day number of the trip
+  kmRidden: 0,                 // total km covered so far
+  countries: [],               // e.g. ['Sweden','Finland']
+  lat: null,                   // precise current lat (optional)
+  lng: null,                   // precise current lng (optional)
+  updates: [
+    // Add entries as you travel — newest first
+    // { date: '2026-XX-XX', location: 'City, Country', text: 'Your update here.', photo: 'https://...' }
+  ],
+  photos: [
+    // Photo pins on the map — add as you go
+    // { lat: 0.0, lng: 0.0, src: 'https://...', caption: 'Caption', location: 'City' }
+  ]
+};
+// ============================================================
+
+const segments = [
+  {
+    id: 1,
+    title: "Gothenburg \u2192 Stockholm",
+    routeName: "Sverigeleden Routes 10+4 / Runt V\u00e4tternleden / G\u00f6ta Canal Towpath",
+    color: "#3b82f6",
+    transport: "bike",
+    distance: "~620 km",
+    days: "9\u201312 days",
+    schengenDays: "9\u201312",
+    description: "Cross Sweden\u2019s heartland east from Gothenburg on dedicated cycling infrastructure. Sverigeleden Route 10 to Jönköping, then Runt V\u00e4tternleden along the full eastern shore of Lake V\u00e4ttern (dedicated signed cycling circuit, blue markers, quiet lakeside roads), then the G\u00f6ta Canal towpath (traffic-free cycling track alongside the canal), then Sverigeleden Route 4 through S\u00f6rmland manor country into Stockholm. Slightly longer than road shortcuts (~30 km added over 9+ days) but avoids all main highways. Mostly paved with some gravel. Bring 32mm+ tyres.",
+    stages: [
+      { name: "Gothenburg \u2192 Alings\u00e5s", dist: "~60 km (~3.5 hrs)", desc: "Follow Sverigeleden Route 10 / S\u00e4ve\u00e5n river valley northeast through Lerum on dedicated cycling paths and quiet residential roads \u2014 avoids the E20 entirely. Gentle terrain, birch forest, small lakes. Slightly longer than the road route but almost entirely traffic-free. Alings\u00e5s: Sweden\u2019s self-proclaimed \u2018fika capital\u2019 \u2014 the town that started the Swedish caf\u00e9 culture movement. Excellent bakeries and a charming old town." },
+      { name: "Alings\u00e5s \u2192 Ulricehamn", dist: "~75 km (~4.5 hrs)", desc: "Sverigeleden Route 10 south-east through rolling V\u00e4sterg\u00f6tland countryside on gravel and quiet farm roads. Open farmland, scattered forests, very low traffic. Slightly longer than direct roads but far more pleasant. Ulricehamn: attractive small town on Lake \u00c5sunden with a lakeside promenade, good resupply point." },
+      { name: "Ulricehamn \u2192 J\u00f6nk\u00f6ping", dist: "~80 km (~5 hrs)", desc: "Sverigeleden through Sm\u00e5land highlands on low-traffic back roads. Gently rolling terrain with forests and small lakes \u2014 the route avoids the main highway. Arrive at J\u00f6nk\u00f6ping, perched at the southern tip of Lake V\u00e4ttern. Stunning lakefront promenade, T\u00e4ndsticksmuseet (Match Museum \u2014 quirky but genuinely interesting)." },
+      { name: "J\u00f6nk\u00f6ping \u2192 Gr\u00e4nna \u2192 Vadstena", dist: "~105 km (~3 hrs/day over 2 days)", desc: "The scenic highlight of the Sweden leg. Follow Runt V\u00e4tternleden north along Lake V\u00e4ttern\u2019s eastern shore \u2014 this is a dedicated signed cycling circuit, blue \u2018Around V\u00e4ttern\u2019 markers, quiet low-traffic roads hugging the shoreline. Crystal-clear water visible the entire way, dramatic views across to the western shore. Gr\u00e4nna: famous for polkagris (peppermint rock candy), views of Visings\u00f6 island. Continue north to Vadstena: one of Sweden\u2019s most beautiful small towns. Renaissance castle on the lakefront, St Birgitta\u2019s medieval convent (1346), cobblestone streets. Split this stage over 2 days." },
+      { name: "Vadstena \u2192 Motala \u2192 Link\u00f6ping", dist: "~85 km (~5 hrs)", desc: "Continue Runt V\u00e4tternleden north to Motala \u2014 the \u2018engine room\u2019 of the G\u00f6ta Canal, where Baltzar von Platen ran the canal project. Motala Motor Museum. Then join the dedicated G\u00f6ta Canal towpath cycle track south-east to Link\u00f6ping \u2014 flat, traffic-free, runs alongside the canal the whole way. Link\u00f6ping: medieval cathedral (Sweden\u2019s tallest spire), Gamla Link\u00f6ping open-air museum." },
+      { name: "Link\u00f6ping \u2192 Norrk\u00f6ping", dist: "~50 km (~3 hrs)", desc: "G\u00f6ta Canal towpath cycle track all the way. Completely traffic-free. Pass the famous Berg locks \u2014 a staircase of canal locks lifting boats between the canal and Lake Roxen. Slightly longer than the road route but an exceptional riding surface. Norrk\u00f6ping: beautifully converted industrial quarter, Arbetets Museum, good nightlife." },
+      { name: "Norrk\u00f6ping \u2192 Nyk\u00f6ping", dist: "~90 km (~5.5 hrs)", desc: "Sverigeleden Route 4 south-east into S\u00f6rmland \u2014 Sweden\u2019s manor house country. Rolling hills, oak forests, small lakes, quiet estate back roads, occasional gravel. Nyk\u00f6ping: medieval castle ruins (where the famous Nyk\u00f6ping Banquet took place in 1317), charming harbour, good overnight stop." },
+      { name: "Nyk\u00f6ping \u2192 Stockholm", dist: "~85 km (~5 hrs)", desc: "Sverigeleden Route 4 through S\u00f6dert\u00e4lje. Once past S\u00f6dert\u00e4lje, join the dedicated Lake M\u00e4laren waterfront bike paths into Stockholm \u2014 smooth, signed, car-free. Arrive in the city: Gamla Stan (Old Town) and S\u00f6dermalm are ideal bases before heading to the archipelago." }
+    ],
+    detours: [
+      { name: "Visings\u00f6 Island", dist: "+ferry + 25 km island loop", time: "Half\u2013full day", desc: "Ferry from Gr\u00e4nna (25 min). Sweden\u2019s second-largest lake island. Cycle the flat 25 km loop past the oak forest planted by King Gustav Vasa in the 1500s, medieval castle ruins (N\u00e4s and Visingsborg), herb gardens, and a 12th-century church. Very peaceful.", verdict: "highly", lat: 58.0300, lng: 14.3350 },
+      { name: "G\u00f6ta Canal Locks at Berg", dist: "+5 km detour", time: "1\u20132 hours", desc: "Between Link\u00f6ping and Norrk\u00f6ping: the Carl Johan lock flight, 7 consecutive locks (part of a 15-lock staircase) lifting boats between the canal and Lake Roxen. One of Sweden\u2019s great engineering marvels since 1832. Watch boats navigate while having coffee at the canalside caf\u00e9.", verdict: "must", lat: 58.4950, lng: 15.8620 },
+      { name: "Stockholm Rest Day", dist: "10\u201320 km city cycling", time: "1\u20132 days", desc: "Before heading to the archipelago, explore Stockholm. Djurg\u00e5rden island: Vasa Museum (17th-century warship raised from harbour), ABBA The Museum, Skansen open-air museum. Gamla Stan medieval old town. Fotografiska photography museum on S\u00f6dermalm.", verdict: "must", lat: 59.3270, lng: 18.0950 }
+    ],
+    waypoints: [
+      { name: "Gothenburg", lat: 57.7089, lng: 11.9746, type: "start" },
+      { name: "Alings\u00e5s", lat: 57.9300, lng: 12.5330, type: "stop" },
+      { name: "Ulricehamn", lat: 57.7905, lng: 13.4175, type: "stop" },
+      { name: "J\u00f6nk\u00f6ping", lat: 57.7826, lng: 14.1618, type: "stop" },
+      { name: "Gr\u00e4nna", lat: 58.0225, lng: 14.4686, type: "stop" },
+      { name: "Vadstena", lat: 58.4497, lng: 14.8839, type: "stop" },
+      { name: "Link\u00f6ping", lat: 58.4108, lng: 15.6214, type: "stop" },
+      { name: "Norrk\u00f6ping", lat: 58.5877, lng: 16.1924, type: "stop" },
+      { name: "Nyk\u00f6ping", lat: 58.7530, lng: 17.0092, type: "stop" },
+      { name: "Stockholm", lat: 59.3293, lng: 18.0586, type: "end" }
+    ],
+    route: [
+      [57.7089,11.9746],[57.9300,12.5330],[57.7905,13.4175],[57.7826,14.1618],
+      [58.0225,14.4686],[58.4497,14.8839],[58.4108,15.6214],[58.5877,16.1924],
+      [58.7530,17.0092],[59.3293,18.0586]
+    ]
+  },
+  {
+    id: 3,
+    title: "Stockholm Archipelago \u2192 \u00c5land \u2192 Turku",
+    routeName: "Stockholm Sk\u00e4rg\u00e5rd + \u00c5land Cycle Routes + Viking/Tallink Ferry",
+    color: "#14b8a6",
+    transport: "bike",
+    transportSecondary: "ferry",
+    distance: "~350 km cycling + 3 ferries",
+    days: "8\u201312 days",
+    schengenDays: "8\u201312",
+    description: "The crown jewel. Island-hop through 30,000 islands of the Stockholm Archipelago heading north to Grisslehamn. Ferry to \u00c5land \u2014 a flat, Swedish-speaking Finnish archipelago with free inter-island ferries. Cycle past medieval castles and fortress ruins. Ferry onward to Turku.",
+    stages: [
+      { name: "Stockholm \u2192 Vaxholm", dist: "~35 km + ferry (~2.5 hrs)", desc: "Cycle north through Liding\u00f6 or take the Djurg\u00e5rden ferry. Cross to Vaxholm via the Rind\u00f6 ferry. Vaxholm: 16th-century fortress, colourful wooden harbour houses, caf\u00e9s. The \u2018capital of the archipelago.\u2019" },
+      { name: "Vaxholm \u2192 Norrt\u00e4lje", dist: "~60 km (~4 hrs)", desc: "Ride through Rind\u00f6 island past Oskar-Fredriksborg fortress. Cross to mainland. Quiet country lanes through birch forest. Norrt\u00e4lje: charming town, good resupply, Roslagen coast." },
+      { name: "Norrt\u00e4lje \u2192 Grisslehamn", dist: "~50 km (~3 hrs)", desc: "Continue north along the Roslagen coast. Flat, peaceful roads through tiny villages. Grisslehamn: Albert Engstr\u00f6m Museum, end of the road \u2014 ferry terminal to \u00c5land." },
+      { name: "Ferry: Grisslehamn \u2192 Ecker\u00f6 (\u00c5land)", dist: "~2 hr crossing", desc: "Ecker\u00f6 Line ferry. ~\u20AC25\u201335 per person + bike. Departs 2\u20133 times daily. Arrive in Ecker\u00f6, \u00c5land. Swedish-speaking Finnish autonomous territory." },
+      { name: "\u00c5land: Ecker\u00f6 \u2192 Geta \u2192 Sund", dist: "~60 km over 2 days (~2 hrs/day)", desc: "Ecker\u00f6 Post & Customs House (imperial era). North to Geta: rocky hills, Djupvik cave, viewpoints. East to Sund: Kastelholm Castle (medieval, perfectly preserved) and Bomarsund Fortress ruins (massive Russian-era fortification). Both are must-sees." },
+      { name: "\u00c5land: Sund \u2192 Mariehamn", dist: "~30 km (~2 hrs)", desc: "South through apple orchards and meadows. Mariehamn: capital city, tall ship Pommern (museum ship), \u00c5land Maritime Museum, restaurants. Ferry terminal." },
+      { name: "Ferry: Mariehamn \u2192 Turku", dist: "~5.5 hr crossing", desc: "Viking Line or Tallink. Evening departure, arrive Turku late evening or overnight. Scenic passage through the Turku Archipelago \u2014 thousands of islands." }
+    ],
+    detours: [
+      { name: "Sandhamn Island", dist: "+25 km round trip + ferry", time: "Full day", desc: "From V\u00e4rmd\u00f6 or Vaxholm, take the boat to Sandhamn. A classic Stockholm summer destination \u2014 bright wooden villas, sandy beaches, sailing culture. Best visited as a rest-day excursion.", verdict: "nice", lat: 59.2860, lng: 18.9160 },
+      { name: "\u00c5land Eastern Archipelago (F\u00f6gl\u00f6 & K\u00f6kar)", dist: "+80 km, 2 extra days", time: "2 days", desc: "From Sund, take inter-island ferries east through the remote outer archipelago. F\u00f6gl\u00f6 and K\u00f6kar islands are stunningly isolated \u2014 tiny fishing communities, medieval churches, absolute silence. The ferries are free. This is world-class archipelago cycling.", verdict: "highly", lat: 60.0200, lng: 20.6500 }
+    ],
+    waypoints: [
+      { name: "Stockholm", lat: 59.3293, lng: 18.0586, type: "start" },
+      { name: "Vaxholm", lat: 59.4024, lng: 18.3554, type: "stop" },
+      { name: "Norrt\u00e4lje", lat: 59.7533, lng: 18.7038, type: "stop" },
+      { name: "Grisslehamn", lat: 60.1088, lng: 18.8237, type: "ferry" },
+      { name: "Ecker\u00f6", lat: 60.2253, lng: 19.5479, type: "ferry" },
+      { name: "Kastelholm Castle", lat: 60.2290, lng: 19.9640, type: "stop" },
+      { name: "Bomarsund", lat: 60.2200, lng: 20.0950, type: "stop" },
+      { name: "Mariehamn", lat: 60.0970, lng: 19.9348, type: "stop" },
+      { name: "Turku", lat: 60.4518, lng: 22.2666, type: "ferry" }
+    ],
+    route: [[59.3293,18.0586],[59.4024,18.3554],[59.55,18.55],[59.7533,18.7038],[59.95,18.80],[60.1088,18.8237]],
+    ferryRoute: [[60.1088,18.8237],[60.2253,19.5479]],
+    bikeRoute2: [[60.2253,19.5479],[60.2290,19.9640],[60.2200,20.0950],[60.15,19.80],[60.0970,19.9348]],
+    ferryRoute2: [[60.0970,19.9348],[60.20,20.50],[60.35,21.30],[60.4518,22.2666]]
+  },
+  {
+    id: 4,
+    title: "Turku \u2192 Helsinki",
+    routeName: "EuroVelo 10 / King\u2019s Road",
+    color: "#f59e0b",
+    transport: "bike",
+    distance: "~284 km",
+    days: "4\u20136 days",
+    schengenDays: "4\u20136",
+    description: "EuroVelo 10 (Baltic Sea Cycle Route) east from Turku to Helsinki. The official EV10 route actively avoids the E18 and main highways, running instead on quiet municipal cycling paths, low-traffic rural roads and forest tracks. 95% paved, max elevation 69m, difficulty 1\/10. Some gravel sections (32mm+ tyres recommended). GPX available free from Bikeland.fi and EuroVelo.com. Well-signed with EV10 markers. Through ironworks villages, wooden old towns, and Finland\u2019s southern archipelago coastline.",
+    stages: [
+      { name: "Turku \u2192 Salo", dist: "~75 km (~4.5 hrs)", desc: "EuroVelo 10 (Baltic Sea Cycle Route) east from Turku. The official route deliberately avoids the main E18 highway, instead threading through Piikki\u00f6, Paimio and Halikko on quiet municipal cycling paths and low-traffic rural roads. 95% paved, mostly flat. Rolling farmland and pine forest." },
+      { name: "Salo \u2192 Mathildedal", dist: "~28 km (~1.5 hrs)", desc: "EuroVelo 10 south to Mathildedal \u2014 a restored 18th-century ironworks village. Now a craft beer and artisan food destination. The EV10 route passes right through. Stay the night. Some gravel sections on this stretch." },
+      { name: "Mathildedal \u2192 Eken\u00e4s (Tammisaari)", dist: "~65 km (~4 hrs)", desc: "EuroVelo 10 through Fagervik (another historic ironworks, similar vintage). Mix of paved cycling paths and quiet coastal forest roads. Some short gravel sections \u2014 32mm+ tyres recommended. Eken\u00e4s: Finland\u2019s most charming wooden old town, Swedish-speaking. Coastal promenade, caf\u00e9s." },
+      { name: "Eken\u00e4s \u2192 Inkoo \u2192 Espoo", dist: "~85 km (~5 hrs)", desc: "EuroVelo 10 east. Raseborg Castle ruins directly on-route. Through Inkoo on quiet coastal roads. Approaching Espoo the infrastructure improves significantly \u2014 dedicated waterfront cycling paths and archipelago parkways into the Helsinki metro area. Almost entirely paved from Inkoo onwards." },
+      { name: "Espoo \u2192 Helsinki", dist: "~28 km (~1.5 hrs)", desc: "EuroVelo 10 / Helsinki baana and coastal bike highways into the city centre. These are high-quality segregated urban cycling paths \u2014 among the best in Scandinavia. Arrive Helsinki: Design District, Temppeliaukio (rock church), Market Square, Suomenlinna ferry." }
+    ],
+    detours: [
+      { name: "Fiskars Village", dist: "+30 km round trip", time: "Half day", desc: "From Eken\u00e4s, ride inland to Fiskars \u2014 a beautifully restored ironworks village now home to designers, glassblowers, and artisans. The Fiskars scissors company started here. Museum, studios, excellent restaurant.", verdict: "highly", lat: 60.1580, lng: 23.5470 },
+      { name: "Porvoo Old Town", dist: "+100 km round trip east of Helsinki", time: "Full day or overnight", desc: "Finland\u2019s most photographed town. Red wooden warehouses on the river, cobblestone streets, medieval cathedral. Best done as a day trip from Helsinki before taking the Tallinn ferry. Take the coastal King\u2019s Road east.", verdict: "must", lat: 60.3930, lng: 25.6590 },
+      { name: "Suomenlinna Sea Fortress", dist: "+ferry from Helsinki", time: "Half day", desc: "UNESCO World Heritage fortress on an island in Helsinki harbour. 15-minute ferry. Walk the ramparts, tunnels, museums. Finland\u2019s most visited attraction. Do this while in Helsinki.", verdict: "must", lat: 60.1450, lng: 24.9880 }
+    ],
+    waypoints: [
+      { name: "Turku", lat: 60.4518, lng: 22.2666, type: "start" },
+      { name: "Salo", lat: 60.3830, lng: 23.1260, type: "stop" },
+      { name: "Mathildedal", lat: 60.2800, lng: 23.0700, type: "stop" },
+      { name: "Eken\u00e4s", lat: 59.9750, lng: 23.4370, type: "stop" },
+      { name: "Raseborg Castle", lat: 60.0060, lng: 23.5060, type: "stop" },
+      { name: "Inkoo", lat: 60.0460, lng: 24.0060, type: "stop" },
+      { name: "Helsinki", lat: 60.1699, lng: 24.9384, type: "stop" }
+    ],
+    route: [[60.4518,22.2666],[60.3830,23.1260],[60.2800,23.0700],[59.9750,23.4370],[60.0060,23.5060],[60.0460,24.0060],[60.17,24.50],[60.1699,24.9384]]
+  },
+  {
+    id: 5,
+    title: "Helsinki \u2192 Tallinn (Ferry)",
+    routeName: "Ecker\u00f6 Line / Viking Line / Tallink",
+    color: "#06b6d4",
+    transport: "ferry",
+    distance: "~80 km crossing",
+    days: "1 day",
+    schengenDays: "1",
+    description: "2\u20132.5 hour crossing of the Gulf of Finland. Multiple daily departures. Bike goes on car deck (\u20AC5\u20138). Arrive at Tallinn\u2019s D-Terminal, less than 1 km walk to the medieval Old Town. Book online, arrive 1 hour early, use the vehicle entrance.",
+    stages: [
+      { name: "Helsinki West Terminal \u2192 Tallinn D-Terminal", dist: "80 km crossing (~2.5 hr ferry)", desc: "Ecker\u00f6 Line is cheapest (~\u20AC20 + \u20AC5 bike). Viking Line and Tallink also run. Depart morning, arrive by lunch. Tallinn\u2019s port is walking distance from the Old Town." }
+    ],
+    detours: [],
+    waypoints: [
+      { name: "Helsinki Terminal", lat: 60.1620, lng: 24.9580, type: "ferry" },
+      { name: "Tallinn Port", lat: 59.4520, lng: 24.7650, type: "ferry" }
+    ],
+    route: [],
+    ferryRoute: [[60.1620,24.9580],[59.90,24.90],[59.65,24.82],[59.4520,24.7650]]
+  },
+  {
+    id: 6,
+    title: "Tallinn \u2192 Baltic Coast \u2192 Klaip\u0117da + Train (via Vilnius overnight) to Warsaw",
+    routeName: "EuroVelo 10 (Baltic Sea Cycle Route) + Train Klaip\u0117da\u2192Vilnius\u2192Warsaw",
+    color: "#ef4444",
+    transport: "bike",
+    distance: "~710 km cycling + train",
+    days: "13\u201315 days",
+    schengenDays: "13\u201315",
+    description: "Down the eastern Baltic coast through Estonia and Latvia to Lithuania via EuroVelo 10, then a 2-day train journey from Klaip\u0117da to Warsaw with an overnight stop in Vilnius \u2014 skipping the Kaliningrad-adjacent section entirely and arriving directly in Warsaw to begin the Poland cycling leg. Vilnius is a genuine highlight: one of Europe\u2019s best-preserved Baroque old towns, UNESCO listed, and very cheap. Terrain is flat throughout. Signage excellent in Estonia, patchy in Latvia. GPS/GPX essential.",
+    stages: [
+      { name: "Tallinn \u2192 P\u00e4rnu", dist: "~130 km, 2 days (~3.5 hrs/day)", desc: "Leave Tallinn Old Town (UNESCO \u2014 spend a full day exploring first). Coastal road south. Option: direct route via Highway 4 (faster, less scenic) or coastal route via Haapsalu (+80 km, much nicer). P\u00e4rnu: Estonia\u2019s summer capital, wide beach, Red Tower, Museum of New Art." },
+      { name: "P\u00e4rnu \u2192 Latvian Border (Ainaži)", dist: "~60 km, 1 day (~3.5 hrs)", desc: "Quiet coastal roads through pine forest. Cross into Latvia at Ainaži. Easy border crossing (both Schengen, no checks)." },
+      { name: "Ainaži \u2192 R\u012bga", dist: "~180 km, 2\u20133 days (~3.5 hrs/day)", desc: "Latvian coast: Salacgr\u012bva fishing village, Saulkrasti white sand dunes. Through J\u016brmala beach resort (wooden Art Nouveau villas \u2014 ride the 25 km seafront bike path). R\u012bga: Art Nouveau district (800+ buildings \u2014 the best collection in Europe), Central Market in former Zeppelin hangars, medieval Old Town." },
+      { name: "R\u012bga \u2192 Liep\u0101ja", dist: "~220 km, 3\u20134 days (~3.5 hrs/day)", desc: "West along the coast. Through Tukums, Talsi. Ventspils: clean Blue Flag beach, cow parade sculptures. Liep\u0101ja: Karosta district (former Soviet naval base \u2014 abandoned prison, military architecture, genuinely eerie and fascinating)." },
+      { name: "Liep\u0101ja \u2192 Klaip\u0117da", dist: "~110 km, 2 days (~3 hrs/day)", desc: "Cross into Lithuania. Through Palanga: amber museum in a botanical garden, sunset from the 470m pier. Klaip\u0117da: Old Town, Theatre Square. End of the cycling leg for this segment." },
+      { name: "Train: Klaip\u0117da \u2192 Vilnius (overnight)", dist: "~310 km, 1 day (~4.5 hrs travel)", desc: "LTG Link InterCity \u2014 modern renovated carriages, power outlets, café/trolley service, dedicated bike spaces. Book bike spot in advance (~45% of ticket price). Depart afternoon, arrive Vilnius early evening. Vilnius overnight: one of Europe\u2019s most underrated cities. Baroque Old Town is UNESCO listed, cathedral square, Gediminas Castle, Gate of Dawn. Extremely cheap \u2014 dinner and a beer for under \u20AC15. Stay in the Old Town." },
+      { name: "Train: Vilnius \u2192 Warsaw", dist: "~650 km, 1 day (~7.5 hrs travel)", desc: "LTG Link cross-border service \u2014 modern carriages, power outlets, tables, comfortable seats, dedicated bike spaces. Book bike spot in advance (~45% of ticket price). Arrive Warsaw Central Station and head directly into the Poland cycling leg. No onward connection needed. Total cost: ~\u20AC60\u201370 including bike. Warsaw is a great city to overnight if arriving late \u2014 postwar rebuilt old town, vibrant food scene, very affordable." }
+    ],
+    detours: [
+      { name: "Saaremaa & Hiiumaa Islands", dist: "+300 km, 4\u20135 extra days", time: "4\u20135 days", desc: "From P\u00e4rnu or Haapsalu, ferry to Estonia\u2019s western islands. Saaremaa: Kuressaare medieval castle, Kaali meteorite crater (3,500 years old), dramatic cliffs. Hiiumaa: K\u00f5pu lighthouse (one of the world\u2019s oldest, operating since 1531). Flat, empty, wildly beautiful. Free inter-island ferries. This is Estonia\u2019s best cycling.", verdict: "highly", lat: 58.4200, lng: 22.1000 },
+      { name: "Sigulda & Gauja National Park", dist: "+160 km round trip from R\u012bga", time: "2 days", desc: "Inland from R\u012bga to \u2018Latvia\u2019s Switzerland.\u2019 Gauja river valley with medieval castle ruins (Turaida Castle, Sigulda Castle), cable car across the valley, Gutmana cave (Latvia\u2019s largest), bobsled track. Stunning in any season. Well worth the inland detour.", verdict: "highly", lat: 57.1530, lng: 24.8540 },
+      { name: "Kuld\u012bga & Ventas Rumba", dist: "+80 km round trip from coast", time: "1 day", desc: "Europe\u2019s widest natural waterfall (249m across). Tiny Latvian town with a beautiful brick bridge. Flying fish leap over the falls in spring. Charming, off-the-beaten-path, totally unique.", verdict: "highly", lat: 56.9680, lng: 21.9670 },
+      { name: "Lahemaa National Park", dist: "+50 km loop from Tallinn", time: "1 day", desc: "Estonia\u2019s oldest and largest national park, just 70 km east of Tallinn. Glacial boulders on wild beaches, pristine bogs with boardwalk trails, restored Soviet-era fishing villages (K\u00e4smu, Altja), and four magnificent manor houses hidden in forest. The Viru Bog boardwalk at dawn is otherworldly.", verdict: "highly", lat: 59.5650, lng: 25.7800 },
+      { name: "Cape Kolka (Kolkasrags)", dist: "+60 km detour from coastal route", time: "Half day", desc: "The very tip of Latvia\u2019s Courland peninsula where the Baltic Sea meets the Gulf of R\u012bga. Wild, windswept, and almost deserted. Hundreds of shipwrecks offshore. Former Soviet restricted zone \u2014 the L\u012bv\u0101ni (Livonian) fishing villages along this coast are among the emptiest, most atmospheric places in Europe.", verdict: "highly", lat: 57.7580, lng: 22.5960 }
+    ],
+    waypoints: [
+      { name: "Tallinn", lat: 59.4370, lng: 24.7536, type: "start" },
+      { name: "Haapsalu", lat: 58.9430, lng: 23.5410, type: "stop" },
+      { name: "P\u00e4rnu", lat: 58.3859, lng: 24.4967, type: "stop" },
+      { name: "Ainaži", lat: 57.8630, lng: 24.3540, type: "stop" },
+      { name: "Saulkrasti", lat: 57.2570, lng: 24.4100, type: "stop" },
+      { name: "J\u016brmala", lat: 56.9680, lng: 23.7720, type: "stop" },
+      { name: "R\u012bga", lat: 56.9496, lng: 24.1052, type: "stop" },
+      { name: "Ventspils", lat: 57.3940, lng: 21.5640, type: "stop" },
+      { name: "Liep\u0101ja", lat: 56.5047, lng: 21.0109, type: "stop" },
+      { name: "Palanga", lat: 55.9200, lng: 21.0680, type: "stop" },
+      { name: "Klaip\u0117da", lat: 55.7033, lng: 21.1443, type: "train" },
+      { name: "Vilnius (overnight)", lat: 54.6892, lng: 25.2798, type: "stop" },
+      { name: "Warsaw", lat: 52.2297, lng: 21.0122, type: "train" }
+    ],
+    route: [
+      [59.4370,24.7536],[58.9430,23.5410],[58.3859,24.4967],[57.8630,24.3540],
+      [57.2570,24.4100],[56.9680,23.7720],[56.9496,24.1052],[57.3940,21.5640],
+      [56.5047,21.0109],[55.9200,21.0680],[55.7033,21.1443]
+    ],
+    trainRoute: [
+      [55.7033,21.1443],[54.6892,25.2798],[52.2297,21.0122]
+    ]
+  },
+  {
+    id: 7,
+    title: "Warsaw \u2192 \u0141\u00f3d\u017a \u2192 Krak\u00f3w",
+    routeName: "Warsaw \u2192 \u0141\u00f3d\u017a \u2192 Cz\u0119stochowa \u2192 Krak\u00f3w / EuroVelo 9",
+    color: "#f97316",
+    transport: "bike",
+    distance: "~400 km",
+    days: "6\u20139 days",
+    schengenDays: "6\u20139",
+    description: "Direct south from Warsaw through central Poland to Krak\u00f3w. Flat agricultural lowlands from Warsaw to \u0141\u00f3d\u017a, then gently rolling through central Poland, building to proper limestone upland terrain in the final stretch through the Jura Krakowsko-Cz\u0119stochowska. This direct route saves ~300 km and 4\u20135 days compared to the full Gdansk\u2013Vistula loop, while still hitting Poland\u2019s headline attractions: \u0141\u00f3d\u017a\u2019s industrial culture, Cz\u0119stochowa\u2019s Jasna G\u00f3ra, and the dramatic Eagle\u2019s Nest castle trail into Krak\u00f3w. EuroVelo 9 markers from \u0141\u00f3d\u017a south. Mostly asphalt with gravel sections near Cz\u0119stochowa.",
+    stages: [
+      { name: "Warsaw \u2192 \u0141\u00f3d\u017a", dist: "~130 km, 2 days (~3.5 hrs/day)", desc: "South-west from Warsaw through Mazovian agricultural flatlands via \u017byrard\u00f3w and Skierniewice on quiet back roads \u2014 this is genuinely flat terrain, ideal for the first cycling day after a long train. \u0141\u00f3d\u017a: Poland\u2019s third city and most underrated. Piotrkowska Street (4.2 km \u2014 Europe\u2019s longest commercial street), the Manufaktura complex (former textile mill turned culture/entertainment hub), extraordinary street art throughout the city, and a deep film heritage \u2014 Polański, Kieślowski, and Wajda all studied at the film school here." },
+      { name: "\u0141\u00f3d\u017a \u2192 Cz\u0119stochowa", dist: "~130 km, 2 days (~3.5 hrs/day)", desc: "South-west through gentle rolling farmland on quiet EuroVelo 9 roads. Wide open Polish countryside. Cz\u0119stochowa: Jasna G\u00f3ra monastery \u2014 home of the Black Madonna icon, Poland\u2019s most sacred pilgrimage site and one of the major religious destinations in Europe. The imposing fortified monastery crowns a hill above the city \u2014 you see it for kilometres before you arrive." },
+      { name: "Cz\u0119stochowa \u2192 Krak\u00f3w", dist: "~140 km, 2\u20133 days (~4 hrs/day)", desc: "The terrain transforms dramatically \u2014 entering the Jura Krakowsko-Cz\u0119stochowska (Polish Jurassic Uplands). Limestone cliffs, ruined castles perched on rocky outcrops, cave-riddled gorges, and forested tracks. This is the Eagle\u2019s Nest Trail section (Szlak Orlich Gniazd) \u2014 one of the most spectacular cycling landscapes in Poland. The final approach into Krak\u00f3w through Ojc\u00f3w National Park gorge is unforgettable. Krak\u00f3w: Wawel Castle, the vast Main Market Square (largest medieval square in Europe), St Mary\u2019s Basilica, Kazimierz Jewish Quarter. Plan 1\u20132 rest days." }
+    ],
+    detours: [
+      { name: "Eagle\u2019s Nest Trail (Szlak Orlich Gniazd)", dist: "+40\u201360 km detour or on-route variant", time: "1\u20132 days", desc: "Chain of ruined medieval castles on dramatic limestone cliffs between Cz\u0119stochowa and Krak\u00f3w. Ogrodzieniec Castle is the most spectacular \u2014 massive ruins on a rocky outcrop. The landscape is unlike anything else in Poland. If time allows, take the full trail route rather than the direct road.", verdict: "highly", lat: 50.4530, lng: 19.5250 },
+      { name: "Ojc\u00f3w National Park", dist: "+20 km or on approach to Krak\u00f3w", time: "Half day", desc: "Just 25 km northwest of Krak\u00f3w. Limestone gorges, cave systems, ruined castles on cliffs. Poland\u2019s smallest national park but one of its most beautiful. Ride through the gorge on the final approach to Krak\u00f3w for a spectacular city entrance.", verdict: "must", lat: 50.2100, lng: 19.8270 },
+      { name: "Wieliczka Salt Mine", dist: "+15 km from Krak\u00f3w", time: "Half day", desc: "UNESCO World Heritage. Underground cathedral carved from salt, 300m below ground. One of the world\u2019s oldest operating mines (700+ years). Do this from Krak\u00f3w as a rest-day excursion.", verdict: "must", lat: 49.9830, lng: 20.0560 },
+      { name: "Kazimierz Dolny", dist: "+130 km round trip from Warsaw or en route detour", time: "1 day", desc: "Renaissance jewel perched above the Vistula. Artists\u2019 colony since the 19th century. Crumbling hilltop castle, ornate merchant houses, gorges with loess pillars (the \u2018Polish Grand Canyon\u2019). Reachable as an east detour from the Warsaw\u2013\u0141\u00f3d\u017a corridor before heading south.", verdict: "highly", lat: 51.3200, lng: 21.9540 }
+    ],
+    waypoints: [
+      { name: "Warsaw", lat: 52.2297, lng: 21.0122, type: "start" },
+      { name: "\u017byrard\u00f3w", lat: 52.0544, lng: 20.4432, type: "stop" },
+      { name: "Skierniewice", lat: 51.9630, lng: 20.1533, type: "stop" },
+      { name: "\u0141\u00f3d\u017a", lat: 51.7592, lng: 19.4560, type: "stop" },
+      { name: "Cz\u0119stochowa", lat: 50.8118, lng: 19.1203, type: "stop" },
+      { name: "Krak\u00f3w", lat: 50.0647, lng: 19.9450, type: "end" }
+    ],
+    route: [
+      [52.2297,21.0122],[52.0544,20.4432],[51.9630,20.1533],[51.7592,19.4560],
+      [51.30,19.30],[50.8118,19.1203],[50.45,19.45],[50.0647,19.9450]
+    ]
+  },
+  {
+    id: 8,
+    title: "Krak\u00f3w \u2192 Vienna \u2192 Croatian Coast \u2192 Dubrovnik",
+    routeName: "EuroVelo 9 + Adriatic Coast (Jadrolinija ferry shortcut Rijeka\u2192Split)",
+    color: "#ec4899",
+    transport: "bike",
+    transportSecondary: "ferry",
+    distance: "~1,550 km cycling + ferry",
+    days: "24\u201330 days",
+    schengenDays: "24\u201330",
+    description: "From Krak\u00f3w south through Czechia, Austria, and Slovenia to Croatia\u2019s Istrian coast, then down the entire Adriatic to Dubrovnik. A Jadrolinija ferry from Rijeka to Split saves ~5 cycling days and keeps your Schengen count manageable. Ends at Dubrovnik \u2014 gateway to Montenegro and the Balkans. ALL SCHENGEN.",
+    stages: [
+      { name: "Krak\u00f3w \u2192 O\u015bwi\u0119cim \u2192 Czech border", dist: "~150 km, 2\u20133 days (~4.5 hrs/day)", desc: "West from Krak\u00f3w through Silesia. O\u015bwi\u0119cim (Auschwitz) is directly on-route \u2014 plan a full day. Cross into Czech Republic near \u010cesk\u00fd T\u011b\u0161\u00edn." },
+      { name: "Czech Republic: Olomouc \u2192 Brno", dist: "~200 km, 3 days (~4 hrs/day)", desc: "Through Moravia. Olomouc: stunning baroque town with UNESCO Holy Trinity Column, massively underrated. Brno: Czech Republic\u2019s second city, lively student scene, Tugendhat Villa (Mies van der Rohe, UNESCO)." },
+      { name: "Brno \u2192 Vienna", dist: "~130 km, 2 days (~4 hrs/day)", desc: "Cross into Austria near B\u0159eclav. Flat ride through the Weinviertel (wine quarter). Vienna: Ringstra\u00dfe, Schlo\u00df Sch\u00f6nbrunn, Stephansdom, coffee house culture. Spend 1\u20132 rest days minimum." },
+      { name: "Vienna \u2192 Graz (Thermenradweg)", dist: "~200 km, 3\u20134 days (~5 hrs/day)", desc: "The Thermenradweg (Spas Cycle Route) south through Lower Austria and Styria. Baden: thermal baths. Wiener Neustadt. \u26a0\ufe0f First real mountain test of the trip \u2014 the Semmering area (approaching ~800\u2013900m from ~270m at Wiener Neustadt) is a genuine climb unlike anything in the previous 2,000 km. Total ascent over these days: ~1,500\u20132,000m. Battery range will drop noticeably for the first time. Plan charging stops in Wiener Neustadt and Mürzzuschlag before the descent into Styria. Once over the top, green rolling countryside eases you into Graz: red rooftops, Schlossberg hill, Kunsthaus. Spend a rest day \u2014 you\u2019ve earned it." },
+      { name: "Graz \u2192 Maribor \u2192 Ljubljana", dist: "~250 km, 3\u20134 days (~5 hrs/day)", desc: "Cross into Slovenia at Bad Radkersburg. Maribor: oldest vine in the world (400+ years). Ljubljana: Europe\u2019s greenest capital, dragon bridge, castle on the hill, car-free old town, incredible food scene. Spend a rest day." },
+      { name: "Ljubljana \u2192 Postojna \u2192 Rovinj", dist: "~200 km, 3\u20134 days (~5 hrs/day)", desc: "Through the Karst region. Postojna Cave (one of the world\u2019s largest show caves, train ride underground). \u0160kocjan Caves (UNESCO, even more dramatic). Cross into Croatia\u2019s Istria. Pula: Roman amphitheatre, 2,000 years old. Rovinj: Venetian jewel on the Adriatic." },
+      { name: "Rovinj \u2192 Rijeka", dist: "~100 km, 1\u20132 days (~6.5 hrs)", desc: "North along the Istrian coast past Vrsar and Pore\u010d (6th-century Euphrasian Basilica, UNESCO). Through Novigrad to Umag, then along the Kvarner coast to Rijeka. Croatia\u2019s third-largest city, underrated \u2014 the 2020 European Capital of Culture. Catch the Jadrolinija ferry." },
+      { name: "Ferry: Rijeka \u2192 Split (Jadrolinija)", dist: "~390 km, 1 day (~10 hr ferry)", desc: "Jadrolinija coastal ferry threads through the Dalmatian islands. Overnight or daytime sailing past Rab, Zadar, and \u0160ibenik. Bike goes on the car deck (~\u20AC10 bike fee). Saves 5+ cycling days and a huge amount of Schengen time. One of the most scenic ferry routes in Europe." },
+      { name: "Split \u2192 Makarska \u2192 Dubrovnik", dist: "~230 km, 3\u20134 days (~4.5 hrs/day)", desc: "Split: Diocletian\u2019s Palace (a living Roman ruin, people live inside it), Riva promenade. Ride the Adriatic Highway south through Omi\u0161 canyon, the Makarska Riviera (Biokovo mountain meets turquoise sea), Plo\u010de, and the Neretva delta. Cross the Pelje\u0161ac Bridge. Final stretch into Dubrovnik \u2014 walk the city walls." }
+    ],
+    detours: [
+      { name: "Wachau Valley (Danube)", dist: "+100 km detour from Vienna", time: "1\u20132 days", desc: "If approaching Vienna from the west, ride the famous Danube Cycle Path through the Wachau Valley. Terraced vineyards, medieval castles, Melk Abbey. One of Europe\u2019s most iconic cycle paths.", verdict: "highly", lat: 48.3660, lng: 15.4180 },
+      { name: "\u0160kocjan Caves", dist: "+10 km detour", time: "Half day", desc: "UNESCO World Heritage. Massive underground canyon, river flowing through caverns. Less crowded and more dramatic than Postojna. Basically on-route between Ljubljana and the coast.", verdict: "must", lat: 45.6630, lng: 13.9910 },
+      { name: "Krka National Park", dist: "+40 km detour from Split area", time: "Full day", desc: "Jaw-dropping series of waterfalls you can actually swim in. Skradinski Buk: a curtain of cascades flowing into emerald pools. Visovac monastery on a tiny island in the river. Reachable from \u0160ibenik (if you break the ferry at \u0160ibenik) or as a detour from Split.", verdict: "must", lat: 43.8010, lng: 15.9620 },
+      { name: "Pelje\u0161ac Peninsula", dist: "+60 km loop", time: "1 day", desc: "Croatia\u2019s best-kept secret. Wine region (Dinga\u010d, Postup \u2014 world-class reds from steep coastal vineyards), oyster farms at Ston (taste them fresh at the harbour), and the 5.5 km Walls of Ston \u2014 second longest fortification in the world after the Great Wall. Accessible via the new Pelje\u0161ac Bridge.", verdict: "highly", lat: 42.9200, lng: 17.2500 },
+      { name: "Dubrovnik City Walls", dist: "2 km walk", time: "Half day", desc: "Walk the full 2 km circuit of medieval walls encircling the Old Town. One of Europe\u2019s most spectacular urban experiences. Views over terracotta rooftops and the Adriatic. Do this on your final day before crossing into Montenegro.", verdict: "must", lat: 42.6410, lng: 18.1080 }
+    ],
+    waypoints: [
+      { name: "Krak\u00f3w", lat: 50.0647, lng: 19.9450, type: "start" },
+      { name: "O\u015bwi\u0119cim", lat: 50.0344, lng: 19.2097, type: "stop" },
+      { name: "\u010cesk\u00fd T\u011b\u0161\u00edn", lat: 49.7462, lng: 18.6270, type: "stop" },
+      { name: "Olomouc", lat: 49.5938, lng: 17.2509, type: "stop" },
+      { name: "Brno", lat: 49.1951, lng: 16.6068, type: "stop" },
+      { name: "Vienna", lat: 48.2082, lng: 16.3738, type: "stop" },
+      { name: "Graz", lat: 47.0707, lng: 15.4395, type: "stop" },
+      { name: "Maribor", lat: 46.5547, lng: 15.6459, type: "stop" },
+      { name: "Ljubljana", lat: 46.0569, lng: 14.5058, type: "stop" },
+      { name: "Postojna Cave", lat: 45.7830, lng: 14.2044, type: "stop" },
+      { name: "Pula", lat: 44.8666, lng: 13.8496, type: "stop" },
+      { name: "Rovinj", lat: 45.0812, lng: 13.6387, type: "stop" },
+      { name: "Rijeka", lat: 45.3271, lng: 14.4420, type: "ferry" },
+      { name: "Split", lat: 43.5081, lng: 16.4402, type: "ferry" },
+      { name: "Makarska", lat: 43.2965, lng: 17.0179, type: "stop" },
+      { name: "Dubrovnik", lat: 42.6507, lng: 18.0944, type: "end" }
+    ],
+    route: [
+      [50.0647,19.9450],[50.0344,19.2097],[49.7462,18.6270],[49.5938,17.2509],
+      [49.1951,16.6068],[48.2082,16.3738],[47.0707,15.4395],[46.5547,15.6459],
+      [46.0569,14.5058],[45.7830,14.2044],[44.8666,13.8496],[45.0812,13.6387],[45.3271,14.4420]
+    ],
+    ferryRoute: [[45.3271,14.4420],[44.75,14.60],[44.05,15.25],[43.73,15.90],[43.5081,16.4402]],
+    bikeRoute2: [[43.5081,16.4402],[43.2965,17.0179],[43.05,17.40],[42.6507,18.0944]]
+  },
+  {
+    id: 9,
+    title: "Balkans: Bosnia \u2192 Montenegro (Non-Schengen)",
+    routeName: "Neretva Canyon + Trans Dinarica / Custom Balkans Loop",
+    color: "#10b981",
+    transport: "bike",
+    distance: "~1,500 km",
+    days: "30\u201340 days",
+    schengenDays: "0",
+    description: "The Schengen escape and budget paradise. Cross from Croatia into Bosnia and the 90-day clock STOPS. No time pressure here \u2014 every country is non-Schengen and visa-free for Australians (90 days each). The terrain is the most challenging of the trip \u2014 this is the Dinaric Alps: expect real mountain passes, 15\u201325% unpaved roads, and daily climbing that would be exhausting on an acoustic bike but is genuinely rewarding on an e-bike. Take your time. The reward is some of Europe\u2019s most spectacular and least-visited landscapes, and at \u20AC15\u201322/day it\u2019s also the cheapest. \u26a0\ufe0f Battery charging note: mountain villages in Bosnia, Kosovo, and the Albanian interior can have 40\u201360 km gaps between guesthouses with reliable power. Ask to charge at cafes and restaurants if needed \u2014 people are universally helpful. Always start mountain days with a full battery.",
+    stages: [
+      { name: "Dubrovnik \u2192 Mostar (Bosnia)", dist: "~130 km, 2\u20133 days (~4.5 hrs/day)", desc: "North from Dubrovnik through the Neretva delta flats. Cross into Bosnia near \u010capljina \u2014 your Schengen clock STOPS at this border. The Neretva canyon begins here: a dramatic limestone gorge where the turquoise river carves between 300m cliffs. The canyon road (M17) follows the river gradient \u2014 steady rather than brutal, but the climb is real (Mostar sits at 60m, the plateau above is 400\u2013600m). Arrive at Mostar: the iconic Stari Most (Old Bridge), rebuilt after the war. Divers leap from it into the Neretva. Spend a rest day." },
+      { name: "Mostar \u2192 Sarajevo", dist: "~130 km, 2\u20133 days (~4.5 hrs/day)", desc: "The hardest riding between Dubrovnik and Sarajevo. The route climbs from Mostar (60m) over Ivan Sedlo Pass (~960m) before descending into Sarajevo (511m) \u2014 roughly 900m of ascent and significant descent in the mountain section. Consider an overnight stop in Konjic (~50 km from Mostar, at the start of the main climb) to break the hardest day in two. This rewards patience: the mountain scenery is exceptional. Sarajevo: one of Europe\u2019s most remarkable cities. Ottoman bazaar (Ba\u0161\u010dar\u0161ija), Austro-Hungarian quarter, siege tunnels, eternal flame. The meeting point of East and West. Spend at least one rest day." },
+      { name: "Sarajevo \u2192 Ni\u0161 (Serbia)", dist: "~350 km, 6\u20138 days (~50 km/day in mountains)", desc: "The longest stage and the most demanding of the entire trip. East from Sarajevo onto the Romanija plateau (1,000\u20131,200m), through dramatic highland terrain into eastern Bosnia, cross into Serbia via U\u017eice and the Zlatibor mountain region (forested peaks up to 1,500m, mountain meadows, stunning gorges). Suggested overnight stops: Pale (30 km, base of Romanija), Han Pijesak (70 km), Fo\u010da (130 km \u2014 at the Drina river canyon, beautiful town, excellent rest point), Prijepolje (200 km, Serbia border area), Zlatibor resort (270 km, well-serviced, good for battery), Ni\u0161 (350 km). Do not rush this. Battery range on mountain climbs with a full touring load will realistically be 60\u201380 km \u2014 plan charges at guesthouses in Fo\u010da and Zlatibor. Ni\u0161: Serbia\u2019s third city, Roman ruins (Mediana), Ni\u0161 Fortress, Skull Tower (grim but fascinating Ottoman-era monument)." },
+      { name: "Ni\u0161 \u2192 Pristina (Kosovo)", dist: "~200 km, 3\u20134 days (~4.5 hrs/day)", desc: "South through Serbia via Leskovac and Vranje, then cross into Kosovo through the Pre\u0161evo valley or Merdare border crossing. The terrain south of Ni\u0161 begins rolling before the Kosovo approach climbs again. Pristina (652m): youngest capital in Europe, Newborn monument, vibrant caf\u00e9 culture, Bill Clinton Boulevard. Incredibly cheap." },
+      { name: "Pristina \u2192 Prizren", dist: "~80 km, 1\u20132 days (~4.5 hrs)", desc: "South through central Kosovo. A manageable day \u2014 good recovery after the Sarajevo\u2013Ni\u0161 marathon. Prizren (410m): Kosovo\u2019s cultural capital, stunning Ottoman old town, fortress overlooking the city, medieval stone bridge, mosques, Orthodox churches side by side. Many consider it the most beautiful city in the Balkans. Stay two nights." },
+      { name: "Prizren \u2192 Ohrid (North Macedonia)", dist: "~180 km, 3\u20134 days (~4 hrs/day)", desc: "South into North Macedonia through the Sar Mountains border crossing, then through Tetovo and south via Bitola (North Macedonia\u2019s second city, \u2018City of Consuls\u2019 \u2014 well worth a night). Lake Ohrid (693m): UNESCO World Heritage, one of Europe\u2019s oldest and deepest lakes \u2014 estimated 5 million years old. Crystal clear, visibly ancient. Ohrid town: Byzantine churches, Roman amphitheatre. Rest day here is essential." },
+      { name: "Ohrid \u2192 Berat (Albania)", dist: "~150 km, 2\u20133 days (~4.5 hrs/day)", desc: "West through mountain passes into Albania. The crossing from North Macedonia can involve gravel and rough road \u2014 GPS essential, verify the crossing is open for bikes. Albania\u2019s interior is spectacular and mostly empty. Berat (75m): \u2018City of a Thousand Windows\u2019, UNESCO World Heritage. Ottoman houses stacked in perfect tiers on a hillside above a castle, Byzantine churches. One of Albania\u2019s most beautiful towns. Rest day." },
+      { name: "Berat \u2192 Tirana", dist: "~120 km, 2\u20133 days (~4 hrs/day)", desc: "North through interior Albania. The terrain between Berat and Tirana mixes lowlands with rolling hills and some unpaved sections. Road quality in this corridor has improved significantly but verify current conditions on cycling forums (Komoot, Bikepacking.com) before departure. Tirana (110m): chaotic, colourful, endlessly fascinating. Rainbow-painted communist blocks, Skanderbeg Square, Bunk\u2019Art museums (in converted bunkers). Incredibly cheap. Stay two nights." },
+      { name: "Tirana \u2192 Shkod\u00ebr", dist: "~100 km, 1\u20132 days (~5 hrs)", desc: "North through the Albanian lowlands. The Via Egnatia cycle route runs through here. Shkod\u00ebr (40m): the \u2018unofficial cycling capital of the Balkans\u2019 \u2014 30% of locals cycle daily, bike repair shops everywhere. Rozafa Castle on its hilltop above the convergence of three rivers. Good base before Montenegro. Consider a rest day here before the final leg." },
+      { name: "Shkod\u00ebr \u2192 Kotor (Montenegro)", dist: "~100 km, 2\u20133 days (~3.5 hrs/day)", desc: "Cross into Montenegro near Hani i Hotit. Along the eastern shore of Lake Skadar (Montenegro\u2019s largest lake, major pelican habitat, extraordinarily beautiful). Then the grand finale: the Bay of Kotor \u2014 a UNESCO World Heritage fjord-like bay surrounded by mountains rising vertically from the water. The coastal road into Kotor is stunning. Kotor Old Town: medieval walled city in near-perfect condition. Walk the city walls to the fortress above. Take your time on this last stretch \u2014 you\u2019ve earned it." }
+    ],
+    detours: [
+      { name: "Lov\u0107en National Park", dist: "+25 km from Kotor", time: "1 day", desc: "Hairpin road from Kotor climbing 1,000m to the Njegosh Mausoleum at the summit. One of the most dramatic road climbs in Europe. Views over the entire Bay of Kotor and the Adriatic. Hard on an e-bike but doable with a full battery.", verdict: "must", lat: 42.3990, lng: 18.8380 },
+      { name: "Theth & Valbona (Albanian Alps)", dist: "+200 km detour from Shkod\u00ebr", time: "3\u20134 days", desc: "The Albanian Alps are genuinely jaw-dropping. Theth and Valbona valleys connected by a famous hiking trail. Rugged peaks, waterfalls, traditional stone guesthouses. Can ride to Theth on a rough road (gravel/MTB), but the Valbona ferry across Koman Lake is unmissable.", verdict: "highly", lat: 42.3830, lng: 19.7860 },
+      { name: "Gjirokast\u00ebr", dist: "+120 km round trip south from Berat", time: "1\u20132 days", desc: "UNESCO World Heritage \u2018City of Stone.\u2019 Ottoman houses with stone roofs, massive hilltop castle, Ismail Kadare\u2019s birthplace. One of Albania\u2019s most atmospheric towns.", verdict: "highly", lat: 40.0758, lng: 20.1389 },
+      { name: "Drvengrad & Mokra Gora (Serbia)", dist: "+40 km from route", time: "Half day", desc: "Emir Kusturica\u2019s wooden village film set. Nearby: \u0160argan Eight narrow-gauge railway over dramatic loops and bridges. Quirky, fun, very Serbian.", verdict: "nice", lat: 43.7960, lng: 19.5600 },
+      { name: "Blue Eye Spring (Syri i Kalt\u00ebr)", dist: "+30 km detour south of Gjirokastr\u00a8r", time: "Half day", desc: "A mesmerising natural spring where deep turquoise water bubbles up from an underground river. The \u2018eye\u2019 is a 50m deep pool of impossible blue surrounded by forest. One of Albania\u2019s most extraordinary natural sights. Completely uncrowded.", verdict: "must", lat: 39.9250, lng: 20.1880 }
+    ],
+    waypoints: [
+      { name: "Mostar", lat: 43.3438, lng: 17.8078, type: "start" },
+      { name: "Sarajevo", lat: 43.8563, lng: 18.4131, type: "stop" },
+      { name: "Ni\u0161", lat: 43.3209, lng: 21.8958, type: "stop" },
+      { name: "Pristina", lat: 42.6629, lng: 21.1655, type: "stop" },
+      { name: "Prizren", lat: 42.2089, lng: 20.7414, type: "stop" },
+      { name: "Ohrid", lat: 41.1231, lng: 20.8016, type: "stop" },
+      { name: "Berat", lat: 40.7058, lng: 19.9522, type: "stop" },
+      { name: "Tirana", lat: 41.3275, lng: 19.8187, type: "stop" },
+      { name: "Shkod\u00ebr", lat: 42.0693, lng: 19.5126, type: "stop" },
+      { name: "Kotor", lat: 42.4247, lng: 18.7712, type: "end" }
+    ],
+    route: [
+      [43.3438,17.8078],[43.8563,18.4131],[43.3209,21.8958],[42.6629,21.1655],
+      [42.2089,20.7414],[41.1231,20.8016],[40.7058,19.9522],[41.3275,19.8187],
+      [42.0693,19.5126],[42.4247,18.7712]
+    ]
+  }
+];
+
+// --- MAP ---
+const map = L.map('map', { center: [57.5, 19], zoom: 5, zoomControl: true, minZoom: 3 });
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
+  subdomains: 'abcd', maxZoom: 18
+}).addTo(map);
+
+function mkIcon(color, type) {
+  const sz = type==='start'||type==='end'?14:type==='ferry'||type==='train'?11:7;
+  const sym = type==='start'?'\u25B6':type==='end'?'\u2605':type==='ferry'?'\u26F4':type==='train'?'\u{1F686}':'';
+  return L.divIcon({
+    className:'',
+    html:`<div style="width:${sz*2}px;height:${sz*2}px;background:${color};border-radius:50%;border:2px solid rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;font-size:${sz}px;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.5)">${sym}</div>`,
+    iconSize:[sz*2,sz*2], iconAnchor:[sz,sz]
+  });
+}
+
+function mkDetourIcon() {
+  return L.divIcon({
+    className:'',
+    html:`<div style="width:20px;height:20px;background:#f59e0b;transform:rotate(45deg);border:2px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.5)"><span style="transform:rotate(-45deg);font-size:10px;color:#000;font-weight:700">\u2606</span></div>`,
+    iconSize:[20,20], iconAnchor:[10,10]
+  });
+}
+
+const layerGroups = {};
+const segmentPolylines = {};
+const stagePolylines = {};   // segId -> [polyline per stage]
+
+function _clearStageOverlays() {
+  Object.keys(stagePolylines).forEach(k => {
+    stagePolylines[k].forEach(pl => pl.setStyle({ opacity: 0 }));
+  });
+}
+
+function highlightSeg(segId) {
+  _clearStageOverlays();
+  const id = parseInt(segId);
+  Object.keys(segmentPolylines).forEach(k => {
+    const isTarget = parseInt(k) === id;
+    segmentPolylines[k].forEach(pl => {
+      pl.setStyle(isTarget ? { weight: 5, opacity: 1 } : { weight: 2, opacity: 0.2 });
+      if (isTarget) pl.bringToFront();
+    });
+  });
+  document.querySelectorAll('.seg').forEach(el => {
+    el.classList.toggle('seg-hl', parseInt(el.dataset.id) === id);
+  });
+}
+
+function highlightStage(segId, stageIdx) {
+  _clearStageOverlays();
+  const id = parseInt(segId);
+  // Dim all segment lines
+  Object.keys(segmentPolylines).forEach(k => {
+    segmentPolylines[k].forEach(pl => pl.setStyle({ weight: 2, opacity: 0.15 }));
+  });
+  // Show only the target stage overlay
+  if (stagePolylines[id] && stagePolylines[id][stageIdx]) {
+    stagePolylines[id][stageIdx].setStyle({ opacity: 1 });
+    stagePolylines[id][stageIdx].bringToFront();
+  }
+  document.querySelectorAll('.seg').forEach(el => {
+    el.classList.toggle('seg-hl', parseInt(el.dataset.id) === id);
+  });
+}
+
+function unhighlightAll() {
+  _clearStageOverlays();
+  Object.keys(segmentPolylines).forEach(k => {
+    segmentPolylines[k].forEach(pl => pl.setStyle({ weight: 3, opacity: 0.8 }));
+  });
+  document.querySelectorAll('.seg').forEach(el => el.classList.remove('seg-hl'));
+}
+
+// Find the index in a lat/lng array closest to a given coordinate
+function closestRouteIdx(route, lat, lng) {
+  let best = 0, bestD = Infinity;
+  for (let i = 0; i < route.length; i++) {
+    const d = (route[i][0] - lat) ** 2 + (route[i][1] - lng) ** 2;
+    if (d < bestD) { bestD = d; best = i; }
+  }
+  return best;
+}
+
+// Strip known non-city prefixes ("Ferry: X → Y" → "X → Y", "Åland: X" → "X")
+function cleanStageName(name) {
+  return name.replace(/^[^:]+:\s*/, '').trim();
+}
+
+// Match a city name against the waypoints array (case-insensitive, prefix-tolerant)
+function wpByName(name, waypoints) {
+  const n = name.trim().toLowerCase();
+  return waypoints.find(wp => {
+    const w = wp.name.toLowerCase();
+    return w === n || w.startsWith(n) || n.startsWith(w);
+  });
+}
+
+function buildStagePolylines(segId, fullLatLngs) {
+  const seg = segments.find(s => s.id == segId);
+  if (!seg || !seg.stages || fullLatLngs.length < 2) return;
+  if (stagePolylines[segId]) {
+    stagePolylines[segId].forEach(pl => { if (pl && layerGroups[segId]) layerGroups[segId].removeLayer(pl); });
+  }
+  stagePolylines[segId] = [];
+  const N = fullLatLngs.length;
+  const stageDists = seg.stages.map(s => parseDistKm(s.dist));
+  const totalDist = stageDists.reduce((a, b) => a + b, 0);
+
+  seg.stages.forEach((stage, idx) => {
+    // Strip label prefixes ("Ferry: A → B" → "A → B") then split on arrow
+    const cleaned = cleanStageName(stage.name);
+    const parts = cleaned.split('→').map(p => p.trim());
+    const startWp = wpByName(parts[0], seg.waypoints);
+    const endWp   = wpByName(parts[parts.length - 1], seg.waypoints);
+
+    let slice;
+    if (startWp && endWp && startWp !== endWp) {
+      // Waypoint-based: snap to closest points in the route
+      const i0 = closestRouteIdx(fullLatLngs, startWp.lat, startWp.lng);
+      const i1 = closestRouteIdx(fullLatLngs, endWp.lat, endWp.lng);
+      const lo = Math.min(i0, i1), hi = Math.max(i0, i1);
+      slice = fullLatLngs.slice(lo, hi + 1);
+    } else if (totalDist > 0) {
+      // Proportional fallback when waypoints can't be found
+      const before = stageDists.slice(0, idx).reduce((a, b) => a + b, 0);
+      const i0 = Math.floor((before / totalDist) * N);
+      const i1 = Math.min(N - 1, Math.ceil(((before + stageDists[idx]) / totalDist) * N));
+      slice = fullLatLngs.slice(i0, i1 + 1);
+    } else {
+      stagePolylines[segId].push(null);
+      return;
+    }
+
+    const pl = L.polyline(slice.length > 1 ? slice : fullLatLngs, {
+      color: '#ffffff', weight: 5, opacity: 0, lineCap: 'round', lineJoin: 'round'
+    }).addTo(layerGroups[segId]);
+    stagePolylines[segId].push(pl);
+  });
+}
+
+segments.forEach(seg => {
+  const g = L.layerGroup().addTo(map);
+  layerGroups[seg.id] = g;
+  segmentPolylines[seg.id] = [];
+
+  const _trackPl = (coords, style) => {
+    if (!coords || coords.length < 2) return;
+    const pl = L.polyline(coords, style).addTo(g);
+    segmentPolylines[seg.id].push(pl);
+    pl.on('mouseover', () => highlightSeg(seg.id));
+    pl.on('mouseout', () => unhighlightAll());
+  };
+  if (seg.route && seg.route.length > 1) {
+    const st = seg.transport==='train'
+      ? {color:seg.color,weight:3,opacity:.8,dashArray:'10,8'}
+      : {color:seg.color,weight:3,opacity:.8};
+    _trackPl(seg.route, st);
+  }
+  _trackPl(seg.ferryRoute, {color:'#5eead4',weight:2.5,opacity:.7,dashArray:'6,10'});
+  _trackPl(seg.bikeRoute2, {color:seg.color,weight:3,opacity:.8});
+  _trackPl(seg.ferryRoute2, {color:'#5eead4',weight:2.5,opacity:.7,dashArray:'6,10'});
+  _trackPl(seg.trainRoute, {color:'#a855f7',weight:3,opacity:.8,dashArray:'10,8'});
+
+  seg.waypoints.forEach(wp => {
+    const m = L.marker([wp.lat, wp.lng], {icon:mkIcon(seg.color, wp.type)}).addTo(g);
+    const tl = wp.type==='start'?'Start':wp.type==='end'?'Finish':wp.type==='ferry'?'Ferry':wp.type==='train'?'Train':'Stop';
+    m.bindPopup(`<div class="pt" style="color:${seg.color}">${tl} &mdash; Seg ${seg.id}</div><b>${wp.name}</b>`);
+  });
+
+  if (seg.detours) {
+    seg.detours.forEach(d => {
+      if (d.lat && d.lng) {
+        const dm = L.marker([d.lat, d.lng], {icon:mkDetourIcon()}).addTo(g);
+        const vc = d.verdict==='must'?'#22c55e':d.verdict==='highly'?'#60a5fa':'#94a3b8';
+        const vl = d.verdict==='must'?'MUST DO':d.verdict==='highly'?'HIGHLY RECOMMENDED':'NICE IF TIME';
+        dm.bindPopup(`<div class="pt" style="color:#f59e0b">Detour &mdash; Seg ${seg.id}</div><b>${d.name}</b><br>${d.desc}<br><span style="font-weight:700;color:${vc};font-size:10px">${vl}</span> &bull; ${d.dist} &bull; ${d.time}`);
+      }
+    });
+  }
+});
+
+// --- ELEVATION PROFILE ---
+const elevationData = {};
+
+function parseDistKm(distStr) {
+  const m = distStr.match(/~?(\d+)\s*km/);
+  return m ? parseInt(m[1]) : 60;
+}
+
+function getStageElevSlice(fullProfile, stageIdx, stageDists) {
+  const total = stageDists.reduce((a, b) => a + b, 0);
+  if (!total || !fullProfile.length) return [];
+  const before = stageDists.slice(0, stageIdx).reduce((a, b) => a + b, 0);
+  const N = fullProfile.length;
+  const i0 = Math.floor((before / total) * N);
+  const i1 = Math.min(N - 1, Math.ceil(((before + stageDists[stageIdx]) / total) * N));
+  return fullProfile.slice(i0, i1 + 1);
+}
+
+function renderMiniElevChart(profile, distKm) {
+  if (!profile || profile.length < 4) return '';
+  const W = 340, H = 42, pT = 5, pB = 3;
+  const cH = H - pT - pB;
+  const step = Math.max(1, Math.floor(profile.length / 120));
+  const pts = [];
+  for (let i = 0; i < profile.length; i += step) pts.push(profile[i]);
+  if (pts.length < 2) return '';
+  const maxE = Math.max(...pts), minE = Math.min(...pts);
+  const range = Math.max(maxE - minE, 8);
+  const xs = pts.map((_, i) => (i / (pts.length - 1)) * W);
+  const ys = pts.map(e => pT + cH - ((e - minE) / range) * cH);
+  const line = pts.map((_, i) => `${xs[i].toFixed(1)},${ys[i].toFixed(1)}`).join(' ');
+  const area = `0,${H - pB} ${line} ${W},${H - pB}`;
+  let asc = 0;
+  for (let i = 1; i < pts.length; i++) { const d = pts[i] - pts[i-1]; if (d > 0.5) asc += d; }
+  asc = Math.round(asc);
+  const terrain = distKm ? getTerrainClass(asc, distKm) : null;
+  const badge = (terrain && terrain.cls !== 'tb-flat')
+    ? `<span class="tbadge ${terrain.cls}" style="font-size:7px;padding:1px 5px;margin-left:5px">${terrain.label}</span>` : '';
+  return `<div class="stage-elev">
+    <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:${H}px;display:block" preserveAspectRatio="none">
+      <polygon points="${area}" fill="rgba(59,130,246,.18)"/>
+      <polyline points="${line}" fill="none" stroke="#60a5fa" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/>
+      <text x="3" y="${pT - 1}" fill="#3b4a61" font-size="6.5" font-family="system-ui,sans-serif">${maxE}m</text>
+      <text x="3" y="${H - 1}" fill="#3b4a61" font-size="6.5" font-family="system-ui,sans-serif">${minE}m</text>
+    </svg>
+    <div style="display:flex;align-items:center;font-size:8.5px;color:#475569;margin-top:2px">
+      <span>\u2191 ${asc}m ascent</span>${badge}
+    </div>
+  </div>`;
+}
+
+function renderStageCharts(segDiv, segId) {
+  const data = elevationData[segId];
+  if (!data || !data.profile || data.profile.length === 0) return;
+  const seg = segments.find(s => s.id == segId);
+  if (!seg || seg.transport !== 'bike') return;
+  const stageEls = segDiv.querySelectorAll('.stage');
+  const stageDists = seg.stages.map(s => parseDistKm(s.dist));
+  stageEls.forEach((el, idx) => {
+    if (el.querySelector('.stage-elev')) return;
+    const slice = getStageElevSlice(data.profile, idx, stageDists);
+    const html = renderMiniElevChart(slice, stageDists[idx]);
+    if (html) el.insertAdjacentHTML('beforeend', html);
+  });
+}
+
+function extractElevationFromGeojson(geojson) {
+  const coords = geojson.features[0].geometry.coordinates;
+  let ascent = 0, descent = 0, prev = null;
+  const profile = [];
+  coords.forEach(c => {
+    const e = c[2];
+    if (e === undefined || e === null) return;
+    profile.push(e);
+    if (prev !== null) {
+      const d = e - prev;
+      if (d > 0.5) ascent += d;
+      else if (d < -0.5) descent += Math.abs(d);
+    }
+    prev = e;
+  });
+  const max = profile.length ? Math.round(Math.max(...profile)) : 0;
+  const min = profile.length ? Math.round(Math.min(...profile)) : 0;
+  return { profile, ascent: Math.round(ascent), descent: Math.round(descent), max, min };
+}
+
+function getTerrainClass(ascent, distKm) {
+  if (!distKm) return { cls:'tb-flat', label:'Flat', note:null };
+  const r = ascent / distKm;
+  if (r < 5)  return { cls:'tb-flat',     label:'Flat',     note:null };
+  if (r < 12) return { cls:'tb-rolling',  label:'Rolling',  note:'Gentle terrain — comfortable daily distances on the e-bike.' };
+  if (r < 22) return { cls:'tb-hilly',    label:'Hilly',    note:'\u26A0 Significant climbing on this leg. Plan shorter day stages (60\u201380 km) and ensure the battery is fully charged each morning.' };
+  return       { cls:'tb-mountain', label:'Mountain', note:'\u26A0 Tough mountain terrain. Plan 50\u201370 km days maximum. Start early, charge every opportunity, and carry the range extender. Battery range drops 30\u201340% on sustained climbs.' };
+}
+
+function renderElevationChart(container, segId) {
+  const data = elevationData[segId];
+  if (!data) { container.innerHTML = '<div class="elev-pending">Loading elevation data\u2026</div>'; return; }
+  if (!data.profile || data.profile.length === 0) { container.innerHTML = '<div class="elev-pending">Elevation data unavailable for this segment</div>'; return; }
+  const { profile, ascent, descent, max, min, distKm } = data;
+  const terrain = getTerrainClass(ascent, distKm);
+  const W = 360, H = 70, pT = 12, pB = 6, pL = 6, pR = 6;
+  const cW = W - pL - pR, cH = H - pT - pB;
+  const step = Math.max(1, Math.floor(profile.length / 250));
+  const pts = [];
+  for (let i = 0; i < profile.length; i += step) pts.push(profile[i]);
+  const range = Math.max(max - min, 10);
+  const xs = pts.map((_, i) => pL + (i / Math.max(pts.length - 1, 1)) * cW);
+  const ys = pts.map(e => pT + cH - ((e - min) / range) * cH);
+  const line = pts.map((_, i) => `${xs[i].toFixed(1)},${ys[i].toFixed(1)}`).join(' ');
+  const area = `${pL},${H - pB} ` + line + ` ${xs[xs.length - 1].toFixed(1)},${H - pB}`;
+  const gId = `eg${segId}`;
+  const svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:70px;display:block;margin-bottom:2px" preserveAspectRatio="none">
+    <defs><linearGradient id="${gId}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity=".55"/>
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity=".04"/>
+    </linearGradient></defs>
+    <polygon points="${area}" fill="url(#${gId})"/>
+    <polyline points="${line}" fill="none" stroke="#60a5fa" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+    <text x="${pL}" y="${pT - 2}" fill="#475569" font-size="7" font-family="system-ui,sans-serif">${max}m</text>
+    <text x="${pL}" y="${H - 1}" fill="#475569" font-size="7" font-family="system-ui,sans-serif">${min}m</text>
+    ${distKm ? `<text x="${W - pR}" y="${H - 1}" fill="#475569" font-size="7" font-family="system-ui,sans-serif" text-anchor="end">${distKm} km</text>` : ''}
+  </svg>`;
+  const terrainNote = terrain.note ? `<div class="terrain-note">${terrain.note}</div>` : '';
+  const gradientStr = distKm ? `<div class="elev-stat"><div class="ev">${Math.round(ascent / distKm)}m/km</div><div class="el">Avg Gradient</div></div>` : '';
+  container.innerHTML = `
+    <div class="elev-hdr"><span class="elev-label">Elevation Profile</span><span class="tbadge ${terrain.cls}">${terrain.label}</span></div>
+    ${svg}
+    <div class="elev-stats">
+      <div class="elev-stat"><div class="ev">\u2191 ${ascent.toLocaleString()}m</div><div class="el">Total Ascent</div></div>
+      <div class="elev-stat"><div class="ev">\u2193 ${descent.toLocaleString()}m</div><div class="el">Total Descent</div></div>
+      <div class="elev-stat"><div class="ev">${max}m</div><div class="el">Max Altitude</div></div>
+      ${gradientStr}
+    </div>
+    ${terrainNote}`;
+}
+
+// --- SIDEBAR ---
+const container = document.getElementById('segments-container');
+segments.forEach(seg => {
+  const div = document.createElement('div');
+  div.className = 'seg';
+  div.dataset.id = seg.id;
+  const bc = seg.transport==='train'?'b-train':seg.transport==='ferry'?'b-ferry':'b-bike';
+  const bt = seg.transport==='train'?'Train':seg.transport==='ferry'?'Ferry':'Cycling';
+  const sb = seg.transportSecondary?`<span class="badge b-ferry">Ferry</span>`:'';
+  const segSt = tripStatus.active
+    ? (seg.id < tripStatus.currentSegment ? 'done'
+      : seg.id === tripStatus.currentSegment ? 'current' : 'upcoming')
+    : 'upcoming';
+  if (segSt === 'done') div.classList.add('seg-done');
+  if (segSt === 'current') div.classList.add('seg-current');
+  const statusBadge = segSt === 'done'
+    ? '<span class="seg-status ss-done">\u2713 Done</span>'
+    : segSt === 'current'
+    ? '<span class="seg-status ss-here">\u25CF Here</span>'
+    : seg.id === tripStatus.currentSegment + 1 && tripStatus.active
+    ? '<span class="seg-status ss-next">Next</span>'
+    : '';
+
+  let stagesHtml = seg.stages.map((s, i) => `
+    <div class="stage" data-stage="${i}">
+      <div class="stage-hdr"><span class="stage-name">${s.name}</span><span class="stage-dist">${s.dist}</span></div>
+      <div class="stage-desc">${s.desc}</div>
+    </div>`).join('');
+
+  let detoursHtml = (seg.detours||[]).map(d => {
+    const vc = d.verdict==='must'?'verdict-must':d.verdict==='highly'?'verdict-highly':'verdict-nice';
+    const vl = d.verdict==='must'?'MUST DO':d.verdict==='highly'?'HIGHLY RECOMMENDED':'NICE IF TIME';
+    return `<div class="detour-card">
+      <div class="detour-hdr"><span class="detour-icon">\u2B25</span><span class="detour-name">${d.name}</span><span class="detour-meta">${d.dist} \u2022 ${d.time}</span></div>
+      <div class="detour-desc">${d.desc}</div>
+      <div class="detour-verdict ${vc}">${vl}</div>
+    </div>`;
+  }).join('');
+
+  const elevWrap = seg.transport === 'bike'
+    ? `<div class="elev-wrap"><div class="elev-container"><div class="elev-pending">Elevation data loads when routes are calculated\u2026</div></div></div>`
+    : '';
+
+  div.innerHTML = `
+    <div class="seg-hdr">
+      <div class="seg-num" style="background:${seg.color}">${seg.id}</div>
+      <div style="flex:1;min-width:0">
+        <div class="seg-title">${seg.title}</div>
+        <div class="seg-meta">
+          <span class="badge ${bc}">${bt}</span>${sb}
+          <span>${seg.distance}</span><span>${seg.days}</span>
+        </div>
+      </div>
+      ${statusBadge}
+    </div>
+    <div class="seg-body">
+      <div class="route-name">${seg.routeName}</div>
+      <p>${seg.description}</p>
+      ${stagesHtml}
+      ${detoursHtml ? '<div style="margin-top:8px;font-size:10px;font-weight:700;color:#fbbf24;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">\u2B25 Recommended Detours</div>' + detoursHtml : ''}
+      ${elevWrap}
+    </div>`;
+
+  div.addEventListener('mouseenter', () => highlightSeg(seg.id));
+  div.addEventListener('mouseleave', () => unhighlightAll());
+
+  div.addEventListener('click', () => {
+    const wasActive = div.classList.contains('active');
+    document.querySelectorAll('.seg').forEach(s => s.classList.remove('active'));
+    if (!wasActive) {
+      div.classList.add('active');
+      const bounds = [];
+      seg.waypoints.forEach(wp => bounds.push([wp.lat, wp.lng]));
+      if (seg.route) seg.route.forEach(p => bounds.push(p));
+      if (seg.ferryRoute) seg.ferryRoute.forEach(p => bounds.push(p));
+      if (seg.trainRoute) seg.trainRoute.forEach(p => bounds.push(p));
+      if (bounds.length) map.fitBounds(bounds, {padding:[60,60], maxZoom:9});
+      // Render elevation chart if data ready
+      const ec = div.querySelector('.elev-container');
+      if (ec) renderElevationChart(ec, seg.id);
+      renderStageCharts(div, seg.id);
+    }
+  });
+  container.appendChild(div);
+
+  // Stage-level map hover — use event delegation so hidden stages still work
+  if (seg.transport === 'bike') {
+    const initRoute = seg.route || [];
+    if (initRoute.length > 1) buildStagePolylines(seg.id, initRoute);
+
+    div.addEventListener('mouseover', (e) => {
+      const stEl = e.target.closest('[data-stage]');
+      if (stEl && div.contains(stEl)) highlightStage(seg.id, parseInt(stEl.dataset.stage));
+    });
+    div.addEventListener('mouseout', (e) => {
+      const leftStage = e.target.closest('[data-stage]');
+      const enteredStage = e.relatedTarget && e.relatedTarget.closest('[data-stage]');
+      if (leftStage && !enteredStage) {
+        if (div.contains(e.relatedTarget)) highlightSeg(seg.id);
+        // leaving div entirely is handled by the div's mouseleave → unhighlightAll
+      }
+    });
+  }
+});
+
+// --- LEGEND ---
+const leg = L.control({position:'bottomright'});
+leg.onAdd = function(){
+  const d = L.DomUtil.create('div');
+  d.style.cssText = 'background:#1e293b;padding:10px 14px;border-radius:8px;border:1px solid #334155;font-family:Segoe UI,system-ui,sans-serif;';
+  d.innerHTML = `
+    <div style="font-size:10px;font-weight:700;color:#f1f5f9;margin-bottom:5px">Legend</div>
+    <div style="font-size:9.5px;color:#94a3b8;display:flex;flex-direction:column;gap:3px">
+      <div><span style="display:inline-block;width:16px;height:3px;background:#3b82f6;vertical-align:middle;margin-right:5px"></span>Cycling</div>
+      <div><span style="display:inline-block;width:16px;height:0;border-bottom:2px dashed #a855f7;vertical-align:middle;margin-right:5px"></span>Train</div>
+      <div><span style="display:inline-block;width:16px;height:0;border-bottom:2px dashed #5eead4;vertical-align:middle;margin-right:5px"></span>Ferry</div>
+      <div><span style="display:inline-block;width:12px;height:12px;background:#f59e0b;transform:rotate(45deg);vertical-align:middle;margin-right:7px;margin-left:2px"></span>Detour</div>
+      <div style="margin-top:3px;border-top:1px solid #334155;padding-top:3px;font-weight:600;color:#cbd5e1">Non-Schengen</div>
+      <div><span style="display:inline-block;width:12px;height:8px;background:rgba(239,68,68,.15);border:1.5px dashed #ef4444;vertical-align:middle;margin-right:5px;border-radius:2px"></span>No-Go</div>
+      <div><span style="display:inline-block;width:12px;height:8px;background:rgba(245,158,11,.08);border:1.5px dashed #f59e0b;vertical-align:middle;margin-right:5px;border-radius:2px"></span>Caution</div>
+      <div><span style="display:inline-block;width:12px;height:8px;background:rgba(34,197,94,.08);border:1.5px dashed #22c55e;vertical-align:middle;margin-right:5px;border-radius:2px"></span>Viable Break</div>
+    </div>`;
+  return d;
+};
+leg.addTo(map);
+
+// --- NON-SCHENGEN OVERLAYS ---
+const nonSchengenZones = [
+  { id:'kaliningrad', name:'Kaliningrad (Russia)', color:'#ef4444', fillOpacity:.15, labelPos:[54.72,20.8],
+    popup:'<b>Kaliningrad (Russia)</b><br>Russian exclave between Lithuania and Poland. Requires Russian visa. Your route avoids it entirely via train from Klaip\u0117da to Gda\u0144sk.',
+    coords:[[55.29,20.57],[55.33,20.94],[55.28,21.09],[55.08,21.87],[54.79,22.18],[54.46,22.79],[54.36,22.79],[54.36,22.13],[54.35,21.18],[54.36,20.43],[54.46,19.97],[54.62,19.79],[54.83,19.93],[55.04,20.24],[55.29,20.57]]},
+  { id:'russia', name:'Russia (NW)', color:'#ef4444', fillOpacity:.08, labelPos:[62.0,32.0],
+    popup:'<b>Russia (Northwest)</b><br>Borders Finland and Estonia to the east. Not accessible without visa.',
+    coords:[[59.37,28.18],[59.02,28.01],[58.60,27.52],[58.08,27.49],[57.81,27.82],[57.52,27.76],[57.50,28.50],[57.80,30.50],[58.50,32.00],[60.00,33.50],[62.00,35.50],[64.00,36.00],[66.50,36.00],[66.50,29.50],[65.00,29.30],[63.50,29.10],[62.60,29.80],[61.17,28.77],[60.62,27.80],[60.23,28.60],[59.73,28.46],[59.37,28.18]]},
+  { id:'belarus', name:'Belarus', color:'#ef4444', fillOpacity:.08, labelPos:[53.5,27.8],
+    popup:'<b>Belarus</b><br>Borders Lithuania/Latvia east and Poland southeast. Not recommended for travel.',
+    coords:[[56.17,26.63],[55.68,26.59],[55.06,26.78],[54.80,26.59],[54.15,25.55],[53.94,24.23],[53.91,23.56],[53.45,23.88],[53.15,23.80],[52.76,23.20],[52.09,23.62],[51.58,23.61],[51.33,24.37],[51.45,25.80],[51.37,27.25],[51.50,29.10],[51.53,30.57],[52.11,31.59],[53.20,31.80],[55.05,28.65],[55.61,28.24],[55.82,27.55],[56.17,26.63]]},
+  { id:'ukraine', name:'Ukraine', color:'#f59e0b', fillOpacity:.06, labelPos:[49.0,31.0],
+    popup:'<b>Ukraine</b><br>Western border ~200 km from Krak\u00f3w. Non-Schengen (days here would pause clock). Check current travel advisories.',
+    coords:[[51.58,23.61],[51.25,24.10],[50.85,24.09],[50.38,24.01],[49.98,23.72],[49.55,22.71],[49.10,22.18],[48.63,22.15],[48.17,22.87],[47.95,24.00],[47.73,25.22],[46.44,28.11],[45.46,28.73],[45.35,29.64],[46.20,30.80],[46.62,32.50],[46.40,34.70],[47.10,36.50],[48.50,39.50],[51.50,40.00],[52.30,35.00],[52.30,31.80],[51.53,30.57],[51.45,25.80],[51.33,24.37],[51.58,23.61]]},
+  { id:'balkans', name:'Non-Schengen Balkans', color:'#22c55e', fillOpacity:.06, labelPos:[43.0,20.5],
+    popup:'<b>Non-Schengen Balkans</b><br>Serbia, Bosnia & Herzegovina, Montenegro, Kosovo, Albania, North Macedonia. All visa-free for Australians. Croatia is Schengen (since 2023) and NOT included.',
+    coords:[[46.10,19.06],[46.17,19.56],[46.15,20.35],[46.05,20.78],[45.98,21.40],[44.80,22.40],[44.03,22.60],[43.20,22.85],[42.53,22.45],[41.85,22.93],[41.23,22.50],[40.85,21.00],[40.60,20.97],[40.00,20.45],[39.65,20.05],[39.63,19.85],[40.46,19.42],[41.32,19.35],[41.87,19.40],[42.13,18.55],[42.47,18.53],[42.66,18.22],[42.93,17.62],[43.08,17.28],[43.50,16.90],[44.05,16.31],[44.55,15.95],[44.82,16.00],[45.15,15.78],[45.50,16.40],[45.78,17.40],[45.83,18.00],[45.52,18.80],[46.10,19.06]]}
+];
+
+const nonSchengenGroup = L.layerGroup().addTo(map);
+nonSchengenZones.forEach(z => {
+  L.polygon(z.coords, {color:z.color,weight:2,opacity:.5,fillColor:z.color,fillOpacity:z.fillOpacity,dashArray:'6,4'}).bindPopup(z.popup).addTo(nonSchengenGroup);
+  L.marker(z.labelPos, {icon:L.divIcon({className:'',html:`<div style="background:${z.color}22;border:1px solid ${z.color}55;color:${z.color};padding:2px 6px;border-radius:3px;font-size:9px;font-weight:700;font-family:Segoe UI,system-ui,sans-serif;white-space:nowrap;text-transform:uppercase;letter-spacing:.4px;text-shadow:0 1px 3px rgba(0,0,0,.8)">${z.name}<br><span style="font-weight:400;font-size:8px;opacity:.7">NON-SCHENGEN</span></div>`,iconSize:[0,0],iconAnchor:[0,0]}),interactive:false}).addTo(nonSchengenGroup);
+});
+
+const ukM = L.marker([54.5,-2.5],{icon:L.divIcon({className:'',html:'<div style="background:#22c55e22;border:2px solid #22c55e88;color:#22c55e;padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;font-family:Segoe UI,system-ui,sans-serif;white-space:nowrap;text-transform:uppercase;text-align:center">United Kingdom<br><span style="font-weight:400;font-size:8px;opacity:.7">NON-SCHENGEN \u2022 OPTIONAL FALLBACK</span></div>',iconSize:[0,0],iconAnchor:[0,0]})}).addTo(nonSchengenGroup);
+ukM.bindPopup('<b>United Kingdom</b><br>Not Schengen. With the train shortcut you have 10\u201329 days buffer, so a UK break is NOT needed. Available as a fallback if you spend extra days exploring.');
+
+const zCb = document.getElementById('zone-checkbox');
+zCb.addEventListener('change', function(){ this.checked ? map.addLayer(nonSchengenGroup) : map.removeLayer(nonSchengenGroup); });
+
+// --- CAMPING LEGALITY LAYER ---
+const campingData = [
+  { name:'Sweden', lat:57.20, lng:12.40, status:'legal', law:'Allemansr\u00e4tten', tip:'Camp anywhere 1\u20132 nights. Avoid gardens, fields, and within sight of homes.' },
+  { name:'Finland', lat:60.30, lng:22.80, status:'legal', law:'Jokamiehenoikeus', tip:'Camp on uncultivated land. Keep 150m from buildings. Free laavu shelters in national parks.' },
+  { name:'\u00c5land', lat:60.15, lng:19.93, status:'legal', law:'Finnish rules apply', tip:'Same as Finland mainland. Flat terrain, many meadow spots.' },
+  { name:'Estonia', lat:59.10, lng:24.20, status:'legal', law:'1-night forest rule', tip:'Legal 1 night. 60+ free RMK shelters with fire pits \u2014 map at loodusegakoos.ee.' },
+  { name:'Latvia', lat:57.05, lng:23.60, status:'tolerated', law:'Grey area', tip:'Forest camping tolerated. Coastal pine forests behind dunes are ideal spots.' },
+  { name:'Lithuania', lat:55.80, lng:21.20, status:'tolerated', law:'Grey area', tip:'Forest camping tolerated. Some free lau\u017eaviet\u0117 sheltered spots exist.' },
+  { name:'Poland', lat:52.50, lng:19.20, status:'illegal', law:'Prohibited', tip:'Cheap campsites \u20AC5\u201312. Stealth: Vistula river islands, dense forest patches. App: park4night.' },
+  { name:'Czech Rep.', lat:49.55, lng:17.00, status:'illegal', law:'Prohibited', tip:'Designated t\u00e1bo\u0159i\u0161t\u011B in forests. Use mapy.cz app. Budget auto-camps \u20AC6\u201315.' },
+  { name:'Austria', lat:47.60, lng:15.80, status:'illegal', law:'Strictly illegal', tip:'FINED if caught. Use campsites (\u20AC12\u201322). Ask Alm farmers \u2014 many allow it for \u20AC5\u201310.' },
+  { name:'Slovenia', lat:46.10, lng:14.80, status:'illegal', law:'Prohibited', tip:'Eco-farms allow camping. Deep Karst forest is remote enough. Mountain hut camping \u20AC5\u201310.' },
+  { name:'Croatia', lat:44.00, lng:15.80, status:'illegal', law:'Prohibited (patrolled)', tip:'500+ auto-camps \u20AC10\u201320. Stealth: inland olive groves (ask), abandoned terraces above coast road.' },
+  { name:'Montenegro', lat:42.50, lng:18.95, status:'tolerated', law:'No anti-camp law', tip:'Mountains and lake areas are fine. Camp above Kotor bay for views. Lake Skadar north shore.' },
+  { name:'Albania', lat:41.40, lng:19.70, status:'tolerated', law:'No enforcement', tip:'Camp anywhere rural. Locals will often invite you. Albanian hospitality is extraordinary.' },
+  { name:'N. Macedonia', lat:41.20, lng:20.90, status:'tolerated', law:'No enforcement', tip:'Lake Ohrid shore has some spots. Mountain areas completely fine.' },
+  { name:'Kosovo', lat:42.45, lng:20.85, status:'tolerated', law:'No enforcement', tip:'Very welcoming to travelers. Rural areas have no issues whatsoever.' },
+  { name:'Serbia', lat:43.50, lng:21.50, status:'tolerated', law:'Grey area', tip:'Mountain camping accepted. Zlatibor/Tara regions excellent. River valleys ideal.' },
+  { name:'Bosnia', lat:43.70, lng:18.20, status:'tolerated', law:'Grey area', tip:'River valleys and mountain passes. Neretva canyon has stunning stealth spots.' }
+];
+
+const campGroup = L.layerGroup();
+campingData.forEach(c => {
+  const col = c.status==='legal'?'#22c55e':c.status==='tolerated'?'#f59e0b':'#ef4444';
+  const lbl = c.status==='legal'?'LEGAL':c.status==='tolerated'?'TOLERATED':'ILLEGAL';
+  const sym = c.status==='legal'?'\u2713':c.status==='tolerated'?'\u26A0':'\u2717';
+  const icon = L.divIcon({
+    className:'',
+    html:`<div style="display:inline-block;background:${col}18;border:1.5px solid ${col}66;color:${col};padding:3px 7px;border-radius:4px;font-size:8.5px;font-weight:700;font-family:Segoe UI,system-ui,sans-serif;white-space:nowrap;text-align:center;line-height:1.4">${sym} ${c.name}<br><span style="font-size:7.5px;opacity:.8">${lbl}</span></div>`,
+    iconSize:[0,0], iconAnchor:[0,0]
+  });
+  const m = L.marker([c.lat,c.lng],{icon:icon});
+  m.bindPopup(`<div class="pt" style="color:${col}">\u26FA Camping \u2014 ${c.name}</div><b>${c.law}</b><br>${c.tip}`);
+  m.addTo(campGroup);
+});
+
+const cCb = document.getElementById('camp-checkbox');
+cCb.addEventListener('change', function(){ this.checked ? map.addLayer(campGroup) : map.removeLayer(campGroup); });
+
+// --- WILDLIFE RISK LAYER ---
+const wildlifeData = [
+  { name:'Sweden', lat:57.20, lng:14.40, risk:'low',
+    hazards:'Mowed Down by Moose<br>Tormented by Ticks<br>Savaged by Snakes',
+    tip:'Moose are a road hazard at dusk and dawn (400\u2013700 kg \u2014 serious at any speed) but pose no camping threat. Ticks present in forest and meadow: do a full-body check after each forest camp. European adder exists but retreats from human disturbance.' },
+  { name:'Finland', lat:61.20, lng:23.80, risk:'low',
+    hazards:'Tormented by Ticks<br>Massacred by Mozzies',
+    tip:'Ticks carry Lyme disease \u2014 do daily checks in forest camps, especially April\u2013October. Mosquitoes peak June\u2013July near lakes and forest. Wild boar present in SW Finland but harmless at camp.' },
+  { name:'\u00c5land', lat:60.15, lng:19.93, risk:'low',
+    hazards:'Tormented by Ticks',
+    tip:'Ticks present in meadow grass and coastal scrub. Carry DEET, check thoroughly after camping in long grass.' },
+  { name:'Estonia', lat:59.10, lng:25.50, risk:'moderate',
+    hazards:'Tormented by Ticks<br>Bulldozed by Boars',
+    tip:'Estonia has one of the highest TBE (tick-borne encephalitis) rates in Europe \u2014 vaccination is recommended if camping extensively in Baltic forests. Use DEET, tuck trousers into socks, and do a full-body check every evening. Wild boar are common and may investigate camp food overnight \u2014 keep food sealed inside your tent or panniers.' },
+  { name:'Latvia', lat:57.05, lng:25.00, risk:'moderate',
+    hazards:'Tormented by Ticks<br>Bulldozed by Boars',
+    tip:'High TBE tick risk throughout forest areas. Wild boar very common \u2014 secure all food overnight. Wolves exist (est. 800+ in Latvia) but pose essentially zero threat to campers.' },
+  { name:'Lithuania', lat:55.40, lng:22.50, risk:'moderate',
+    hazards:'Tormented by Ticks<br>Bulldozed by Boars',
+    tip:'Significant TBE tick risk in coastal forest areas (especially Curonian Spit pines and Klaip\u0117da region). Wild boar common. If planning heavy Baltic forest camping, a TBE vaccination course before departure is worthwhile insurance.' },
+  { name:'Poland', lat:52.50, lng:19.20, risk:'low',
+    hazards:'Bulldozed by Boars<br>Tormented by Ticks',
+    tip:'Wild boar are very common in Polish forests and will investigate any food left out overnight. They are not aggressive unless cornered with young \u2014 make noise if you hear them in camp. No bears or wolves near the Warsaw\u2013Krak\u00f3w route corridor.' },
+  { name:'Czech Rep.', lat:49.55, lng:17.00, risk:'low',
+    hazards:'Bulldozed by Boars<br>Tormented by Ticks',
+    tip:'Wild boar common in Moravian forests \u2014 noisy at night but not dangerous. Ticks active April\u2013October in forest undergrowth. Keep food sealed and tent zipped at night.' },
+  { name:'Austria', lat:47.60, lng:15.80, risk:'low',
+    hazards:'Bulldozed by Boars<br>Tormented by Ticks',
+    tip:'Wild boar active at night near the Semmering forested areas. Ticks present in Styrian meadow grass below 1,000 m. No bears along the Thermenradweg corridor.' },
+  { name:'Slovenia', lat:46.10, lng:14.80, risk:'low',
+    hazards:'Battered by Bears<br>Bulldozed by Boars<br>Tormented by Ticks',
+    tip:'Slovenia has ~700 brown bears, concentrated south of Ljubljana in the Dinaric range. The Karst/Postojna corridor has occasional sightings \u2014 hang food from a tree branch 4+ m up if camping in remote forest. Wild boar common throughout. Ticks very active in Karst scrubland.' },
+  { name:'Croatia', lat:44.00, lng:15.80, risk:'low',
+    hazards:'Bulldozed by Boars<br>Skewered by Scorpions',
+    tip:'Wild boar active in coastal hinterland at night \u2014 secure food. Mediterranean scorpions found along the coast under rocks \u2014 shake out shoes each morning. Sting is painful but not dangerous.' },
+  { name:'Bosnia', lat:43.70, lng:18.20, risk:'high',
+    hazards:'Blown Up in Bosnia<br>Savaged by Snakes<br>Bulldozed by Boars',
+    tip:'!! LANDMINE RISK: Residual mines from the 1992\u201395 war remain along former front lines. NEVER camp off established trails or in unmarked forest. Red signs or red-painted rocks indicate danger zones. Stick to paved road corridors \u2014 the Neretva valley main road is safe. Nose-horned viper (Vipera ammodytes) present in rocky terrain \u2014 shake out boots each morning. Wild boar common in mountain forests.' },
+  { name:'Montenegro', lat:42.50, lng:18.95, risk:'moderate',
+    hazards:'Savaged by Snakes<br>Bulldozed by Boars<br>Devoured by Dogs',
+    tip:'Nose-horned viper is the primary wildlife concern in rocky mountain terrain \u2014 avoid putting hands into rock crevices, shake out boots each morning. Wild boar common in mountain areas. Stray dogs in towns can be territorial at night; a trekking pole provides deterrence.' },
+  { name:'Albania', lat:41.40, lng:19.70, risk:'moderate',
+    hazards:'Devoured by Dogs<br>Savaged by Snakes<br>Jostled by Jackals',
+    tip:'The main wildlife camping concern in Albania is livestock guardian dogs (large Kangal-type breeds protecting sheep flocks). These can be aggressive \u2014 camp well away from any visible flock, carry a stick, never run. Nose-horned viper in rocky terrain. Jackals are common and vocal at night \u2014 loud but completely harmless. Asking locals to camp near their land is almost always met with hospitality.' },
+  { name:'N. Macedonia', lat:41.20, lng:20.90, risk:'moderate',
+    hazards:'Devoured by Dogs<br>Savaged by Snakes',
+    tip:'Stray dog packs common around towns \u2014 use a stick and assert yourself calmly if approached. Vipers present in rocky Lake Ohrid hillside terrain. Camp away from rubbish areas. Overall risk is moderate and manageable with standard precautions.' },
+  { name:'Kosovo', lat:42.45, lng:20.85, risk:'low',
+    hazards:'Devoured by Dogs',
+    tip:'Stray dogs present but Kosovo is among the more welcoming Balkan countries for wild camping. Rural areas are safe. Asking locals to camp near their land is almost always met positively \u2014 often with tea and food.' },
+  { name:'Serbia', lat:43.70, lng:20.40, risk:'moderate',
+    hazards:'Savaged by Snakes<br>Bulldozed by Boars<br>Devoured by Dogs',
+    tip:'Nose-horned viper common in the Zlatibor and Tara mountain regions \u2014 shake boots and check gear each morning, avoid putting hands in rocky crevices. Wild boar very active in Serbian mountain forests. Livestock guardian dogs near flocks. Zlatibor resort area has good infrastructure.' }
+];
+
+const wildlifeGroup = L.layerGroup();
+wildlifeData.forEach(function(w) {
+  var col = w.risk==='low' ? '#22c55e' : w.risk==='moderate' ? '#f59e0b' : '#ef4444';
+  var lbl = w.risk==='low' ? 'LOW RISK' : w.risk==='moderate' ? 'MODERATE' : 'HIGH RISK';
+  var sym = w.risk==='low' ? '\u2713' : w.risk==='high' ? '\u2717' : '\u26A0';
+  var icon = L.divIcon({
+    className: '',
+    html: '<div style="display:inline-block;background:' + col + '18;border:1.5px solid ' + col + '66;color:' + col + ';padding:3px 7px;border-radius:4px;font-size:8px;font-weight:700;font-family:Segoe UI,system-ui,sans-serif;white-space:nowrap;text-align:center;line-height:1.6">'
+        + sym + ' ' + w.name
+        + '<br><span style="font-size:7px;opacity:.9;line-height:1.9">' + w.hazards + '</span>'
+        + '<br><span style="font-size:7px;opacity:.75">' + lbl + '</span>'
+        + '</div>',
+    iconSize: [0,0], iconAnchor: [0,0]
+  });
+  var cleanHazards = w.hazards.replace(/<br>/g, ', ');
+  var m = L.marker([w.lat, w.lng], {icon: icon});
+  m.bindPopup('<div class="pt" style="color:' + col + '">\u26A0 Wildlife \u2014 ' + w.name + '</div><b>' + cleanHazards + '</b><br><br>' + w.tip);
+  m.addTo(wildlifeGroup);
+});
+
+const wCb = document.getElementById('wildlife-checkbox');
+wCb.addEventListener('change', function(){ this.checked ? map.addLayer(wildlifeGroup) : map.removeLayer(wildlifeGroup); });
+
+// --- BROUTER REAL GPS ROUTING ---
+const routingSegments = {
+  1: { parts: [{ type:'bike', coords:'11.97,57.71|12.53,57.93|13.42,57.79|14.16,57.78|14.47,58.02|14.88,58.45|15.62,58.41|16.19,58.59|17.01,58.75|18.06,59.33' }] },
+  3: { parts: [
+    { type:'bike', coords:'18.06,59.33|18.36,59.40|18.70,59.75|18.82,60.11' },
+    { type:'bike', coords:'19.55,60.23|19.96,60.23|20.10,60.22|19.93,60.10' }
+  ]},
+  4: { parts: [{ type:'bike', coords:'22.27,60.45|23.13,60.38|23.07,60.28|23.44,59.98|24.01,60.05|24.94,60.17' }] },
+  5: null,
+  6: { parts: [
+    { type:'bike', coords:'24.75,59.44|23.54,58.94|24.50,58.39' },
+    { type:'bike', coords:'24.50,58.39|24.35,57.86|24.41,57.26|23.77,56.97|24.11,56.95' },
+    { type:'bike', coords:'24.11,56.95|23.77,56.97|21.56,57.39|21.01,56.50|21.07,55.92|21.14,55.70' }
+  ]},
+  7: { parts: [
+    { type:'bike', coords:'21.0122,52.2297|20.4432,52.0544|20.1533,51.9630|19.4560,51.7592' },
+    { type:'bike', coords:'19.4560,51.7592|19.1203,50.8118' },
+    { type:'bike', coords:'19.1203,50.8118|19.9450,50.0647' }
+  ]},
+  8: { parts: [
+    { type:'bike', coords:'19.95,50.06|19.21,50.03|18.63,49.75|17.25,49.59|16.61,49.20|16.37,48.21|15.44,47.07|15.65,46.55|14.51,46.06|14.20,45.78|13.85,44.87|13.64,45.08' },
+    { type:'bike', coords:'13.64,45.08|14.44,45.33' },
+    { type:'bike', coords:'16.44,43.51|17.02,43.30|18.09,42.65' }
+  ]},
+  9: { parts: [
+    { type:'bike', coords:'17.8078,43.3438|18.4131,43.8563' },
+    { type:'bike', coords:'18.4131,43.8563|19.2876,43.7826|19.8494,43.8574' },
+    { type:'bike', coords:'19.8494,43.8574|20.3497,43.8914|20.6897,43.7227' },
+    { type:'bike', coords:'20.6897,43.7227|21.3263,43.5809|21.8958,43.3209' },
+    { type:'bike', coords:'21.8958,43.3209|21.1655,42.6629|20.7414,42.2089|20.8016,41.1231' },
+    { type:'bike', coords:'20.8016,41.1231|19.9522,40.7058|19.8187,41.3275|19.5126,42.0693|18.7712,42.4247' }
+  ]}
+};
+
+const realRoutePolylines = {};
+const realDistances = {};
+
+async function fetchBRouterRoute(coordString) {
+  const url = `https://brouter.de/brouter?lonlats=${coordString}&profile=fastbike-lowtraffic&alternativeidx=0&format=geojson`;
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error(`BRouter ${resp.status}`);
+  return resp.json();
+}
+
+function geojsonToLatLngs(geojson) {
+  const coords = geojson.features[0].geometry.coordinates;
+  return coords.map(c => [c[1], c[0]]);
+}
+
+function getRouteDistance(geojson) {
+  return Number(geojson.features[0].properties['track-length']) || 0;
+}
+
+async function loadRealRoutes() {
+  const statusEl = document.createElement('div');
+  statusEl.id = 'route-status';
+  statusEl.style.cssText = 'position:fixed;bottom:12px;left:50%;transform:translateX(-50%);background:#1e293b;color:#60a5fa;padding:8px 16px;border-radius:8px;font-size:11px;font-family:Segoe UI,system-ui,sans-serif;z-index:1000;border:1px solid #334155;box-shadow:0 4px 12px rgba(0,0,0,.5)';
+  document.body.appendChild(statusEl);
+
+  let totalRealKm = 0;
+  let loadedCount = 0;
+  const segIds = Object.keys(routingSegments).filter(k => routingSegments[k]);
+
+  for (const segId of segIds) {
+    const rd = routingSegments[segId];
+    if (!rd) continue;
+    const seg = segments.find(s => s.id == segId);
+    if (!seg) continue;
+
+    statusEl.textContent = `Calculating real cycling route: Segment ${segId}/${segments.length}...`;
+    let segDistM = 0;
+    const segLatLngs = [];
+
+    for (const part of rd.parts) {
+      if (part.type !== 'bike') continue;
+      try {
+        const geojson = await fetchBRouterRoute(part.coords);
+        const latlngs = geojsonToLatLngs(geojson);
+        const distM = getRouteDistance(geojson);
+        segDistM += distM;
+        segLatLngs.push(latlngs);
+        // Extract elevation profile for this part
+        const ep = extractElevationFromGeojson(geojson);
+        if (!elevationData[segId]) elevationData[segId] = { profile:[], ascent:0, descent:0, max:-Infinity, min:Infinity, distKm:0 };
+        const ed = elevationData[segId];
+        ed.profile = ed.profile.concat(ep.profile);
+        ed.ascent += ep.ascent;
+        ed.descent += ep.descent;
+        if (ep.max > ed.max) ed.max = ep.max;
+        if (ep.min < ed.min) ed.min = ep.min;
+      } catch (e) {
+        console.warn(`BRouter failed for seg ${segId}:`, e);
+      }
+      await new Promise(r => setTimeout(r, 800));
+    }
+
+    if (segLatLngs.length > 0) {
+      const group = layerGroups[segId];
+      if (group) {
+        group.eachLayer(l => {
+          if (l instanceof L.Polyline && !(l.options.dashArray)) group.removeLayer(l);
+        });
+        // Keep only dashed (train/ferry) in tracking; solid estimated lines are gone
+        segmentPolylines[segId] = (segmentPolylines[segId] || []).filter(pl => pl.options.dashArray);
+        segLatLngs.forEach(ll => {
+          const pl = L.polyline(ll, { color: seg.color, weight: 3, opacity: 0.85 }).addTo(group);
+          segmentPolylines[segId].push(pl);
+          pl.on('mouseover', () => highlightSeg(segId));
+          pl.on('mouseout', () => unhighlightAll());
+        });
+        // Rebuild stage overlays with accurate GPS geometry
+        buildStagePolylines(segId, segLatLngs.flat());
+      }
+
+      const km = Math.round(segDistM / 1000);
+      totalRealKm += km;
+      realDistances[segId] = km;
+
+      // Finalise elevation distance and refresh chart if segment is open
+      if (elevationData[segId]) {
+        elevationData[segId].distKm = km;
+        const activeEc = document.querySelector(`.seg[data-id="${segId}"].active .elev-container`);
+        if (activeEc) renderElevationChart(activeEc, segId);
+        const activeSegDiv = document.querySelector(`.seg[data-id="${segId}"].active`);
+        if (activeSegDiv) renderStageCharts(activeSegDiv, segId);
+      }
+
+      const segEl = document.querySelector(`.seg[data-id="${segId}"]`);
+      if (segEl) {
+        const distSpan = segEl.querySelector('.seg-meta');
+        if (distSpan) {
+          const spans = distSpan.querySelectorAll('span:not(.badge)');
+          if (spans.length > 0) spans[0].textContent = `${km} km (GPS)`;
+        }
+      }
+      loadedCount++;
+    }
+  }
+
+  if (totalRealKm > 0) {
+    statusEl.innerHTML = `<span style="color:#22c55e;font-weight:700">GPS routes loaded</span> &mdash; ${loadedCount} segments, ${totalRealKm.toLocaleString()} km total cycling distance`;
+    setTimeout(() => { statusEl.style.opacity = '0'; statusEl.style.transition = 'opacity 2s'; setTimeout(() => statusEl.remove(), 2000); }, 6000);
+  } else {
+    statusEl.textContent = 'Route calculation unavailable \u2014 showing estimated routes';
+    setTimeout(() => statusEl.remove(), 4000);
+  }
+}
+
+// --- PHOTO LAYER ---
+const photoGroup = L.layerGroup();
+function rebuildPhotoLayer() {
+  photoGroup.clearLayers();
+  tripStatus.photos.forEach(function(p) {
+    var icon = L.divIcon({
+      className: '',
+      html: '<div class="photo-pin-wrap"><img src="' + p.src + '" alt="' + (p.caption||'') + '"></div>',
+      iconSize: [64, 52],
+      iconAnchor: [32, 52]
+    });
+    var m = L.marker([p.lat, p.lng], {icon: icon});
+    m.bindPopup(
+      '<div style="text-align:center">' +
+      '<img src="' + p.src + '" style="width:220px;max-height:160px;object-fit:cover;border-radius:6px;display:block;margin-bottom:8px">' +
+      '<div style="font-size:11.5px;color:#f1f5f9;font-weight:600">' + (p.caption||'') + '</div>' +
+      '<div style="font-size:10px;color:#64748b;margin-top:3px">' + (p.location||'') + '</div>' +
+      '</div>'
+    );
+    m.addTo(photoGroup);
+  });
+}
+rebuildPhotoLayer();
+const phCb = document.getElementById('photo-checkbox');
+phCb.addEventListener('change', function(){ this.checked ? map.addLayer(photoGroup) : map.removeLayer(photoGroup); });
+
+// --- TRIP STATUS RENDERING ---
+function initTripStatus() {
+  if (!tripStatus.active) return;
+
+  // Status banner
+  var banner = document.getElementById('trip-status-banner');
+  banner.style.display = 'block';
+  var segName = '';
+  var curSeg = segments.find(function(s){ return s.id === tripStatus.currentSegment; });
+  if (curSeg) segName = curSeg.title;
+  banner.innerHTML =
+    '<div class="trip-banner">' +
+    '<div class="tb-top"><span class="tb-badge">\u25CF Live</span><span class="tb-city">' + tripStatus.currentCity + '</span></div>' +
+    '<div class="tb-sub">Day ' + tripStatus.dayNumber + (segName ? ' \u00b7 ' + segName : '') +
+    (tripStatus.countries.length ? ' \u00b7 ' + tripStatus.countries.join(', ') : '') + '</div>' +
+    '</div>';
+
+  // Live stats bar
+  var statsWrap = document.getElementById('live-stats-wrap');
+  statsWrap.style.display = 'block';
+  var completedSegs = tripStatus.currentSegment - 1;
+  statsWrap.innerHTML =
+    '<div class="live-stats">' +
+    '<div class="live-stat"><div class="ls-val">' + tripStatus.kmRidden.toLocaleString() + '</div><div class="ls-lbl">km ridden</div></div>' +
+    '<div class="live-stat"><div class="ls-val">' + tripStatus.dayNumber + '</div><div class="ls-lbl">day</div></div>' +
+    '<div class="live-stat"><div class="ls-val">' + (tripStatus.countries.length||0) + '</div><div class="ls-lbl">countries</div></div>' +
+    '</div>';
+
+  // Progress bar
+  var progWrap = document.getElementById('live-prog-wrap');
+  progWrap.style.display = 'block';
+  var pct = Math.round((tripStatus.kmRidden / 5025) * 100);
+  pct = Math.min(pct, 100);
+  progWrap.innerHTML =
+    '<div class="prog-wrap">' +
+    '<div class="prog-lbl"><span>Trip progress</span><span>' + pct + '% \u00b7 ' + (5025 - tripStatus.kmRidden) + ' km remaining</span></div>' +
+    '<div class="prog-track"><div class="prog-fill" style="width:' + pct + '%"></div></div>' +
+    '</div>';
+
+  // Updates feed
+  renderUpdatesFeed();
+
+  // Where I Am Now map marker
+  var pinLat = tripStatus.lat;
+  var pinLng = tripStatus.lng;
+  if (!pinLat && curSeg) {
+    var wp = curSeg.waypoints.find(function(w){ return w.name.toLowerCase().indexOf(tripStatus.currentCity.toLowerCase()) !== -1; });
+    if (wp) { pinLat = wp.lat; pinLng = wp.lng; }
+    else if (curSeg.waypoints.length) { pinLat = curSeg.waypoints[0].lat; pinLng = curSeg.waypoints[0].lng; }
+  }
+  if (pinLat && pinLng) {
+    var yahIcon = L.divIcon({
+      className: '',
+      html: '<div class="yah-wrap"><div class="yah-ring"></div><div class="yah-dot"></div></div>',
+      iconSize: [22, 22],
+      iconAnchor: [11, 11]
+    });
+    var yahMarker = L.marker([pinLat, pinLng], {icon: yahIcon, zIndexOffset: 1000});
+    yahMarker.bindPopup(
+      '<div class="pt" style="color:#60a5fa">\u25CF You Are Here</div>' +
+      '<b>' + tripStatus.currentCity + '</b><br>' +
+      'Day ' + tripStatus.dayNumber + ' \u00b7 ' + tripStatus.kmRidden + ' km ridden'
+    );
+    yahMarker.addTo(map);
+  }
+}
+
+function renderUpdatesFeed() {
+  var wrap = document.getElementById('updates-feed-wrap');
+  if (!wrap) return;
+  var updates = tripStatus.updates || [];
+  var countBadge = updates.length ? '<span class="u-count">' + updates.length + '</span>' : '';
+  var bodyHtml = '';
+  if (!updates.length) {
+    bodyHtml = '<div class="updates-empty">No updates yet \u2014 check back once the trip starts!</div>';
+  } else {
+    bodyHtml = updates.map(function(u) {
+      var photoHtml = u.photo ? '<div class="uc-img"><img src="' + u.photo + '" alt="" onclick="window.open(this.src)"></div>' : '';
+      return '<div class="update-card">' +
+        '<div class="uc-meta"><span class="uc-date">' + u.date + '</span><span class="uc-loc">' + u.location + '</span></div>' +
+        '<div class="uc-text">' + u.text + '</div>' +
+        photoHtml +
+        '</div>';
+    }).join('');
+  }
+  wrap.innerHTML =
+    '<div class="updates-section open">' +
+    '<div class="updates-hdr" onclick="this.parentElement.classList.toggle(\'open\')">' +
+    '<h3>&#x25CF; Journey Updates</h3>' + countBadge +
+    '</div>' +
+    '<div class="updates-body">' + bodyHtml + '</div>' +
+    '</div>';
+}
+
+// Always render updates feed (shows "check back" message before trip starts)
+renderUpdatesFeed();
+initTripStatus();
+
+loadRealRoutes();
+
+/* Mobile sidebar toggle — attached via DOMContentLoaded at end of script */
+
+/* PWA service worker */
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){});}
+
+document.addEventListener('DOMContentLoaded', function(){
+  var btn = document.querySelector('.mob-toggle');
+  if(!btn) return;
+  btn.addEventListener('click', function(){
+    document.getElementById('sidebar').classList.add('open');
+    btn.classList.add('hidden');
+  });
+});
+</script>
+<button class="mob-toggle">&#x1f6b2; Route Plan</button>
+</body>
+</html>
