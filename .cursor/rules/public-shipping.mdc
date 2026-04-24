@@ -1,0 +1,32 @@
+---
+description: Shits Creek site is public — no secrets; only trip-site files get committed
+alwaysApply: true
+---
+
+# Public repository and live site
+
+This project is **intended to be public** (GitHub + static hosting). Treat every commit as world-readable.
+
+## Never add to the repo or to site files
+
+- Secrets: API keys, tokens, passwords, private URLs with embedded credentials, `.env`, recovery codes.
+- **Private keys** or certs: `*.pem`, `id_rsa`, `*.p12`, etc.
+- **High-risk personal data**: home address, passport or ID numbers, phone numbers you want private, bank or card details, medical info, employer/client confidential notes.
+- **One-off travel logistics** you would not post on a public blog: exact hotel booking confirmations, reservation codes, travel document numbers, precise “where I’ll be on date X” if that creates safety risk — use generic wording in the shipped HTML/JS.
+
+Trip narrative, route stages, public place names, and general budget figures the user chooses to show are **fine** if they accept them being public.
+
+## Scope of commits and pushes
+
+- **Only** change files under this project (the Shits Creek static site: HTML, `vendor/`, manifest, icons, `.cursor/rules` here).
+- Do **not** add unrelated Desktop files, scratch notes, or other repos unless the user explicitly asks to fold them into this site.
+- Prefer **no new tracked files** outside the existing layout unless they are clearly part of the public site.
+
+## Before finishing work that touches commits
+
+- Quick scan changed text for accidental pastes (messages, emails with private detail, “password:”, JWT-looking strings, AWS-style keys).
+- If unsure whether something is sensitive, **do not commit it** — ask or redact.
+
+## Hosting note
+
+A **public repo** does not require the live URL to be secret; friends can use the published link. The rule above is about **not leaking credentials or unintended personal data** in that public surface.
