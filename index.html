@@ -9,5 +9,8 @@
 </head>
 <body>
 <p><a href="shits-creek.html">Open Shits Creek planner</a></p>
+<script>
+if ('serviceWorker' in navigator) navigator.serviceWorker.register(new URL('sw.js', location.href)).catch(function () {});
+</script>
 </body>
 </html>
