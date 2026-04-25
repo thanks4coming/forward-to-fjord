@@ -29,4 +29,4 @@ Trip narrative, route stages, public place names, and general budget figures the
 
 ## Hosting note
 
-A **public repo** does not require the live URL to be secret; friends can use the published link. The rule above is about **not leaking credentials or unintended personal data** in that public surface.
+The site is meant to be viewed via **GitHub**: the **repository** (commits, history, `tripStatus` edits in HTML) and **GitHub Pages** for the interactive map. A public repo does not hide the live Pages URL. The rule above is about **not leaking credentials or unintended personal data** in that public surface.

@@ -1,8 +1,11 @@
-const CACHE = 'biketrip-v3';
-const PRECACHE = ['/', '/index.html'];
+const CACHE = 'biketrip-v4';
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(PRECACHE)));
+  const scope = self.registration.scope;
+  const precache = [scope, scope + 'index.html'];
+  e.waitUntil(
+    caches.open(CACHE).then(c => c.addAll(precache))
+  );
   self.skipWaiting();
 });
 

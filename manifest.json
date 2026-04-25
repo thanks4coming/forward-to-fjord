@@ -2,7 +2,7 @@
   "name": "Scandinavia & Baltic E-Bike Trip",
   "short_name": "Bike Trip",
   "description": "Interactive bikepacking route planner — Gothenburg to the Balkans",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "orientation": "any",
   "background_color": "#0f172a",
