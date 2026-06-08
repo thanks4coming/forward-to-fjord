@@ -1,16 +1,14 @@
-# Shits Creek — E-bike trip planner
+# Forward to Fjord — E-bike trip
 
 Interactive route planner for a Scandinavia → Baltic → Balkans tour (static HTML + Leaflet). Updates live as the trip progresses.
 
 ## View the map (GitHub Pages)
 
-**[https://thanks4coming.github.io/shits-creek/](https://thanks4coming.github.io/shits-creek/)**
+**[https://thanks4coming.github.io/forward-to-fjord/](https://thanks4coming.github.io/forward-to-fjord/)**
 
 GitHub Pages is enabled on this repo (branch `main`, folder `/`). After you push changes, the live site usually updates within one to two minutes.
 
 Share that URL with anyone following along. The repo is public — commits and file history are visible too.
-
-`shits-creek.html` redirects to the main entry (`index.html`).
 
 ---
 
@@ -109,4 +107,4 @@ When the trip is active and the newest update has a `photo`, link previews (iMes
 
 ## History
 
-Trip changes are normal Git history: [commits](https://github.com/thanks4coming/shits-creek/commits/main), diffs, and blame on `trip-data.js` and `photos/`.
+Trip changes are normal Git history: [commits](https://github.com/thanks4coming/forward-to-fjord/commits/main), diffs, and blame on `trip-data.js` and `photos/`.

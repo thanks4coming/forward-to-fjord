@@ -1,5 +1,5 @@
 ---
-description: Shits Creek site is public — no secrets; only trip-site files get committed
+description: Forward to Fjord site is public — no secrets; only trip-site files get committed
 alwaysApply: true
 ---
 
@@ -18,7 +18,7 @@ Trip narrative, route stages, public place names, and general budget figures the
 
 ## Scope of commits and pushes
 
-- **Only** change files under this project (the Shits Creek static site: HTML, `vendor/`, manifest, icons, `.cursor/rules` here).
+- **Only** change files under this project (the Forward to Fjord static site: HTML, `vendor/`, manifest, icons, `.cursor/rules` here).
 - Do **not** add unrelated Desktop files, scratch notes, or other repos unless the user explicitly asks to fold them into this site.
 - Prefer **no new tracked files** outside the existing layout unless they are clearly part of the public site.
 

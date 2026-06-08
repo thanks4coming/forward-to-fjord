@@ -1,7 +1,7 @@
 {
-  "name": "Shits Creek — E-Bike Route Planner",
-  "short_name": "Shits Creek",
-  "description": "Shits Creek: interactive bikepacking route planner — Scandinavia and the Baltic to the Balkans",
+  "name": "Forward to Fjord — E-Bike Trip",
+  "short_name": "Fwd to Fjord",
+  "description": "Forward to Fjord: interactive bikepacking trip — Scandinavia and the Baltic to the Balkans",
   "start_url": "./",
   "display": "standalone",
   "orientation": "any",
