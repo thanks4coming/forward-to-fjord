@@ -1,18 +1,112 @@
 # Shits Creek — E-bike trip planner
 
-Interactive route planner for a Scandinavia → Baltic → Balkans tour (static HTML + Leaflet).
+Interactive route planner for a Scandinavia → Baltic → Balkans tour (static HTML + Leaflet). Updates live as the trip progresses.
 
 ## View the map (GitHub Pages)
 
-After [GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site) is enabled for this repo (**Settings → Pages → Branch `main` / folder `/`**):
-
 **[https://thanks4coming.github.io/shits-creek/](https://thanks4coming.github.io/shits-creek/)**
 
-Alternate entry: [`shits-creek.html`](https://thanks4coming.github.io/shits-creek/shits-creek.html) (bundled Leaflet, same trip data).
+GitHub Pages is enabled on this repo (branch `main`, folder `/`). After you push changes, the live site usually updates within one to two minutes.
 
-## Trip progress and changes (this repo)
+Share that URL with anyone following along. The repo is public — commits and file history are visible too.
 
-- **Live stats / journey updates** are driven by the `tripStatus` object in `index.html` and `shits-creek.html` (set `active: true` when the trip starts, edit `updates`, `kmRidden`, etc.).
-- **History of what changed** is normal Git: [commits](https://github.com/thanks4coming/shits-creek/commits/main), diffs, and blame on those files.
+`shits-creek.html` redirects to the main entry (`index.html`).
 
-Sharing the **repo link** or the **Pages URL** above is enough for people following along.
+---
+
+## Check-in workflow (while traveling)
+
+Each update is a small edit plus an optional photo. You only need to touch **`trip-data.js`** (not the full HTML).
+
+### 1. Add photos (optional)
+
+1. Resize photos before committing (max ~1600px wide, ~80% JPEG quality keeps the repo fast).
+2. Save into [`photos/`](photos/) with a dated name, e.g. `2026-06-08-gothenburg.jpg`.
+3. Reference them as `photos/2026-06-08-gothenburg.jpg` in `trip-data.js` (relative path).
+
+Do not commit RAW originals or huge batches in one go.
+
+### 2. Edit `trip-data.js`
+
+Open [`trip-data.js`](trip-data.js) and update:
+
+| Field | What to set |
+|-------|-------------|
+| `active` | `true` once the trip has started |
+| `currentSegment` | Segment id you are on — **1, 3, 4, 5, 6, 7, 8, or 9** (there is no segment 2) |
+| `currentCity` | Current town or city name |
+| `dayNumber` | Trip day count |
+| `kmRidden` | Total km cycled so far |
+| `countries` | Array of countries visited, e.g. `['Sweden','Finland']` |
+| `lat` / `lng` | Your current coordinates — preferred over city-name guessing on the map |
+| `lastUpdated` | Today's date string, e.g. `'2026-06-08'` — shown in the live banner |
+| `updates` | Prepend a new entry (newest first) — see example below |
+| `photos` | Optional map pins — same image paths as in `updates` |
+
+**Example update entry** (prepend to `updates`):
+
+```javascript
+{
+  date: '2026-06-08',
+  location: 'Gothenburg, Sweden',
+  text: 'Packed and ready. Ferry tomorrow.',
+  photo: 'photos/2026-06-08-gothenburg.jpg'
+}
+```
+
+**Example map pin** (add to `photos`):
+
+```javascript
+{
+  lat: 57.7089,
+  lng: 11.9746,
+  src: 'photos/2026-06-08-gothenburg.jpg',
+  caption: 'Harbor sunset',
+  location: 'Gothenburg'
+}
+```
+
+### 3. Bump the service worker cache
+
+In [`sw.js`](sw.js), increment the cache name so PWA visitors get fresh trip data:
+
+```javascript
+const CACHE = 'biketrip-v7';  // was v6, v7, v8 …
+```
+
+Bump this on every check-in you push.
+
+### 4. Commit and push
+
+```powershell
+git add trip-data.js photos/ sw.js
+git commit -m "trip check-in: Gothenburg, day 0"
+git push origin main
+```
+
+### 5. Before you push — public data check
+
+This repo is **world-readable**. Fine to publish: route narrative, city names, trip photos you are happy to share, general budget figures.
+
+**Do not commit:** API keys, `.env`, passwords, passport or booking codes, private home address, exact hotel confirmations, or anything you would not post on a public blog.
+
+---
+
+## What the site shows
+
+When `active: true`:
+
+- Live banner with city, day, segment, countries, and last-updated date
+- Stats bar (km ridden, day, country count)
+- Progress bar vs total planned distance (~5025 km)
+- “You Are Here” map pin from `lat`/`lng`
+- Journey Updates feed in the sidebar
+- Optional photo pins on the map (toggle “Show Photos”)
+
+When the trip is active and the newest update has a `photo`, link previews (iMessage, WhatsApp, etc.) use that image.
+
+---
+
+## History
+
+Trip changes are normal Git history: [commits](https://github.com/thanks4coming/shits-creek/commits/main), diffs, and blame on `trip-data.js` and `photos/`.

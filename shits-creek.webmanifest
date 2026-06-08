@@ -1,9 +1,9 @@
 {
-  "id": "./shits-creek.html",
+  "id": "./",
   "name": "Shits Creek — E-Bike Route Planner",
   "short_name": "Shits Creek",
   "description": "Interactive bikepacking route planner — Scandinavia & Baltic to the Balkans",
-  "start_url": "./shits-creek.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",

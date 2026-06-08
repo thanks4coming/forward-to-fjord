@@ -1,8 +1,8 @@
-const CACHE = 'biketrip-v5';
+const CACHE = 'biketrip-v6';
 
 self.addEventListener('install', e => {
   const scope = self.registration.scope;
-  const precache = [scope, scope + 'index.html'];
+  const precache = [scope, scope + 'index.html', scope + 'trip-data.js'];
   e.waitUntil(
     caches.open(CACHE).then(c => c.addAll(precache))
   );
