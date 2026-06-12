@@ -6,3 +6,7 @@ desktop.ini
 .cursor/*
 !.cursor/rules/
 !.cursor/rules/**
+
+# Private planning notes — never committed
+DEPART.md
+*.private.md
