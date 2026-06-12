@@ -127,20 +127,6 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
 .notes-section h3{font-size:11.5px;font-weight:600;color:#60a5fa;margin-bottom:6px}
 .notes-section ul{padding-left:14px}
 .notes-section li{font-size:11px;color:#94a3b8;line-height:1.55;margin-bottom:3px}
-.camp-section{margin:8px 16px 10px;background:#0a1628;border-radius:10px;border:1px solid #1e3a5f;overflow:hidden}
-.camp-header{padding:12px 14px;background:linear-gradient(135deg,#1a2e0a,#0f172a);border-bottom:1px solid #1e3a5f;cursor:pointer;display:flex;align-items:center;justify-content:space-between}
-.camp-header h3{font-size:12px;font-weight:700;color:#86efac}
-.camp-body{padding:12px 14px;display:none}
-.camp-section.open .camp-body{display:block}
-.camp-group{margin-bottom:10px}
-.camp-group-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #1e293b}
-.camp-entry{padding:6px 0;border-bottom:1px solid #1e293b08}
-.camp-entry .ce-hdr{display:flex;align-items:center;gap:6px;margin-bottom:2px}
-.camp-entry .ce-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.camp-entry .ce-name{font-size:11px;font-weight:600;color:#e2e8f0}
-.camp-entry .ce-law{font-size:9.5px;font-weight:600;margin-left:auto}
-.camp-entry .ce-desc{font-size:10.5px;color:#94a3b8;line-height:1.5}
-.camp-entry .ce-tip{font-size:10px;color:#fbbf24;line-height:1.45;margin-top:3px;padding:4px 6px;background:#f59e0b08;border-radius:4px;border-left:2px solid #f59e0b44}
 #map{flex:1;background:#1a1a1a}
 .leaflet-bar a{background:#1e293b!important;color:#f1f5f9!important;border-color:#475569!important}
 .leaflet-bar a:hover{background:#334155!important}
@@ -234,7 +220,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
   <div class="mob-close"><span>Route Plan</span><button type="button" id="mob-sidebar-close" aria-label="Close route plan">Close</button></div>
   <div id="sidebar-header">
     <h1>Forward to Fjord</h1>
-    <div class="subtitle">Scandinavia &amp; Baltic e-bike tour &bull; Needle-detail route guide &bull; Every stage, every detour, every must-see</div>
+    <div class="subtitle">Scandinavia &amp; Baltic e-bike tour &bull; Live route map &amp; journey updates</div>
   </div>
 
   <div id="trip-status-banner" style="display:none"></div>
@@ -254,15 +240,13 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
   </div>
 
   <label class="layer-toggle"><input type="checkbox" id="zone-checkbox" checked><span class="toggle-track"></span><span class="toggle-label">Show Non-Schengen Zones</span></label>
-  <label class="layer-toggle"><input type="checkbox" id="camp-checkbox"><span class="toggle-track"></span><span class="toggle-label">Show Camping Legality</span></label>
-  <label class="layer-toggle"><input type="checkbox" id="wildlife-checkbox"><span class="toggle-track"></span><span class="toggle-label">Show Wildlife Risks</span></label>
   <label class="layer-toggle"><input type="checkbox" id="photo-checkbox"><span class="toggle-track"></span><span class="toggle-label">Show Photos</span></label>
 
   <div id="updates-feed-wrap"></div>
 
   <div id="segments-container"></div>
 
-  <div class="budget-section open" id="budget-section">
+  <div class="budget-section" id="budget-section">
     <div class="budget-header" onclick="this.parentElement.classList.toggle('open')">
       <h3>Budget Breakdown &mdash; 26,000 AUD (1 AUD &asymp; &euro;0.61)</h3>
       <span class="budget-total">&euro;15,860 available</span>
@@ -372,229 +356,6 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
     </ul>
   </div>
 
-  <div class="camp-section open" id="camp-section">
-    <div class="camp-header" onclick="this.parentElement.classList.toggle('open')">
-      <h3>&#9978; Free Camping Guide by Country</h3>
-    </div>
-    <div class="camp-body">
-
-      <div class="camp-group">
-        <div class="camp-group-title" style="color:#22c55e">&#10003; Legal &mdash; Right to Roam</div>
-
-        <div class="camp-entry">
-          <div class="ce-hdr"><span class="ce-dot" style="background:#22c55e"></span><span class="ce-name">Sweden</span><span class="ce-law" style="color:#22c55e">Allemansr&auml;tten</span></div>
-          <div class="ce-desc">Camp anywhere for 1&ndash;2 nights except private gardens, cultivated fields, and within sight of dwellings. No permission needed. Fires only where safe and permitted (check local fire bans in summer). The most cyclist-friendly camping law in Europe.</div>
-        </div>
-
-        <div class="camp-entry">
-          <div class="ce-hdr"><span class="ce-dot" style="background:#22c55e"></span><span class="ce-name">Finland / &Aring;land</span><span class="ce-law" style="color:#22c55e">Jokamiehenoikeus</span></div>
-          <div class="ce-desc">Everyman&rsquo;s Right: camp anywhere on uncultivated land, keep 150m from buildings. No fires without landowner permission, but many designated fire pits in forests. RMK-style shelters are less common than Estonia but laavu (lean-to) shelters exist in many national parks.</div>
-        </div>
-
-        <div class="camp-entry">
-          <div class="ce-hdr"><span class="ce-dot" style="background:#22c55e"></span><span class="ce-name">Estonia</span><span class="ce-law" style="color:#22c55e">1-night rule</span></div>
-          <div class="ce-desc">Legal to camp 1 night in forests and public land. RMK (State Forest) shelters are superb &mdash; free wooden shelters with fire pits, dry toilet, and firewood at 60+ locations across the country. Map them at loodusegakoos.ee. The best free camping infrastructure on the route.</div>
-        </div>
-      </div>
-
-      <div class="camp-group">
-        <div class="camp-group-title" style="color:#f59e0b">&#9888; Tolerated &mdash; Grey Area (Use Common Sense)</div>
-
-        <div class="camp-entry">
-          <div class="ce-hdr"><span class="ce-dot" style="background:#f59e0b"></span><span class="ce-name">Latvia</span><span class="ce-law" style="color:#f59e0b">Tolerated</span></div>
-          <div class="ce-desc">No legal right to camp, but widely practiced in forests. Technically need landowner permission. Nobody checks. Stay off private farmland and you&rsquo;ll have zero issues.</div>
-          <div class="ce-tip">Best spots: dense pine forests behind coastal dunes between Saulkrasti and Ventspils. Cape Kolka area is especially wild and empty.</div>
-        </div>
-
-        <div class="camp-entry">
-          <div class="ce-hdr"><span class="ce-dot" style="background:#f59e0b"></span><span class="ce-name">Lithuania</span><span class="ce-law" style="color:#f59e0b">Tolerated</span></div>
-          <div class="ce-desc">Similar to Latvia. Forest camping tolerated. Some forests have free lau&#x17E;aviet&#x0117; (sheltered camping spots with fire pits). Palanga pine forests near the coast are excellent.</div>
-        </div>
-
-        <div class="camp-entry">
-          <div class="ce-hdr"><span class="ce-dot" style="background:#f59e0b"></span><span class="ce-name">Montenegro</span><span class="ce-law" style="color:#f59e0b">Tolerated</span></div>
-          <div class="ce-desc">No specific anti-camping law. Tolerated in mountains and rural areas. Coastal areas are busier &mdash; camp away from beaches and towns.</div>
-          <div class="ce-tip">Best spots: above the Bay of Kotor on Lov&#x0107;en approaches. Lake Skadar north shore has empty stretches. Mountain passes are ideal.</div>
-        </div>
-
-        <div class="camp-entry">
-          <div class="ce-hdr"><span class="ce-dot" style="background:#f59e0b"></span><span class="ce-name">Albania</span><span class="ce-law" style="color:#f59e0b">Tolerated / Welcomed</span></div>
-          <div class="ce-desc">No real enforcement anywhere. Locals often invite you to camp in their yard or field. Albania is arguably the most camping-friendly country in Europe by culture. Extremely safe.</div>
-          <div class="ce-tip">Camp literally anywhere rural. In towns, ask at a caf&eacute; and someone will find you a spot. Albanian hospitality (besa) is legendary.</div>
-        </div>
-
-        <div class="camp-entry">
-          <div class="ce-hdr"><span class="ce-dot" style="background:#f59e0b"></span><span class="ce-name">N. Macedonia / Kosovo</span><span class="ce-law" style="color:#f59e0b">Tolerated</span></div>
-          <div class="ce-desc">No enforcement. Camp in rural/mountain areas without issue. Lake Ohrid lakeshore has some designated spots. Kosovo is very welcoming to travelers.</div>
-        </div>
-
-        <div class="camp-entry">
-          <div class="ce-hdr"><span class="ce-dot" style="background:#f59e0b"></span><span class="ce-name">Serbia / Bosnia</span><span class="ce-law" style="color:#f59e0b">Tolerated</span></div>
-          <div class="ce-desc">Technically need permission, never enforced in rural areas. Mountain camping is completely accepted. Zlatibor and Tara regions (Serbia) are excellent. Bosnia&rsquo;s river valleys and mountain passes are ideal.</div>
-          <div class="ce-tip">Neretva canyon between Sarajevo and Mostar: find a flat spot above the river. Stunning wild camps.</div>
-        </div>
-      </div>
-
-      <div class="camp-group">
-        <div class="camp-group-title" style="color:#ef4444">&#10007; Illegal &mdash; Campsites or Stealth Required</div>
-
-        <div class="camp-entry">
-          <div class="ce-hdr"><span class="ce-dot" style="background:#ef4444"></span><span class="ce-name">Poland</span><span class="ce-law" style="color:#ef4444">Illegal</span></div>
-          <div class="ce-desc">Wild camping prohibited outside designated areas. However, Poland has hundreds of cheap campsites (&euro;5&ndash;12/night) and some forests have designated bivouac spots (biwak). The Vistula riverbanks have many hidden spots cyclists use.</div>
-          <div class="ce-tip">Stealth: dense forest patches along the Vistula between towns. Set up late, leave early. Vistula river islands are excellent &mdash; nobody goes there. App: park4night for spots other cyclists have used.</div>
-        </div>
-
-        <div class="camp-entry">
-          <div class="ce-hdr"><span class="ce-dot" style="background:#ef4444"></span><span class="ce-name">Czech Republic</span><span class="ce-law" style="color:#ef4444">Illegal</span></div>
-          <div class="ce-desc">Camping outside campsites is banned. Some forests have designated bivouac areas (t&aacute;bo&#x0159;i&#x0161;t&#x011B;) marked on mapy.cz. Budget auto-camps &euro;6&ndash;15. Moravia has many small sites near wine cellars.</div>
-          <div class="ce-tip">Stealth: the Moravian forests between Olomouc and Brno. Use mapy.cz (Czech app) to find forest tracks. Camp well off trails.</div>
-        </div>
-
-        <div class="camp-entry">
-          <div class="ce-hdr"><span class="ce-dot" style="background:#ef4444"></span><span class="ce-name">Austria</span><span class="ce-law" style="color:#ef4444">Strictly Illegal</span></div>
-          <div class="ce-desc">FINED if caught. Austria takes this seriously, especially in Tyrol and national parks. Excellent campsite network (&euro;12&ndash;22/night). Some Alm (alpine pasture) farmers allow camping if you ask.</div>
-          <div class="ce-tip">Stealth (risky): deep Styrian forests between Vienna and Graz. NEVER near trails, roads, or villages. Late arrival, early departure essential. Your best bet: negotiate directly with farmers &mdash; many will say yes for &euro;5&ndash;10.</div>
-        </div>
-
-        <div class="camp-entry">
-          <div class="ce-hdr"><span class="ce-dot" style="background:#ef4444"></span><span class="ce-name">Slovenia</span><span class="ce-law" style="color:#ef4444">Illegal</span></div>
-          <div class="ce-desc">Banned except at campsites. Eco-farms (turisti&#x010D;ne kmetije) sometimes allow camping &mdash; check Slovenia tourism site. Budget campsites &euro;10&ndash;18.</div>
-          <div class="ce-tip">Stealth: the Karst region between Ljubljana and Postojna has deep limestone forest. Remote enough that enforcement is nonexistent. Also: some mountain huts (ko&#x010D;a) allow tent camping nearby for a small fee.</div>
-        </div>
-
-        <div class="camp-entry">
-          <div class="ce-hdr"><span class="ce-dot" style="background:#ef4444"></span><span class="ce-name">Croatia</span><span class="ce-law" style="color:#ef4444">Illegal</span></div>
-          <div class="ce-desc">Strictly illegal on the coast (frequent police patrols in summer). Massive auto-camp network &mdash; Croatia has 500+ registered campsites, many directly on the coast from &euro;10&ndash;20/night. Inland Istria and islands are more relaxed.</div>
-          <div class="ce-tip">Stealth: Istrian interior olive groves (ask farmers). Between Split and Dubrovnik: find spots above the road where mountain meets coast &mdash; terraced olive/vine land is often abandoned and usable. Pelje&#x0161;ac peninsula interior is very quiet. The Neretva delta has secluded spots.</div>
-        </div>
-      </div>
-
-      <div style="margin-top:8px;padding:8px;background:#1e293b;border-radius:6px">
-        <div style="font-size:10px;font-weight:700;color:#60a5fa;margin-bottom:4px">Essential Apps for Wild Camping</div>
-        <div style="font-size:10px;color:#94a3b8;line-height:1.6">
-          <b>park4night</b> &mdash; Cyclist/van spots, user-reviewed, works everywhere<br>
-          <b>iOverlander</b> &mdash; Best for Balkans, global camping database<br>
-          <b>Komoot</b> &mdash; Route planning with wild camp spot community notes<br>
-          <b>mapy.cz</b> &mdash; Excellent offline maps, shows Czech/Slovak bivouac areas<br>
-          <b>RMK loodusegakoos.ee</b> &mdash; Estonian free forest shelter locations<br>
-          <b>Camping.info</b> &mdash; European campsite directory with prices and booking
-        </div>
-      </div>
-
-      <!-- WILDLIFE CONSIDERATIONS -->
-      <div style="margin-top:10px;padding-top:10px;border-top:1px solid #1e3a5f">
-        <div style="font-size:11px;font-weight:700;color:#f87171;margin-bottom:8px">&#128024; Wildlife Risks</div>
-
-        <!-- TICKS -->
-        <div style="margin-bottom:10px;padding:8px;background:#1e293b;border-radius:6px;border-left:3px solid #ef4444">
-          <div style="font-size:10.5px;font-weight:700;color:#fca5a5;margin-bottom:3px">TORMENTED BY TICKS &mdash; #1 Threat (Entire Route)</div>
-          <div style="font-size:10px;color:#94a3b8;line-height:1.55">
-            Ticks carrying <b>Lyme disease</b> and <b>TBE (tick-borne encephalitis)</b> are present across your entire route. The highest-risk zones are the Baltics (Estonia, Latvia, Lithuania are among Europe&rsquo;s worst), southern Sweden, Finland, Poland, and Czech Republic.<br><br>
-            <b style="color:#e2e8f0">Prevention:</b> Treat clothing with permethrin before departure. Wear long pants tucked into socks when walking through grass. Full body tick check every evening &mdash; they prefer warm folds (groin, armpits, behind ears, waistband).<br><br>
-            <b style="color:#e2e8f0">TBE Vaccine:</b> <span style="color:#fbbf24;font-weight:600">Get vaccinated before departure.</span> 2-dose course (Encepur or FSME-Immun), available in Australia. Lyme has no vaccine &mdash; rely on tick checks and removal within 24hrs.<br><br>
-            <b style="color:#e2e8f0">Removal:</b> Carry a tick removal tool (O&rsquo;Tom tick twister or fine-point tweezers). Grip at the head, twist gently, pull straight out. Do not squeeze the body. Clean with antiseptic. Monitor for expanding red ring (Lyme indicator) over next 2&ndash;4 weeks.
-          </div>
-        </div>
-
-        <!-- SNAKES -->
-        <div style="margin-bottom:10px;padding:8px;background:#1e293b;border-radius:6px;border-left:3px solid #f59e0b">
-          <div style="font-size:10.5px;font-weight:700;color:#fde68a;margin-bottom:3px">SAVAGED BY SNAKES &mdash; Two Species to Know</div>
-          <div style="font-size:10px;color:#94a3b8;line-height:1.55">
-            <b style="color:#e2e8f0">European Adder (Hugorm/Kyy)</b> &mdash; <span style="color:#86efac">Sweden &rarr; Baltics &rarr; Poland</span><br>
-            The only venomous snake in Scandinavia and the Baltics. Zigzag pattern on back, 50&ndash;70cm. Very shy, bites are rare and almost never fatal. Found in meadows, forest edges, and rocky ground. Risk: low. Stomp your feet when walking through undergrowth and they&rsquo;ll flee.<br><br>
-            <b style="color:#e2e8f0">Nose-Horned Viper (Poskok)</b> &mdash; <span style="color:#ef4444">Slovenia &rarr; Croatia &rarr; all Balkans</span><br>
-            Europe&rsquo;s most dangerous snake. Thick body, triangular head, distinctive horn on snout, up to 90cm. Found in rocky karst terrain, dry stone walls, and sun-warmed rubble &mdash; exactly the type of terrain on the Croatian and Bosnian coast. <b style="color:#fca5a5">This is a genuine concern when choosing camp spots in the Balkans.</b><br><br>
-            <b style="color:#e2e8f0">Camp smart:</b> Clear ground before pitching. Never reach into rock crevices or under stones. Shake out shoes and gear in the morning. In Croatia/Bosnia/Montenegro, prefer grassy clearings over rocky ground. The viper is nocturnal in summer &mdash; use a headtorch walking at night.
-          </div>
-        </div>
-
-        <!-- BEARS -->
-        <div style="margin-bottom:10px;padding:8px;background:#1e293b;border-radius:6px;border-left:3px solid #a78bfa">
-          <div style="font-size:10.5px;font-weight:700;color:#c4b5fd;margin-bottom:3px">BATTERED BY BEARS</div>
-          <div style="font-size:10px;color:#94a3b8;line-height:1.55">
-            Present in <b>Finland</b> (~2,000), <b>Estonia</b> (small population), <b>Slovenia</b> (~1,000 &mdash; highest density in western Europe), <b>Croatia</b> (Gorski Kotar/Velebit), <b>Bosnia</b>, <b>Montenegro</b>, <b>Albania</b>, <b>N. Macedonia</b>, and <b>Kosovo</b>.<br><br>
-            European brown bears are very shy and avoid humans. Attacks on campers are exceptionally rare (&lt;1/year across all of Europe). They are NOT comparable to North American grizzlies.<br><br>
-            <b style="color:#e2e8f0">Camp practice:</b> Store food in panniers away from your tent (hang from a branch or seal in dry bags). Cook and eat 50m+ from your sleeping spot. Never keep food or strong-smelling items (toothpaste, sunscreen) in the tent. In Slovenia&rsquo;s Notranjska forests, bears are common but almost never seen &mdash; they hear you long before you see them. Make noise on forest trails.
-          </div>
-        </div>
-
-        <!-- WILD BOAR -->
-        <div style="margin-bottom:10px;padding:8px;background:#1e293b;border-radius:6px;border-left:3px solid #fb923c">
-          <div style="font-size:10.5px;font-weight:700;color:#fdba74;margin-bottom:3px">BULLDOZED BY BOARS</div>
-          <div style="font-size:10px;color:#94a3b8;line-height:1.55">
-            Common in forests across the <b>entire route</b> from Sweden to Bosnia. The most likely large animal you&rsquo;ll actually encounter. Usually harmless and will run, but a sow with piglets can charge if she feels cornered.<br><br>
-            <b style="color:#e2e8f0">Camp practice:</b> Keep food sealed and away from tent. If you hear grunting/snuffling at night, bang pots or shout &mdash; they&rsquo;ll leave. Don&rsquo;t camp on obvious boar trails (look for churned-up earth and tracks). Most encounters happen at dusk.
-          </div>
-        </div>
-
-        <!-- MOSQUITOES -->
-        <div style="margin-bottom:10px;padding:8px;background:#1e293b;border-radius:6px;border-left:3px solid #38bdf8">
-          <div style="font-size:10.5px;font-weight:700;color:#7dd3fc;margin-bottom:3px">MASSACRED BY MOZZIES</div>
-          <div style="font-size:10px;color:#94a3b8;line-height:1.55">
-            <b style="color:#e2e8f0">Scandinavia &amp; Finland (Jun&ndash;Aug):</b> Can be brutal, especially near lakes and in the Finnish interior. Carry DEET 30%+ or Icaridin repellent. A head net weighs nothing and can save your sanity. Your tent&rsquo;s mesh is your best friend.<br><br>
-            <b style="color:#e2e8f0">Baltics:</b> Coastal marshes in Latvia and Lithuania have heavy mosquitoes in summer. Camp on higher ground or windward coastal spots where breeze keeps them away.<br><br>
-            <b style="color:#e2e8f0">Poland (Vistula):</b> River valleys breed mosquitoes. Camp away from standing water.<br><br>
-            <b style="color:#e2e8f0">Balkans:</b> Less intense than Scandinavia but present near rivers and lakes. Horse flies (obadi) are a nuisance on hot days in Bosnia/Montenegro.
-          </div>
-        </div>
-
-        <!-- MOOSE -->
-        <div style="margin-bottom:10px;padding:8px;background:#1e293b;border-radius:6px;border-left:3px solid #22d3ee">
-          <div style="font-size:10.5px;font-weight:700;color:#67e8f9;margin-bottom:3px">MOWED DOWN BY MOOSE (Sweden &amp; Finland)</div>
-          <div style="font-size:10px;color:#94a3b8;line-height:1.55">
-            Sweden has ~350,000 moose, Finland ~100,000. They are a <b>road hazard, not a camping threat</b>. Most dangerous at dusk and dawn when they cross roads. A moose collision at cycling speed can cause serious injury &mdash; they&rsquo;re 400&ndash;700kg.<br><br>
-            <b style="color:#e2e8f0">Cycling:</b> Be alert at dawn/dusk on forest roads. Use lights. If one crosses in front of you, stop &mdash; where there&rsquo;s one, there&rsquo;s often a second.<br>
-            <b style="color:#e2e8f0">Camping:</b> If a moose wanders into camp, stay calm, give it space, and it will move on. Never approach calves.
-          </div>
-        </div>
-
-        <!-- STRAY DOGS -->
-        <div style="margin-bottom:10px;padding:8px;background:#1e293b;border-radius:6px;border-left:3px solid #e879f9">
-          <div style="font-size:10.5px;font-weight:700;color:#f0abfc;margin-bottom:3px">DEVOURED BY DOGS (Balkans)</div>
-          <div style="font-size:10px;color:#94a3b8;line-height:1.55">
-            The most <b>frequent actual confrontation</b> you&rsquo;ll face. Stray dogs are common in <b>Albania, Kosovo, N. Macedonia, Serbia</b>, and <b>Bosnia</b>. Rural guard dogs (often Sharplaninac or Tornjak breeds) protect livestock and can be territorial.<br><br>
-            <b style="color:#e2e8f0">While cycling:</b> Dogs will chase bikes. Stop pedaling, dismount, and walk slowly. Put the bike between you and the dog. Avoid eye contact. Speak calmly. They almost always lose interest once you stop being a moving target.<br>
-            <b style="color:#e2e8f0">While camping:</b> Keep food sealed. If dogs visit camp at night, a firm loud voice usually works. Carry a stick for confidence. Strays in Albanian towns are generally docile and socialized &mdash; rural livestock guardians are the ones to watch for.<br>
-            <b style="color:#e2e8f0">Gear:</b> Some bikepackers carry a dog deterrent spray (citronella-based, legal in EU). A small ultrasonic dog deterrent device (Dazer II) weighs 70g and works well.
-          </div>
-        </div>
-
-        <!-- SCORPIONS -->
-        <div style="margin-bottom:10px;padding:8px;background:#1e293b;border-radius:6px;border-left:3px solid #fbbf24">
-          <div style="font-size:10.5px;font-weight:700;color:#fde68a;margin-bottom:3px">SKEWERED BY SCORPIONS (Adriatic Coast)</div>
-          <div style="font-size:10px;color:#94a3b8;line-height:1.55">
-            Small Mediterranean scorpions (Euscorpius spp.) are found along the <b>Croatian, Montenegrin, and Albanian coasts</b>. They hide under rocks and in dry stone walls. Sting is painful but not medically dangerous &mdash; similar to a bee sting.<br><br>
-            <b style="color:#e2e8f0">Camp practice:</b> Shake out shoes, clothing, and panniers every morning. Don&rsquo;t place bare hands under rocks. Keep tent zipped at all times.
-          </div>
-        </div>
-
-        <!-- BOSNIA LANDMINE WARNING -->
-        <div style="padding:8px;background:#450a0a;border-radius:6px;border:1px solid #991b1b">
-          <div style="font-size:10.5px;font-weight:700;color:#fca5a5;margin-bottom:3px">&#9888; BLOWN UP IN BOSNIA &mdash; LANDMINE AREAS</div>
-          <div style="font-size:10px;color:#fecaca;line-height:1.55">
-            Not wildlife, but a critical camping safety note. Bosnia has residual landmines from the 1992&ndash;95 war, primarily along former front lines. Affected areas are marked with red signs or red-painted rocks. <b>Never camp off established trails or roads in Bosnia.</b> Stick to paved roads, well-used paths, and cleared areas. The Neretva valley main road corridor is safe. Mountain shortcuts through unmarked forest are not. This is a real and ongoing risk &mdash; casualties still occur.
-          </div>
-        </div>
-
-        <!-- GEAR CHECKLIST -->
-        <div style="margin-top:10px;padding:8px;background:#1e293b;border-radius:6px">
-          <div style="font-size:10px;font-weight:700;color:#60a5fa;margin-bottom:4px">Wildlife Gear Checklist</div>
-          <div style="font-size:10px;color:#94a3b8;line-height:1.7">
-            &#9744; TBE vaccination (2-dose, get before departure)<br>
-            &#9744; Tick removal tool (O&rsquo;Tom tick twister)<br>
-            &#9744; DEET 30%+ or Icaridin repellent<br>
-            &#9744; Permethrin spray (treat clothing pre-trip)<br>
-            &#9744; Head net (ultralight, for Scandinavia/Baltics)<br>
-            &#9744; Small headtorch (snake visibility at night)<br>
-            &#9744; Dog deterrent (citronella spray or Dazer II ultrasonic)<br>
-            &#9744; Dry bags for food storage (bear/boar separation from tent)<br>
-            &#9744; Antiseptic wipes (tick bite, sting, scratch treatment)
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
 </div>
 <div id="map"></div>
 </div>
@@ -1464,123 +1225,6 @@ ukM.bindPopup('<b>United Kingdom</b><br>Not Schengen. With the train shortcut yo
 
 const zCb = document.getElementById('zone-checkbox');
 zCb.addEventListener('change', function(){ this.checked ? map.addLayer(nonSchengenGroup) : map.removeLayer(nonSchengenGroup); });
-
-// --- CAMPING LEGALITY LAYER ---
-const campingData = [
-  { name:'Sweden', lat:57.20, lng:12.40, status:'legal', law:'Allemansr\u00e4tten', tip:'Camp anywhere 1\u20132 nights. Avoid gardens, fields, and within sight of homes.' },
-  { name:'Finland', lat:60.30, lng:22.80, status:'legal', law:'Jokamiehenoikeus', tip:'Camp on uncultivated land. Keep 150m from buildings. Free laavu shelters in national parks.' },
-  { name:'\u00c5land', lat:60.15, lng:19.93, status:'legal', law:'Finnish rules apply', tip:'Same as Finland mainland. Flat terrain, many meadow spots.' },
-  { name:'Estonia', lat:59.10, lng:24.20, status:'legal', law:'1-night forest rule', tip:'Legal 1 night. 60+ free RMK shelters with fire pits \u2014 map at loodusegakoos.ee.' },
-  { name:'Latvia', lat:57.05, lng:23.60, status:'tolerated', law:'Grey area', tip:'Forest camping tolerated. Coastal pine forests behind dunes are ideal spots.' },
-  { name:'Lithuania', lat:55.80, lng:21.20, status:'tolerated', law:'Grey area', tip:'Forest camping tolerated. Some free lau\u017eaviet\u0117 sheltered spots exist.' },
-  { name:'Poland', lat:52.50, lng:19.20, status:'illegal', law:'Prohibited', tip:'Cheap campsites \u20AC5\u201312. Stealth: Vistula river islands, dense forest patches. App: park4night.' },
-  { name:'Czech Rep.', lat:49.55, lng:17.00, status:'illegal', law:'Prohibited', tip:'Designated t\u00e1bo\u0159i\u0161t\u011B in forests. Use mapy.cz app. Budget auto-camps \u20AC6\u201315.' },
-  { name:'Austria', lat:47.60, lng:15.80, status:'illegal', law:'Strictly illegal', tip:'FINED if caught. Use campsites (\u20AC12\u201322). Ask Alm farmers \u2014 many allow it for \u20AC5\u201310.' },
-  { name:'Slovenia', lat:46.10, lng:14.80, status:'illegal', law:'Prohibited', tip:'Eco-farms allow camping. Deep Karst forest is remote enough. Mountain hut camping \u20AC5\u201310.' },
-  { name:'Croatia', lat:44.00, lng:15.80, status:'illegal', law:'Prohibited (patrolled)', tip:'500+ auto-camps \u20AC10\u201320. Stealth: inland olive groves (ask), abandoned terraces above coast road.' },
-  { name:'Montenegro', lat:42.50, lng:18.95, status:'tolerated', law:'No anti-camp law', tip:'Mountains and lake areas are fine. Camp above Kotor bay for views. Lake Skadar north shore.' },
-  { name:'Albania', lat:41.40, lng:19.70, status:'tolerated', law:'No enforcement', tip:'Camp anywhere rural. Locals will often invite you. Albanian hospitality is extraordinary.' },
-  { name:'N. Macedonia', lat:41.20, lng:20.90, status:'tolerated', law:'No enforcement', tip:'Lake Ohrid shore has some spots. Mountain areas completely fine.' },
-  { name:'Kosovo', lat:42.45, lng:20.85, status:'tolerated', law:'No enforcement', tip:'Very welcoming to travelers. Rural areas have no issues whatsoever.' },
-  { name:'Serbia', lat:43.50, lng:21.50, status:'tolerated', law:'Grey area', tip:'Mountain camping accepted. Zlatibor/Tara regions excellent. River valleys ideal.' },
-  { name:'Bosnia', lat:43.70, lng:18.20, status:'tolerated', law:'Grey area', tip:'River valleys and mountain passes. Neretva canyon has stunning stealth spots.' }
-];
-
-const campGroup = L.layerGroup();
-campingData.forEach(c => {
-  const col = c.status==='legal'?'#22c55e':c.status==='tolerated'?'#f59e0b':'#ef4444';
-  const lbl = c.status==='legal'?'LEGAL':c.status==='tolerated'?'TOLERATED':'ILLEGAL';
-  const sym = c.status==='legal'?'\u2713':c.status==='tolerated'?'\u26A0':'\u2717';
-  const icon = L.divIcon({
-    className:'',
-    html:`<div style="display:inline-block;background:${col}18;border:1.5px solid ${col}66;color:${col};padding:3px 7px;border-radius:4px;font-size:8.5px;font-weight:700;font-family:Segoe UI,system-ui,sans-serif;white-space:nowrap;text-align:center;line-height:1.4">${sym} ${c.name}<br><span style="font-size:7.5px;opacity:.8">${lbl}</span></div>`,
-    iconSize:[0,0], iconAnchor:[0,0]
-  });
-  const m = L.marker([c.lat,c.lng],{icon:icon});
-  m.bindPopup(`<div class="pt" style="color:${col}">\u26FA Camping \u2014 ${c.name}</div><b>${c.law}</b><br>${c.tip}`);
-  m.addTo(campGroup);
-});
-
-const cCb = document.getElementById('camp-checkbox');
-cCb.addEventListener('change', function(){ this.checked ? map.addLayer(campGroup) : map.removeLayer(campGroup); });
-
-// --- WILDLIFE RISK LAYER ---
-const wildlifeData = [
-  { name:'Sweden', lat:57.20, lng:14.40, risk:'low',
-    hazards:'Mowed Down by Moose<br>Tormented by Ticks<br>Savaged by Snakes',
-    tip:'Moose are a road hazard at dusk and dawn (400\u2013700 kg \u2014 serious at any speed) but pose no camping threat. Ticks present in forest and meadow: do a full-body check after each forest camp. European adder exists but retreats from human disturbance.' },
-  { name:'Finland', lat:61.20, lng:23.80, risk:'low',
-    hazards:'Tormented by Ticks<br>Massacred by Mozzies',
-    tip:'Ticks carry Lyme disease \u2014 do daily checks in forest camps, especially April\u2013October. Mosquitoes peak June\u2013July near lakes and forest. Wild boar present in SW Finland but harmless at camp.' },
-  { name:'\u00c5land', lat:60.15, lng:19.93, risk:'low',
-    hazards:'Tormented by Ticks',
-    tip:'Ticks present in meadow grass and coastal scrub. Carry DEET, check thoroughly after camping in long grass.' },
-  { name:'Estonia', lat:59.10, lng:25.50, risk:'moderate',
-    hazards:'Tormented by Ticks<br>Bulldozed by Boars',
-    tip:'Estonia has one of the highest TBE (tick-borne encephalitis) rates in Europe \u2014 vaccination is recommended if camping extensively in Baltic forests. Use DEET, tuck trousers into socks, and do a full-body check every evening. Wild boar are common and may investigate camp food overnight \u2014 keep food sealed inside your tent or panniers.' },
-  { name:'Latvia', lat:57.05, lng:25.00, risk:'moderate',
-    hazards:'Tormented by Ticks<br>Bulldozed by Boars',
-    tip:'High TBE tick risk throughout forest areas. Wild boar very common \u2014 secure all food overnight. Wolves exist (est. 800+ in Latvia) but pose essentially zero threat to campers.' },
-  { name:'Lithuania', lat:55.40, lng:22.50, risk:'moderate',
-    hazards:'Tormented by Ticks<br>Bulldozed by Boars',
-    tip:'Significant TBE tick risk in coastal forest areas (especially Curonian Spit pines and Klaip\u0117da region). Wild boar common. If planning heavy Baltic forest camping, a TBE vaccination course before departure is worthwhile insurance.' },
-  { name:'Poland', lat:52.50, lng:19.20, risk:'low',
-    hazards:'Bulldozed by Boars<br>Tormented by Ticks',
-    tip:'Wild boar are very common in Polish forests and will investigate any food left out overnight. They are not aggressive unless cornered with young \u2014 make noise if you hear them in camp. No bears or wolves near the Warsaw\u2013Krak\u00f3w route corridor.' },
-  { name:'Czech Rep.', lat:49.55, lng:17.00, risk:'low',
-    hazards:'Bulldozed by Boars<br>Tormented by Ticks',
-    tip:'Wild boar common in Moravian forests \u2014 noisy at night but not dangerous. Ticks active April\u2013October in forest undergrowth. Keep food sealed and tent zipped at night.' },
-  { name:'Austria', lat:47.60, lng:15.80, risk:'low',
-    hazards:'Bulldozed by Boars<br>Tormented by Ticks',
-    tip:'Wild boar active at night near the Semmering forested areas. Ticks present in Styrian meadow grass below 1,000 m. No bears along the Thermenradweg corridor.' },
-  { name:'Slovenia', lat:46.10, lng:14.80, risk:'low',
-    hazards:'Battered by Bears<br>Bulldozed by Boars<br>Tormented by Ticks',
-    tip:'Slovenia has ~700 brown bears, concentrated south of Ljubljana in the Dinaric range. The Karst/Postojna corridor has occasional sightings \u2014 hang food from a tree branch 4+ m up if camping in remote forest. Wild boar common throughout. Ticks very active in Karst scrubland.' },
-  { name:'Croatia', lat:44.00, lng:15.80, risk:'low',
-    hazards:'Bulldozed by Boars<br>Skewered by Scorpions',
-    tip:'Wild boar active in coastal hinterland at night \u2014 secure food. Mediterranean scorpions found along the coast under rocks \u2014 shake out shoes each morning. Sting is painful but not dangerous.' },
-  { name:'Bosnia', lat:43.70, lng:18.20, risk:'high',
-    hazards:'Blown Up in Bosnia<br>Savaged by Snakes<br>Bulldozed by Boars',
-    tip:'!! LANDMINE RISK: Residual mines from the 1992\u201395 war remain along former front lines. NEVER camp off established trails or in unmarked forest. Red signs or red-painted rocks indicate danger zones. Stick to paved road corridors \u2014 the Neretva valley main road is safe. Nose-horned viper (Vipera ammodytes) present in rocky terrain \u2014 shake out boots each morning. Wild boar common in mountain forests.' },
-  { name:'Montenegro', lat:42.50, lng:18.95, risk:'moderate',
-    hazards:'Savaged by Snakes<br>Bulldozed by Boars<br>Devoured by Dogs',
-    tip:'Nose-horned viper is the primary wildlife concern in rocky mountain terrain \u2014 avoid putting hands into rock crevices, shake out boots each morning. Wild boar common in mountain areas. Stray dogs in towns can be territorial at night; a trekking pole provides deterrence.' },
-  { name:'Albania', lat:41.40, lng:19.70, risk:'moderate',
-    hazards:'Devoured by Dogs<br>Savaged by Snakes<br>Jostled by Jackals',
-    tip:'The main wildlife camping concern in Albania is livestock guardian dogs (large Kangal-type breeds protecting sheep flocks). These can be aggressive \u2014 camp well away from any visible flock, carry a stick, never run. Nose-horned viper in rocky terrain. Jackals are common and vocal at night \u2014 loud but completely harmless. Asking locals to camp near their land is almost always met with hospitality.' },
-  { name:'N. Macedonia', lat:41.20, lng:20.90, risk:'moderate',
-    hazards:'Devoured by Dogs<br>Savaged by Snakes',
-    tip:'Stray dog packs common around towns \u2014 use a stick and assert yourself calmly if approached. Vipers present in rocky Lake Ohrid hillside terrain. Camp away from rubbish areas. Overall risk is moderate and manageable with standard precautions.' },
-  { name:'Kosovo', lat:42.45, lng:20.85, risk:'low',
-    hazards:'Devoured by Dogs',
-    tip:'Stray dogs present but Kosovo is among the more welcoming Balkan countries for wild camping. Rural areas are safe. Asking locals to camp near their land is almost always met positively \u2014 often with tea and food.' },
-  { name:'Serbia', lat:43.70, lng:20.40, risk:'moderate',
-    hazards:'Savaged by Snakes<br>Bulldozed by Boars<br>Devoured by Dogs',
-    tip:'Nose-horned viper common in the Zlatibor and Tara mountain regions \u2014 shake boots and check gear each morning, avoid putting hands in rocky crevices. Wild boar very active in Serbian mountain forests. Livestock guardian dogs near flocks. Zlatibor resort area has good infrastructure.' }
-];
-
-const wildlifeGroup = L.layerGroup();
-wildlifeData.forEach(function(w) {
-  var col = w.risk==='low' ? '#22c55e' : w.risk==='moderate' ? '#f59e0b' : '#ef4444';
-  var lbl = w.risk==='low' ? 'LOW RISK' : w.risk==='moderate' ? 'MODERATE' : 'HIGH RISK';
-  var sym = w.risk==='low' ? '\u2713' : w.risk==='high' ? '\u2717' : '\u26A0';
-  var icon = L.divIcon({
-    className: '',
-    html: '<div style="display:inline-block;background:' + col + '18;border:1.5px solid ' + col + '66;color:' + col + ';padding:3px 7px;border-radius:4px;font-size:8px;font-weight:700;font-family:Segoe UI,system-ui,sans-serif;white-space:nowrap;text-align:center;line-height:1.6">'
-        + sym + ' ' + w.name
-        + '<br><span style="font-size:7px;opacity:.9;line-height:1.9">' + w.hazards + '</span>'
-        + '<br><span style="font-size:7px;opacity:.75">' + lbl + '</span>'
-        + '</div>',
-    iconSize: [0,0], iconAnchor: [0,0]
-  });
-  var cleanHazards = w.hazards.replace(/<br>/g, ', ');
-  var m = L.marker([w.lat, w.lng], {icon: icon});
-  m.bindPopup('<div class="pt" style="color:' + col + '">\u26A0 Wildlife \u2014 ' + w.name + '</div><b>' + cleanHazards + '</b><br><br>' + w.tip);
-  m.addTo(wildlifeGroup);
-});
-
-const wCb = document.getElementById('wildlife-checkbox');
-wCb.addEventListener('change', function(){ this.checked ? map.addLayer(wildlifeGroup) : map.removeLayer(wildlifeGroup); });
 
 // --- BROUTER REAL GPS ROUTING ---
 const routingSegments = {
