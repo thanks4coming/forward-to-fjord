@@ -43,91 +43,87 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172a;color:#e2e8f0}
-#app{display:flex;height:100vh;height:100dvh;padding-bottom:env(safe-area-inset-bottom,0);box-sizing:border-box}
-#sidebar{width:440px;min-width:440px;background:#1e293b;overflow-y:auto;border-right:1px solid #334155;display:flex;flex-direction:column}
-#sidebar-header{padding:20px 24px 16px;background:linear-gradient(135deg,#1e3a5f,#1e293b);border-bottom:1px solid #334155;position:sticky;top:0;z-index:10}
-#sidebar-header h1{font-size:17px;font-weight:700;color:#f8fafc;margin-bottom:4px}
-#sidebar-header .subtitle{font-size:11.5px;color:#94a3b8}
-.totals-bar{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;padding:12px 14px;margin:12px 16px 8px;background:#0f172a;border-radius:10px}
-.total-item{text-align:center}
-.total-item .value{font-size:18px;font-weight:700;color:#60a5fa}
-.total-item .label{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:.5px}
-.schengen-banner{margin:0 16px 10px;padding:12px 14px;background:linear-gradient(135deg,#7f1d1d,#991b1b);border:1px solid #dc2626;border-radius:10px}
-.schengen-banner h3{font-size:12px;color:#fca5a5;margin-bottom:4px}
-.schengen-banner p{font-size:11px;color:#fecaca;line-height:1.5}
-.layer-toggle{display:flex;align-items:center;gap:8px;margin:8px 16px 4px;padding:8px 12px;background:#0f172a;border-radius:8px;cursor:pointer;user-select:none}
-.layer-toggle:hover{background:#1a2640}
-.layer-toggle input{display:none}
-.toggle-track{width:30px;height:16px;background:#334155;border-radius:8px;position:relative;transition:background .2s;flex-shrink:0}
-.toggle-track::after{content:'';position:absolute;top:2px;left:2px;width:12px;height:12px;background:#94a3b8;border-radius:50%;transition:transform .2s,background .2s}
-.layer-toggle input:checked+.toggle-track{background:#dc2626}
-.layer-toggle input:checked+.toggle-track::after{transform:translateX(14px);background:#fff}
-#photo-checkbox:checked+.toggle-track{background:#2563eb}
-.toggle-label{font-size:11px;color:#cbd5e1;font-weight:500}
-.seg{margin:0 12px 8px;background:#0f172a;border-radius:10px;border:1px solid #1e293b;overflow:hidden;cursor:pointer;transition:border-color .2s}
-.seg:hover{border-color:#475569}
-.seg.active{border-color:#60a5fa}
-.seg.seg-hl{border-color:#94a3b8}
-.seg-hdr{display:flex;align-items:center;gap:10px;padding:10px 12px}
-.seg-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
-.seg-title{font-size:12.5px;font-weight:600;color:#f1f5f9}
-.seg-meta{display:flex;gap:8px;font-size:10px;color:#94a3b8;margin-top:2px;flex-wrap:wrap}
+/* === FULL-MAP + BOTTOM DOCK LAYOUT === */
+#app{position:relative;width:100%;height:100vh;height:100dvh;overflow:hidden}
+#map{position:absolute;inset:0;z-index:0;background:#1a1a1a}
+/* Top HUD (brand + toggles) */
+#map-hud{position:absolute;top:0;left:0;right:0;z-index:500;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:calc(14px + env(safe-area-inset-top,0px)) 16px 12px;pointer-events:none}
+.hud-brand{pointer-events:auto;background:rgba(15,23,42,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(148,163,184,.18);border-radius:14px;padding:10px 16px;box-shadow:0 4px 24px rgba(0,0,0,.35);max-width:min(360px,58vw)}
+.hud-brand h1{font-size:15px;font-weight:700;color:#f8fafc;letter-spacing:-.02em;line-height:1.2}
+.hud-brand .hud-sub{font-size:10px;color:#94a3b8;margin-top:2px}
+.hud-brand .hud-live{display:inline-flex;align-items:center;gap:5px;margin-top:6px;font-size:10px;font-weight:600;color:#4ade80}
+.hud-brand .hud-live-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e;animation:here-pulse 2s infinite}
+.hud-controls{pointer-events:auto;display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;align-items:flex-start}
+.hud-pill{display:flex;align-items:center;gap:6px;padding:7px 11px;background:rgba(15,23,42,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(148,163,184,.18);border-radius:999px;cursor:pointer;user-select:none;font-size:10px;color:#cbd5e1;font-weight:500;box-shadow:0 2px 12px rgba(0,0,0,.25);transition:background .15s}
+.hud-pill:hover{background:rgba(30,41,59,.88)}
+.hud-pill input{display:none}
+.hud-pill .toggle-track{width:26px;height:14px;background:#334155;border-radius:7px;position:relative;transition:background .2s;flex-shrink:0}
+.hud-pill .toggle-track::after{content:'';position:absolute;top:2px;left:2px;width:10px;height:10px;background:#94a3b8;border-radius:50%;transition:transform .2s,background .2s}
+.hud-pill input:checked+.toggle-track{background:#2563eb}
+.hud-pill input:checked+.toggle-track::after{transform:translateX(12px);background:#fff}
+#trail-checkbox:checked+.toggle-track{background:#22c55e}
+/* Bottom trip dock */
+#trip-dock{position:absolute;bottom:0;left:0;right:0;z-index:600;display:flex;flex-direction:column;background:linear-gradient(to top,rgba(8,15,28,.95) 0%,rgba(12,20,38,.88) 55%,rgba(15,23,42,.75) 100%);backdrop-filter:blur(24px) saturate(1.1);-webkit-backdrop-filter:blur(24px) saturate(1.1);border-top:1px solid rgba(148,163,184,.12);box-shadow:0 -16px 64px rgba(0,0,0,.5);padding-bottom:env(safe-area-inset-bottom,0)}
+/* Expandable detail panel above the scrubber */
+#dock-detail{flex:0 1 auto;min-height:0;overflow-y:auto;border-bottom:1px solid rgba(51,65,85,.4);transition:max-height .32s cubic-bezier(.4,0,.2,1),opacity .22s}
+#dock-detail.collapsed{max-height:0;opacity:0;border-bottom:none;overflow:hidden;pointer-events:none}
+#dock-detail-inner{padding:16px 20px 12px;max-height:min(44vh,360px);overflow-y:auto}
+.dock-detail-photo{width:100%;max-height:150px;object-fit:cover;border-radius:10px;margin-bottom:12px;display:block;cursor:pointer;border:1px solid rgba(148,163,184,.12)}
+.dock-detail-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:6px}
+.dock-detail-badge{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.45px;padding:2px 9px;border-radius:999px}
+.dock-detail-badge.done{background:rgba(34,197,94,.12);color:#4ade80;border:1px solid rgba(34,197,94,.22)}
+.dock-detail-badge.current{background:rgba(59,130,246,.12);color:#93c5fd;border:1px solid rgba(59,130,246,.28)}
+.dock-detail-badge.upcoming{background:rgba(100,116,139,.1);color:#94a3b8;border:1px solid rgba(100,116,139,.2)}
+.dock-detail-badge.update{background:rgba(96,165,250,.1);color:#93c5fd;border:1px solid rgba(96,165,250,.2)}
+.dock-detail-date{font-size:10px;color:#64748b;font-weight:600}
+.dock-detail-title{font-size:17px;font-weight:700;color:#f1f5f9;line-height:1.22;margin-bottom:3px;letter-spacing:-.025em}
+.dock-detail-sub{font-size:11px;color:#64748b;margin-bottom:9px}
+.dock-detail-body{font-size:12px;color:#cbd5e1;line-height:1.6;max-height:80px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical}
+.dock-detail-body.expanded{max-height:none;-webkit-line-clamp:unset;display:block}
+.dock-detail-more{margin-top:8px;background:none;border:none;color:#60a5fa;font-size:10.5px;font-weight:600;cursor:pointer;padding:0}
+.dock-stages{margin-top:12px;padding-top:10px;border-top:1px solid rgba(51,65,85,.45)}
+.dock-stages-title{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#475569;margin-bottom:7px}
+.dock-stage{background:rgba(30,41,59,.6);border-radius:7px;padding:8px 11px;margin-bottom:5px}
+.dock-stage-name{font-size:11px;font-weight:600;color:#e2e8f0;margin-bottom:2px}
+.dock-stage-dist{font-size:10px;color:#475569;font-weight:600}
+.dock-stage-desc{font-size:10.5px;color:#94a3b8;line-height:1.5;margin-top:3px}
+/* Scrubber track */
+#dock-scrub-wrap{flex:0 0 auto;padding:10px 0 12px;position:relative}
+#dock-progress-bar{height:3px;background:rgba(51,65,85,.5);margin:0 20px 10px;border-radius:2px;overflow:hidden}
+#dock-progress-fill{height:100%;background:linear-gradient(90deg,#22c55e,#3b82f6,#a855f7);border-radius:2px;transition:width .4s ease}
+#dock-track{display:flex;gap:0;overflow-x:auto;overflow-y:hidden;padding:4px 28px 6px;scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+#dock-track::-webkit-scrollbar{display:none}
+.dock-node{position:relative;z-index:1;flex:0 0 auto;width:80px;scroll-snap-align:center;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;padding:4px 2px 2px;border:none;background:none;font:inherit;color:inherit;-webkit-tap-highlight-color:transparent;transition:transform .15s}
+.dock-node:hover{transform:translateY(-2px)}
+/* Connector line between nodes */
+.dock-node::before{content:'';position:absolute;top:22px;right:-20px;width:40px;height:2px;background:rgba(51,65,85,.6);z-index:0}
+.dock-node:last-child::before{display:none}
+.dock-node.done::before{background:rgba(34,197,94,.35)}
+.dock-node-ring{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid rgba(148,163,184,.3);background:rgba(15,23,42,.8);overflow:hidden;transition:box-shadow .2s,border-color .2s;position:relative;z-index:1}
+.dock-node.selected .dock-node-ring{box-shadow:0 0 0 3px rgba(96,165,250,.4),0 0 20px rgba(59,130,246,.3)}
+.dock-node.done .dock-node-ring{border-color:rgba(34,197,94,.5);background:rgba(34,197,94,.1)}
+.dock-node.current .dock-node-ring{width:44px;height:44px;border-color:#60a5fa;background:rgba(59,130,246,.18);animation:here-pulse 2.5s infinite}
+.dock-node.upcoming .dock-node-ring{opacity:.75}
+.dock-node-thumb{width:100%;height:100%;object-fit:cover}
+.dock-node-icon{font-size:14px;line-height:1}
+.dock-node-label{font-size:9px;font-weight:600;color:#94a3b8;text-align:center;line-height:1.25;max-width:76px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dock-node.selected .dock-node-label{color:#e2e8f0}
+.dock-node.current .dock-node-label{color:#93c5fd;font-weight:700}
+.dock-node.done .dock-node-label{color:#4ade80}
+/* badge / type styles kept for detour cards inside detail panel */
 .badge{display:inline-flex;padding:1px 6px;border-radius:3px;font-size:9px;font-weight:700;text-transform:uppercase}
 .b-bike{background:#1e3a5f;color:#60a5fa}
 .b-train{background:#3b1764;color:#c084fc}
 .b-ferry{background:#134e4a;color:#5eead4}
-.seg-body{padding:0 12px 12px;display:none}
-.seg.active .seg-body{display:block}
-.seg-body .route-name{font-size:11px;color:#60a5fa;font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px}
-.seg-body>p{font-size:11.5px;color:#cbd5e1;line-height:1.55;margin-bottom:8px}
-.stage{background:#1e293b;border-radius:6px;padding:8px 10px;margin-bottom:6px;transition:background .15s}
-.stage:hover{background:#253548}
-.stage-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
-.stage-name{font-size:11px;font-weight:600;color:#e2e8f0}
-.stage-dist{font-size:10px;color:#64748b;font-weight:600}
-.stage-desc{font-size:10.5px;color:#94a3b8;line-height:1.5}
-.stage-highlights{margin-top:4px;padding:0;list-style:none}
-.stage-highlights li{font-size:10.5px;color:#94a3b8;padding:2px 0;display:flex;align-items:flex-start;gap:5px}
-.stage-highlights li::before{content:'\2022';color:#475569;flex-shrink:0;margin-top:0}
-.detour-card{background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid #f59e0b33;border-radius:6px;padding:8px 10px;margin-bottom:6px}
-.detour-hdr{display:flex;align-items:center;gap:6px;margin-bottom:3px}
-.detour-icon{font-size:10px}
+.detour-card{background:rgba(26,26,46,.8);border:1px solid rgba(245,158,11,.2);border-radius:6px;padding:8px 10px;margin-bottom:6px}
 .detour-name{font-size:11px;font-weight:600;color:#fbbf24}
-.detour-meta{font-size:9.5px;color:#92400e;font-weight:600;margin-left:auto}
-.detour-desc{font-size:10.5px;color:#94a3b8;line-height:1.5}
-.detour-verdict{font-size:10px;font-weight:700;margin-top:3px}
+.detour-meta{font-size:9.5px;color:#92400e;font-weight:600}
+.detour-desc{font-size:10.5px;color:#94a3b8;line-height:1.5;margin-top:3px}
+.detour-verdict{font-size:10px;font-weight:700;margin-top:4px}
 .verdict-must{color:#22c55e}
 .verdict-highly{color:#60a5fa}
 .verdict-nice{color:#94a3b8}
-.budget-section{margin:8px 16px 10px;background:#0a1628;border-radius:10px;border:1px solid #1e3a5f;overflow:hidden}
-.budget-header{padding:12px 14px;background:linear-gradient(135deg,#0a2e1a,#0f172a);border-bottom:1px solid #1e3a5f;cursor:pointer;display:flex;align-items:center;justify-content:space-between}
-.budget-header h3{font-size:12px;font-weight:700;color:#22c55e}
-.budget-header .budget-total{font-size:14px;font-weight:700;color:#86efac}
-.budget-body{padding:12px 14px;display:none}
-.budget-section.open .budget-body{display:block}
-.budget-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:10.5px;border-bottom:1px solid #1e293b11}
-.budget-row .bl{color:#94a3b8}
-.budget-row .bv{color:#e2e8f0;font-weight:600;font-variant-numeric:tabular-nums}
-.budget-row.subtotal{border-top:1px solid #334155;margin-top:4px;padding-top:6px}
-.budget-row.subtotal .bl{color:#cbd5e1;font-weight:600}
-.budget-row.subtotal .bv{color:#60a5fa;font-weight:700}
-.budget-row.grand{border-top:2px solid #22c55e44;margin-top:6px;padding-top:8px}
-.budget-row.grand .bl{color:#f1f5f9;font-weight:700;font-size:11.5px}
-.budget-row.grand .bv{color:#22c55e;font-weight:700;font-size:13px}
-.budget-cat{font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin:10px 0 4px;padding-top:6px;border-top:1px solid #1e293b}
-.budget-cat:first-child{margin-top:0;border:0;padding:0}
-.budget-note{font-size:9.5px;color:#64748b;margin-top:3px;line-height:1.4;font-style:italic}
-.country-bar{display:flex;align-items:center;gap:6px;padding:5px 0;font-size:10.5px}
-.country-bar .cb-name{width:70px;color:#94a3b8;flex-shrink:0}
-.country-bar .cb-bar{flex:1;height:8px;background:#1e293b;border-radius:4px;overflow:hidden}
-.country-bar .cb-fill{height:100%;border-radius:4px}
-.country-bar .cb-val{width:55px;text-align:right;color:#e2e8f0;font-weight:600;font-variant-numeric:tabular-nums}
-.extension-badge{display:inline-block;padding:2px 6px;border-radius:3px;font-size:9px;font-weight:700;background:#f59e0b22;color:#fbbf24;border:1px solid #f59e0b44;margin-left:4px}
-.notes-section{margin:8px 16px 16px;padding:12px 14px;background:#172033;border-radius:10px;border:1px solid #1e3a5f}
-.notes-section h3{font-size:11.5px;font-weight:600;color:#60a5fa;margin-bottom:6px}
-.notes-section ul{padding-left:14px}
-.notes-section li{font-size:11px;color:#94a3b8;line-height:1.55;margin-bottom:3px}
-#map{flex:1;background:#1a1a1a}
+/* Leaflet UI theme */
 .leaflet-bar a{background:#1e293b!important;color:#f1f5f9!important;border-color:#475569!important}
 .leaflet-bar a:hover{background:#334155!important}
 .leaflet-bar a.leaflet-disabled{color:#64748b!important;opacity:1!important}
@@ -136,26 +132,15 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
 .leaflet-popup-content{font-family:'Segoe UI',system-ui,sans-serif;font-size:11.5px;line-height:1.5;max-width:260px}
 .leaflet-popup-content b{color:#f8fafc}
 .leaflet-popup-content .pt{font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;font-weight:700}
-@media(max-width:900px){
-#app{position:relative}
-#sidebar{position:fixed;top:0;left:0;width:100%;height:100%;height:100dvh;z-index:1000;transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);min-width:0;max-height:none;-webkit-overflow-scrolling:touch;padding-bottom:env(safe-area-inset-bottom,0);box-sizing:border-box}
-#sidebar.open{transform:translateY(0)}
-#map{width:100%;height:100vh}
-.mob-toggle{display:flex!important;position:fixed;bottom:calc(24px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);z-index:999;background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;border:none;border-radius:28px;padding:14px 28px;font-size:15px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.5);cursor:pointer;align-items:center;gap:8px;white-space:nowrap;-webkit-tap-highlight-color:transparent}
-.mob-toggle:active{transform:translateX(-50%) scale(.95)}
-.mob-toggle.hidden{display:none!important}
-.mob-close{display:flex!important;position:sticky;top:0;background:#0f172a;padding:calc(14px + env(safe-area-inset-top,0px)) 16px 14px;z-index:11;justify-content:space-between;align-items:center;border-bottom:1px solid #334155}
-.mob-close span{font-size:13px;font-weight:600;color:#94a3b8}
-.mob-close button{background:#334155;color:#f1f5f9;border:none;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.mob-close button:active{background:#475569}
-.seg-hdr{padding:12px 14px}
-.stage{padding:10px 12px}
-.stage-name{font-size:12px}
-.stage-dist{font-size:11px}
-.stage-desc{font-size:11.5px}
-.leaflet-popup-content{max-width:220px;font-size:12px}
+@media(max-width:600px){
+.hud-brand h1{font-size:14px}
+.hud-brand{max-width:calc(100vw - 100px)}
+.dock-node{width:68px}
+.dock-node-ring{width:34px;height:34px}
+.dock-node.current .dock-node-ring{width:40px;height:40px}
+#dock-detail-inner{padding:12px 14px 10px}
+.dock-detail-title{font-size:15px}
 }
-@media(min-width:901px){.mob-toggle,.mob-close{display:none!important}}
 .elev-wrap{margin-top:10px;background:#0a1628;border-radius:6px;padding:10px;border:1px solid #1e3a5f;overflow:hidden}
 .elev-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
 .elev-label{font-size:10px;font-weight:700;color:#60a5fa}
@@ -200,6 +185,25 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
 .update-card .uc-img{margin-top:6px}
 .update-card .uc-img img{width:100%;display:block;max-height:160px;object-fit:cover;border-radius:6px;cursor:pointer}
 .updates-empty{font-size:11px;color:#475569;font-style:italic;text-align:center;padding:14px 0}
+.timeline-section{margin:0 12px 8px;background:#0a1628;border-radius:10px;border:1px solid #14532d;overflow:hidden}
+.timeline-hdr{padding:10px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:linear-gradient(135deg,#0a2818,#0a1628);border-bottom:1px solid #14532d}
+.timeline-hdr h3{font-size:11.5px;font-weight:700;color:#4ade80;margin:0}
+.timeline-hdr .tl-count{font-size:9px;background:#22c55e22;color:#4ade80;border:1px solid #22c55e44;padding:1px 7px;border-radius:10px}
+.timeline-body{padding:10px 12px 6px;display:none;max-height:320px;overflow-y:auto}
+.timeline-section.open .timeline-body{display:block}
+.tl-item{position:relative;padding:0 0 12px 22px;border-left:2px solid #1e3a2f;margin-left:6px}
+.tl-item:last-child{border-left-color:transparent;padding-bottom:4px}
+.tl-item::before{content:'';position:absolute;left:-7px;top:2px;width:10px;height:10px;border-radius:50%;background:#22c55e;border:2px solid #0f172a;box-shadow:0 0 0 1px #22c55e55}
+.tl-item.tl-latest::before{background:#3b82f6;box-shadow:0 0 0 1px #3b82f655;animation:here-pulse 2s infinite}
+.tl-item.tl-click{cursor:pointer}
+.tl-item.tl-click:hover .tl-loc{color:#86efac}
+.tl-when{font-size:9px;color:#475569;font-weight:600}
+.tl-loc{font-size:10.5px;color:#4ade80;font-weight:700;margin:2px 0}
+.tl-note{font-size:10.5px;color:#94a3b8;line-height:1.4}
+.tl-coords{font-size:8.5px;color:#334155;font-family:ui-monospace,monospace;margin-top:2px}
+#trail-checkbox:checked+.toggle-track{background:#22c55e}
+.trail-pin{width:10px;height:10px;background:#22c55e;border-radius:50%;border:2px solid #fff;box-shadow:0 0 4px rgba(34,197,94,.7)}
+.trail-pin-latest{width:12px;height:12px;background:#3b82f6;border:2px solid #fff;box-shadow:0 0 6px rgba(59,130,246,.8)}
 .seg-status{padding:1px 7px;border-radius:3px;font-size:8px;font-weight:700;text-transform:uppercase;flex-shrink:0;align-self:flex-start;margin-top:2px}
 .ss-done{background:#22c55e22;color:#22c55e;border:1px solid #22c55e44}
 .ss-here{background:#3b82f622;color:#60a5fa;border:1px solid #3b82f644;animation:here-pulse 2s infinite}
@@ -216,148 +220,43 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
 </head>
 <body>
 <div id="app">
-<div id="sidebar">
-  <div class="mob-close"><span>Route Plan</span><button type="button" id="mob-sidebar-close" aria-label="Close route plan">Close</button></div>
-  <div id="sidebar-header">
-    <h1>Forward to Fjord</h1>
-    <div class="subtitle">Scandinavia &amp; Baltic e-bike tour &bull; Live route map &amp; journey updates</div>
-  </div>
-
-  <div id="trip-status-banner" style="display:none"></div>
-  <div id="live-stats-wrap" style="display:none"></div>
-  <div id="live-prog-wrap" style="display:none"></div>
-
-  <div class="totals-bar">
-    <div class="total-item"><div class="value" id="total-km">~5,025</div><div class="label">Total KM</div></div>
-    <div class="total-item"><div class="value">80&ndash;109</div><div class="label">Total Days</div></div>
-    <div class="total-item"><div class="value">14</div><div class="label">Countries</div></div>
-    <div class="total-item"><div class="value">~&euro;9,250</div><div class="label">Budget</div></div>
-  </div>
-
-  <div class="schengen-banner">
-    <h3>&#9888; Schengen Strategy &mdash; 61&ndash;82 Schengen Days (Continuous Overland Route)</h3>
-    <p><strong>Segments 1&ndash;8</strong> (Gothenburg to Dubrovnik): 61&ndash;82 Schengen days. Includes a Vilnius overnight on the train journey (+1 day vs single-day transit). The Klaip&#x0117;da&rarr;Warsaw train (2 days via Vilnius) saves ~5 days vs cycling to Warsaw, and the Rijeka&rarr;Split ferry saves ~5 more. Warsaw&rarr;Krak&oacute;w direct saves a further ~5 days vs the full Vistula route. At 20 rest days + 58 cycling days: <strong>79 Schengen days used, 11-day buffer remaining</strong>. Worst case (82) still gives 8 days spare. Cross into Bosnia at Dubrovnik and the clock <strong>STOPS</strong>. <strong>Segment 9</strong> (Balkans): 30&ndash;40 non-Schengen days (no time pressure &mdash; 90-day visa-free in every country). All Balkans countries are visa-free for Australians.</p>
-  </div>
-
-  <label class="layer-toggle"><input type="checkbox" id="zone-checkbox" checked><span class="toggle-track"></span><span class="toggle-label">Show Non-Schengen Zones</span></label>
-  <label class="layer-toggle"><input type="checkbox" id="photo-checkbox"><span class="toggle-track"></span><span class="toggle-label">Show Photos</span></label>
-
-  <div id="updates-feed-wrap"></div>
-
-  <div id="segments-container"></div>
-
-  <div class="budget-section" id="budget-section">
-    <div class="budget-header" onclick="this.parentElement.classList.toggle('open')">
-      <h3>Budget Breakdown &mdash; 26,000 AUD (1 AUD &asymp; &euro;0.61)</h3>
-      <span class="budget-total">&euro;15,860 available</span>
-    </div>
-    <div class="budget-body">
-
-      <div class="budget-cat">E-Bike &amp; Gear (One-Time)</div>
-      <div class="budget-row"><span class="bl">Cube Touring Hybrid Pro 800 (Bosch PX, 800Wh)</span><span class="bv">&euro;3,000</span></div>
-      <div class="budget-row"><span class="bl">Bosch PowerMore 250 range extender (1,050Wh total)</span><span class="bv">&euro;400</span></div>
-      <div class="budget-row"><span class="bl">Tent (Naturehike Cloud Up 2P, 1.35kg)</span><span class="bv">&euro;130</span></div>
-      <div class="budget-row"><span class="bl">Sleeping bag (3-season, comfort 5&deg;C)</span><span class="bv">&euro;80</span></div>
-      <div class="budget-row"><span class="bl">Sleeping mat (inflatable insulated)</span><span class="bv">&euro;60</span></div>
-      <div class="budget-row"><span class="bl">Cooking kit (stove, pot, utensils)</span><span class="bv">&euro;50</span></div>
-      <div class="budget-row"><span class="bl">Panniers (Ortlieb Back-Roller style &times;2)</span><span class="bv">&euro;150</span></div>
-      <div class="budget-row"><span class="bl">Handlebar bag + frame bag</span><span class="bv">&euro;50</span></div>
-      <div class="budget-row"><span class="bl">Bike accessories (lights, lock, pump, tubes, mount)</span><span class="bv">&euro;150</span></div>
-      <div class="budget-row"><span class="bl">Misc gear (headlamp, multitool, first aid, dry bags)</span><span class="bv">&euro;100</span></div>
-      <div class="budget-row"><span class="bl">Travel insurance (90 days)</span><span class="bv">&euro;400</span></div>
-      <div class="budget-row"><span class="bl">Phone SIM / data (EU roaming)</span><span class="bv">&euro;50</span></div>
-      <div class="budget-row subtotal"><span class="bl">One-time subtotal</span><span class="bv">&euro;4,620</span></div>
-      <div class="budget-note">No Cube dealer in Gothenburg &mdash; order the bike online and have it delivered to your hotel (e.g. Scandic: confirm reception accepts freight, your name on the label, arrival window). Book a local bike shop in advance for assembly, safety check, and Bosch/e-bike setup. Buy camping gear at Decathlon (locations in Gothenburg, Stockholm, Helsinki, R&imacr;ga, Gda&nacute;sk). Tip: sell the bike at trip end for &euro;1,000&ndash;1,500 recovery.</div>
-
-      <div class="budget-cat">Daily Costs by Country (2 camp : 1 hostel ratio)</div>
-      <div class="budget-note" style="margin-bottom:6px">Wild camping is FREE and legal in Sweden (Allemansr&auml;tten) and Finland (Jokamiehenoikeus). Estonia allows 1-night wild camps. Latvia/Lithuania generally tolerated. Poland &amp; south: use paid campsites.</div>
-      <div class="country-bar"><span class="cb-name">Sweden</span><div class="cb-bar"><div class="cb-fill" style="width:82%;background:#3b82f6"></div></div><span class="cb-val">&euro;36/day</span></div>
-      <div class="country-bar"><span class="cb-name">Finland</span><div class="cb-bar"><div class="cb-fill" style="width:86%;background:#f59e0b"></div></div><span class="cb-val">&euro;38/day</span></div>
-      <div class="country-bar"><span class="cb-name">Estonia</span><div class="cb-bar"><div class="cb-fill" style="width:55%;background:#06b6d4"></div></div><span class="cb-val">&euro;24/day</span></div>
-      <div class="country-bar"><span class="cb-name">Latvia</span><div class="cb-bar"><div class="cb-fill" style="width:64%;background:#ef4444"></div></div><span class="cb-val">&euro;28/day</span></div>
-      <div class="country-bar"><span class="cb-name">Lithuania</span><div class="cb-bar"><div class="cb-fill" style="width:55%;background:#ef4444"></div></div><span class="cb-val">&euro;24/day</span></div>
-      <div class="country-bar"><span class="cb-name">Poland</span><div class="cb-bar"><div class="cb-fill" style="width:52%;background:#f97316"></div></div><span class="cb-val">&euro;23/day</span></div>
-      <div class="country-bar"><span class="cb-name">Czechia</span><div class="cb-bar"><div class="cb-fill" style="width:52%;background:#a855f7"></div></div><span class="cb-val">&euro;23/day</span></div>
-      <div class="country-bar"><span class="cb-name">Austria</span><div class="cb-bar"><div class="cb-fill" style="width:100%;background:#ec4899"></div></div><span class="cb-val">&euro;44/day</span></div>
-      <div class="country-bar"><span class="cb-name">Slovenia</span><div class="cb-bar"><div class="cb-fill" style="width:73%;background:#ec4899"></div></div><span class="cb-val">&euro;32/day</span></div>
-      <div class="country-bar"><span class="cb-name">Croatia</span><div class="cb-bar"><div class="cb-fill" style="width:70%;background:#ec4899"></div></div><span class="cb-val">&euro;31/day</span></div>
-      <div class="budget-note">Daily avg includes: accommodation (2 camp nights + 1 hostel/3), food (self-catering + occasional meal out), misc supplies. Camp = free wild camp or &euro;5&ndash;15 campsite. Hostel = dorm bed or budget guesthouse &euro;15&ndash;35. Austria/Slovenia/Croatia: wild camping is ILLEGAL, must use paid campsites &euro;12&ndash;20.</div>
-
-      <div class="budget-cat">Original Route (~51 days, all bike)</div>
-      <div class="budget-row"><span class="bl">Sweden &mdash; 10 days &times; &euro;36</span><span class="bv">&euro;360</span></div>
-      <div class="budget-row"><span class="bl">Finland &mdash; 10 days &times; &euro;38</span><span class="bv">&euro;380</span></div>
-      <div class="budget-row"><span class="bl">Estonia &mdash; 5 days &times; &euro;24</span><span class="bv">&euro;120</span></div>
-      <div class="budget-row"><span class="bl">Latvia &mdash; 6 days &times; &euro;28</span><span class="bv">&euro;168</span></div>
-      <div class="budget-row"><span class="bl">Lithuania &mdash; 2 days &times; &euro;24</span><span class="bv">&euro;48</span></div>
-      <div class="budget-row"><span class="bl">Poland &mdash; 7 days &times; &euro;23 (Warsaw&rarr;Krak&oacute;w direct)</span><span class="bv">&euro;161</span></div>
-      <div class="budget-row"><span class="bl">Ferry days &mdash; 3 days &times; &euro;30</span><span class="bv">&euro;90</span></div>
-      <div class="budget-row subtotal"><span class="bl">Daily living subtotal</span><span class="bv">&euro;1,442</span></div>
-
-      <div class="budget-cat">Transport</div>
-      <div class="budget-row"><span class="bl">Ferry Grisslehamn &rarr; Ecker&ouml;</span><span class="bv">&euro;35</span></div>
-      <div class="budget-row"><span class="bl">Ferry Mariehamn &rarr; Turku</span><span class="bv">&euro;40</span></div>
-      <div class="budget-row"><span class="bl">Ferry Helsinki &rarr; Tallinn</span><span class="bv">&euro;25</span></div>
-      <div class="budget-row"><span class="bl">Train Klaip&#x0117;da &rarr; Vilnius &rarr; Warsaw + bike</span><span class="bv">&euro;65</span></div>
-      <div class="budget-row"><span class="bl">Vilnius overnight accommodation</span><span class="bv">&euro;35</span></div>
-      <div class="budget-row subtotal"><span class="bl">Transport subtotal</span><span class="bv">&euro;220</span></div>
-
-      <div class="budget-cat">Contingency</div>
-      <div class="budget-row"><span class="bl">Bike repairs, spare parts, tyres</span><span class="bv">&euro;300</span></div>
-      <div class="budget-row"><span class="bl">Museums, attractions, nice dinners</span><span class="bv">&euro;350</span></div>
-      <div class="budget-row"><span class="bl">Emergency buffer</span><span class="bv">&euro;500</span></div>
-      <div class="budget-row subtotal"><span class="bl">Contingency subtotal</span><span class="bv">&euro;1,150</span></div>
-
-      <div class="budget-row grand"><span class="bl">Original Route Total</span><span class="bv">&euro;7,432 &asymp; AUD 12,180</span></div>
-      <div class="budget-row grand" style="border:0;padding-top:2px"><span class="bl">Remaining from AUD 26K</span><span class="bv" style="color:#22c55e">AUD 13,820</span></div>
-
-      <div class="budget-cat">Seg 8: Krak&oacute;w &rarr; Dubrovnik (+30 days)</div>
-      <div class="budget-row"><span class="bl">Czechia &mdash; 3 days &times; &euro;23</span><span class="bv">&euro;69</span></div>
-      <div class="budget-row"><span class="bl">Austria &mdash; 8 days &times; &euro;44</span><span class="bv">&euro;352</span></div>
-      <div class="budget-row"><span class="bl">Slovenia &mdash; 4 days &times; &euro;32</span><span class="bv">&euro;128</span></div>
-      <div class="budget-row"><span class="bl">Croatia &mdash; 13 days &times; &euro;31</span><span class="bv">&euro;403</span></div>
-      <div class="budget-row"><span class="bl">Ferry Rijeka &rarr; Split (Jadrolinija + bike)</span><span class="bv">&euro;55</span></div>
-      <div class="budget-row"><span class="bl">Extra transport &amp; contingency</span><span class="bv">&euro;300</span></div>
-      <div class="budget-row subtotal"><span class="bl">Seg 8 subtotal</span><span class="bv">&euro;1,307</span></div>
-
-      <div class="budget-row grand"><span class="bl">Schengen Route Total (Seg 1&ndash;8)</span><span class="bv">&euro;8,739 &asymp; AUD 14,325</span></div>
-
-      <div class="budget-cat">Balkans Non-Schengen Extension &mdash; Seg 9 (+35 days) <span class="extension-badge">Clock Stops</span></div>
-      <div class="budget-note" style="margin-bottom:6px">The Balkans are Europe&rsquo;s best-value cycling destination. Wild camping widely tolerated. Hostel dorms &euro;8&ndash;15. Full restaurant meal &euro;3&ndash;7. Daily average across the region: &euro;18/day. No time pressure &mdash; visa-free 90 days in every country.</div>
-      <div class="country-bar"><span class="cb-name">Montenegro</span><div class="cb-bar"><div class="cb-fill" style="width:50%;background:#10b981"></div></div><span class="cb-val">&euro;22/day</span></div>
-      <div class="country-bar"><span class="cb-name">Albania</span><div class="cb-bar"><div class="cb-fill" style="width:34%;background:#10b981"></div></div><span class="cb-val">&euro;15/day</span></div>
-      <div class="country-bar"><span class="cb-name">N. Macedonia</span><div class="cb-bar"><div class="cb-fill" style="width:36%;background:#10b981"></div></div><span class="cb-val">&euro;16/day</span></div>
-      <div class="country-bar"><span class="cb-name">Kosovo</span><div class="cb-bar"><div class="cb-fill" style="width:32%;background:#10b981"></div></div><span class="cb-val">&euro;14/day</span></div>
-      <div class="country-bar"><span class="cb-name">Serbia</span><div class="cb-bar"><div class="cb-fill" style="width:38%;background:#10b981"></div></div><span class="cb-val">&euro;17/day</span></div>
-      <div class="country-bar"><span class="cb-name">Bosnia</span><div class="cb-bar"><div class="cb-fill" style="width:36%;background:#10b981"></div></div><span class="cb-val">&euro;16/day</span></div>
-      <div class="budget-row"><span class="bl">Montenegro &mdash; 4 days &times; &euro;22</span><span class="bv">&euro;88</span></div>
-      <div class="budget-row"><span class="bl">Albania &mdash; 9 days &times; &euro;15</span><span class="bv">&euro;135</span></div>
-      <div class="budget-row"><span class="bl">N. Macedonia &mdash; 4 days &times; &euro;16</span><span class="bv">&euro;64</span></div>
-      <div class="budget-row"><span class="bl">Kosovo &mdash; 4 days &times; &euro;14</span><span class="bv">&euro;56</span></div>
-      <div class="budget-row"><span class="bl">Serbia &mdash; 7 days &times; &euro;17</span><span class="bv">&euro;119</span></div>
-      <div class="budget-row"><span class="bl">Bosnia &mdash; 7 days &times; &euro;16</span><span class="bv">&euro;112</span></div>
-      <div class="budget-row"><span class="bl">Extra contingency</span><span class="bv">&euro;200</span></div>
-      <div class="budget-row subtotal"><span class="bl">Balkans subtotal (35 days)</span><span class="bv">&euro;774</span></div>
-      <div class="budget-note">Yes, really. The entire 35-day Balkans journey costs less than 10 days in Scandinavia.</div>
-
-      <div class="budget-row grand"><span class="bl">FULL TRIP TOTAL (Seg 1&ndash;9, continuous overland)</span><span class="bv">&euro;9,513 &asymp; AUD 15,590</span></div>
-      <div class="budget-row grand" style="border:0;padding-top:2px"><span class="bl">Remaining from AUD 26K</span><span class="bv" style="color:#22c55e">AUD 10,410</span></div>
-      <div class="budget-note">Over AUD 10K remaining even with a generous 35-day Balkans leg. Includes Vilnius overnight on train journey (+&euro;50 vs single-day transit &mdash; well worth it). You could: sell the bike at trip end for &euro;1,000&ndash;1,500 recovery, extend into Greece or Turkey, upgrade accommodation, or keep as cushion.</div>
-    </div>
-  </div>
-
-  <div class="notes-section">
-    <h3>E-Bike Essentials</h3>
-    <ul>
-      <li><strong>EU law:</strong> Max 250W motor, 25 km/h assist cutoff. Above = moped (registration + insurance).</li>
-      <li><strong>Range:</strong> Plan 60&ndash;100 km/charge. Carry a spare or plan charging every 80 km at cafes/hostels.</li>
-      <li><strong>Ferries:</strong> Bikes treated as regular bikes. Some charge extra for the battery.</li>
-      <li><strong>Train (Klaip&#x0117;da&rarr;Warsaw via Vilnius overnight):</strong> Day 1: LTG Link to Vilnius (~4.5 hrs) &mdash; book bike space in advance. Overnight in Vilnius Old Town. Day 2: LTG Link to Warsaw (~7.5 hrs) &mdash; get off here and begin the Poland cycling leg directly. No onward connection to Gda&#x0144;sk needed. Total ~&euro;65 inc. bike fees.</li>
-      <li><strong>GPX files:</strong> Download from EuroVelo, Komoot, and Bikemap for each named route. Essential in Latvia/Lithuania/Poland where signage is patchy.</li>
-    </ul>
-  </div>
-
-</div>
 <div id="map"></div>
+
+<!-- Top HUD: brand + layer toggles -->
+<div id="map-hud">
+  <div class="hud-brand">
+    <h1>Forward to Fjord</h1>
+    <div class="hud-sub">Scandinavia &rarr; Balkans &bull; E-bike journey</div>
+    <div id="hud-live-wrap" style="display:none">
+      <span class="hud-live"><span class="hud-live-dot"></span><span id="hud-live-text"></span></span>
+    </div>
+  </div>
+  <div class="hud-controls">
+    <label class="hud-pill"><input type="checkbox" id="photo-checkbox"><span class="toggle-track"></span> Photos</label>
+    <label class="hud-pill"><input type="checkbox" id="trail-checkbox" checked><span class="toggle-track"></span> Trail</label>
+  </div>
+</div>
+
+<!-- Bottom timeline dock -->
+<div id="trip-dock">
+  <!-- Expandable segment/update detail -->
+  <div id="dock-detail" class="collapsed">
+    <div id="dock-detail-inner"></div>
+  </div>
+  <!-- Scrubber -->
+  <div id="dock-scrub-wrap">
+    <div id="dock-progress-bar"><div id="dock-progress-fill" style="width:0%"></div></div>
+    <div id="dock-track"></div>
+  </div>
+</div>
+
+<!-- Hidden containers kept for JS rendering (not shown in UI directly) -->
+<div id="location-timeline-wrap" style="display:none"></div>
+<div id="updates-feed-wrap" style="display:none"></div>
+<div id="trip-status-banner" style="display:none"></div>
+<div id="live-stats-wrap" style="display:none"></div>
+<div id="live-prog-wrap" style="display:none"></div>
+<div id="segments-container" style="display:none"></div>
 </div>
 
 <script>
@@ -1147,10 +1046,6 @@ leg.onAdd = function(){
       <div><span style="display:inline-block;width:16px;height:0;border-bottom:2px dashed #a855f7;vertical-align:middle;margin-right:5px"></span>Train</div>
       <div><span style="display:inline-block;width:16px;height:0;border-bottom:2px dashed #5eead4;vertical-align:middle;margin-right:5px"></span>Ferry</div>
       <div><span style="display:inline-block;width:12px;height:12px;background:#f59e0b;transform:rotate(45deg);vertical-align:middle;margin-right:7px;margin-left:2px"></span>Detour</div>
-      <div style="margin-top:3px;border-top:1px solid #334155;padding-top:3px;font-weight:600;color:#cbd5e1">Non-Schengen</div>
-      <div><span style="display:inline-block;width:12px;height:8px;background:rgba(239,68,68,.15);border:1.5px dashed #ef4444;vertical-align:middle;margin-right:5px;border-radius:2px"></span>No-Go</div>
-      <div><span style="display:inline-block;width:12px;height:8px;background:rgba(245,158,11,.08);border:1.5px dashed #f59e0b;vertical-align:middle;margin-right:5px;border-radius:2px"></span>Caution</div>
-      <div><span style="display:inline-block;width:12px;height:8px;background:rgba(34,197,94,.08);border:1.5px dashed #22c55e;vertical-align:middle;margin-right:5px;border-radius:2px"></span>Viable Break</div>
     </div>`;
   return d;
 };
@@ -1194,37 +1089,6 @@ locateCtrl.onAdd = function () {
   return btn;
 };
 locateCtrl.addTo(map);
-
-// --- NON-SCHENGEN OVERLAYS ---
-const nonSchengenZones = [
-  { id:'kaliningrad', name:'Kaliningrad (Russia)', color:'#ef4444', fillOpacity:.15, labelPos:[54.72,20.8],
-    popup:'<b>Kaliningrad (Russia)</b><br>Russian exclave between Lithuania and Poland. Requires Russian visa. Your route avoids it entirely via train from Klaip\u0117da to Gda\u0144sk.',
-    coords:[[55.29,20.57],[55.33,20.94],[55.28,21.09],[55.08,21.87],[54.79,22.18],[54.46,22.79],[54.36,22.79],[54.36,22.13],[54.35,21.18],[54.36,20.43],[54.46,19.97],[54.62,19.79],[54.83,19.93],[55.04,20.24],[55.29,20.57]]},
-  { id:'russia', name:'Russia (NW)', color:'#ef4444', fillOpacity:.08, labelPos:[62.0,32.0],
-    popup:'<b>Russia (Northwest)</b><br>Borders Finland and Estonia to the east. Not accessible without visa.',
-    coords:[[59.37,28.18],[59.02,28.01],[58.60,27.52],[58.08,27.49],[57.81,27.82],[57.52,27.76],[57.50,28.50],[57.80,30.50],[58.50,32.00],[60.00,33.50],[62.00,35.50],[64.00,36.00],[66.50,36.00],[66.50,29.50],[65.00,29.30],[63.50,29.10],[62.60,29.80],[61.17,28.77],[60.62,27.80],[60.23,28.60],[59.73,28.46],[59.37,28.18]]},
-  { id:'belarus', name:'Belarus', color:'#ef4444', fillOpacity:.08, labelPos:[53.5,27.8],
-    popup:'<b>Belarus</b><br>Borders Lithuania/Latvia east and Poland southeast. Not recommended for travel.',
-    coords:[[56.17,26.63],[55.68,26.59],[55.06,26.78],[54.80,26.59],[54.15,25.55],[53.94,24.23],[53.91,23.56],[53.45,23.88],[53.15,23.80],[52.76,23.20],[52.09,23.62],[51.58,23.61],[51.33,24.37],[51.45,25.80],[51.37,27.25],[51.50,29.10],[51.53,30.57],[52.11,31.59],[53.20,31.80],[55.05,28.65],[55.61,28.24],[55.82,27.55],[56.17,26.63]]},
-  { id:'ukraine', name:'Ukraine', color:'#f59e0b', fillOpacity:.06, labelPos:[49.0,31.0],
-    popup:'<b>Ukraine</b><br>Western border ~200 km from Krak\u00f3w. Non-Schengen (days here would pause clock). Check current travel advisories.',
-    coords:[[51.58,23.61],[51.25,24.10],[50.85,24.09],[50.38,24.01],[49.98,23.72],[49.55,22.71],[49.10,22.18],[48.63,22.15],[48.17,22.87],[47.95,24.00],[47.73,25.22],[46.44,28.11],[45.46,28.73],[45.35,29.64],[46.20,30.80],[46.62,32.50],[46.40,34.70],[47.10,36.50],[48.50,39.50],[51.50,40.00],[52.30,35.00],[52.30,31.80],[51.53,30.57],[51.45,25.80],[51.33,24.37],[51.58,23.61]]},
-  { id:'balkans', name:'Non-Schengen Balkans', color:'#22c55e', fillOpacity:.06, labelPos:[43.0,20.5],
-    popup:'<b>Non-Schengen Balkans</b><br>Serbia, Bosnia & Herzegovina, Montenegro, Kosovo, Albania, North Macedonia. All visa-free for Australians. Croatia is Schengen (since 2023) and NOT included.',
-    coords:[[46.10,19.06],[46.17,19.56],[46.15,20.35],[46.05,20.78],[45.98,21.40],[44.80,22.40],[44.03,22.60],[43.20,22.85],[42.53,22.45],[41.85,22.93],[41.23,22.50],[40.85,21.00],[40.60,20.97],[40.00,20.45],[39.65,20.05],[39.63,19.85],[40.46,19.42],[41.32,19.35],[41.87,19.40],[42.13,18.55],[42.47,18.53],[42.66,18.22],[42.93,17.62],[43.08,17.28],[43.50,16.90],[44.05,16.31],[44.55,15.95],[44.82,16.00],[45.15,15.78],[45.50,16.40],[45.78,17.40],[45.83,18.00],[45.52,18.80],[46.10,19.06]]}
-];
-
-const nonSchengenGroup = L.layerGroup().addTo(map);
-nonSchengenZones.forEach(z => {
-  L.polygon(z.coords, {color:z.color,weight:2,opacity:.5,fillColor:z.color,fillOpacity:z.fillOpacity,dashArray:'6,4'}).bindPopup(z.popup).addTo(nonSchengenGroup);
-  L.marker(z.labelPos, {icon:L.divIcon({className:'',html:`<div style="background:${z.color}22;border:1px solid ${z.color}55;color:${z.color};padding:2px 6px;border-radius:3px;font-size:9px;font-weight:700;font-family:Segoe UI,system-ui,sans-serif;white-space:nowrap;text-transform:uppercase;letter-spacing:.4px;text-shadow:0 1px 3px rgba(0,0,0,.8)">${z.name}<br><span style="font-weight:400;font-size:8px;opacity:.7">NON-SCHENGEN</span></div>`,iconSize:[0,0],iconAnchor:[0,0]}),interactive:false}).addTo(nonSchengenGroup);
-});
-
-const ukM = L.marker([54.5,-2.5],{icon:L.divIcon({className:'',html:'<div style="background:#22c55e22;border:2px solid #22c55e88;color:#22c55e;padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;font-family:Segoe UI,system-ui,sans-serif;white-space:nowrap;text-transform:uppercase;text-align:center">United Kingdom<br><span style="font-weight:400;font-size:8px;opacity:.7">NON-SCHENGEN \u2022 OPTIONAL FALLBACK</span></div>',iconSize:[0,0],iconAnchor:[0,0]})}).addTo(nonSchengenGroup);
-ukM.bindPopup('<b>United Kingdom</b><br>Not Schengen. With the train shortcut you have 10\u201329 days buffer, so a UK break is NOT needed. Available as a fallback if you spend extra days exploring.');
-
-const zCb = document.getElementById('zone-checkbox');
-zCb.addEventListener('change', function(){ this.checked ? map.addLayer(nonSchengenGroup) : map.removeLayer(nonSchengenGroup); });
 
 // --- BROUTER REAL GPS ROUTING ---
 const routingSegments = {
@@ -1400,6 +1264,53 @@ rebuildPhotoLayer();
 const phCb = document.getElementById('photo-checkbox');
 phCb.addEventListener('change', function(){ this.checked ? map.addLayer(photoGroup) : map.removeLayer(photoGroup); });
 
+// --- LOCATION TRAIL ---
+const trailGroup = L.layerGroup();
+function formatTimelineWhen(iso) {
+  if (!iso) return '';
+  var d = new Date(iso);
+  if (isNaN(d.getTime())) return iso;
+  var date = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+  var time = d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+  return date + ' \u00b7 ' + time;
+}
+function rebuildTrailLayer() {
+  trailGroup.clearLayers();
+  var history = (tripStatus.locationHistory || []).slice().filter(function(h){ return h.lat != null && h.lng != null; });
+  if (!history.length) return;
+  var chronological = history.slice().reverse();
+  if (chronological.length > 1) {
+    var line = L.polyline(chronological.map(function(h){ return [h.lat, h.lng]; }), {
+      color: '#22c55e', weight: 3, opacity: 0.75, dashArray: '6,8', lineCap: 'round'
+    });
+    line.addTo(trailGroup);
+  }
+  chronological.forEach(function(h, idx) {
+    var isLatest = idx === chronological.length - 1;
+    var icon = L.divIcon({
+      className: '',
+      html: '<div class="' + (isLatest ? 'trail-pin-latest' : 'trail-pin') + '"></div>',
+      iconSize: isLatest ? [12, 12] : [10, 10],
+      iconAnchor: isLatest ? [6, 6] : [5, 5]
+    });
+    var label = h.location || (h.lat + ', ' + h.lng);
+    var popup = '<div class="pt" style="color:#4ade80">' + (isLatest ? '\u25CF Latest' : 'Check-in') + '</div>' +
+      '<b>' + label + '</b><br>' +
+      '<span style="font-size:10px;color:#64748b">' + formatTimelineWhen(h.at) + '</span>';
+    if (h.note) popup += '<br><span style="font-size:10px;color:#94a3b8">' + h.note + '</span>';
+    var m = L.marker([h.lat, h.lng], { icon: icon, zIndexOffset: isLatest ? 900 : 500 + idx });
+    m.bindPopup(popup);
+    m.addTo(trailGroup);
+  });
+}
+rebuildTrailLayer();
+const trailCb = document.getElementById('trail-checkbox');
+trailCb.addEventListener('change', function(){
+  if (this.checked && (tripStatus.locationHistory || []).length) map.addLayer(trailGroup);
+  else map.removeLayer(trailGroup);
+});
+if (trailCb.checked && (tripStatus.locationHistory || []).length) map.addLayer(trailGroup);
+
 // --- TRIP STATUS RENDERING ---
 function initTripStatus() {
   if (!tripStatus.active) return;
@@ -1493,43 +1404,236 @@ function renderUpdatesFeed() {
     '</div>' +
     '<div class="updates-body">' + bodyHtml + '</div>' +
     '</div>';
+  wrap.querySelectorAll('.uc-map').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var lat = parseFloat(el.getAttribute('data-lat'));
+      var lng = parseFloat(el.getAttribute('data-lng'));
+      if (!isNaN(lat) && !isNaN(lng)) map.setView([lat, lng], 11, { animate: true });
+    });
+  });
 }
 
 // Always render updates feed (shows "check back" message before trip starts)
 renderUpdatesFeed();
+renderLocationTimeline();
 initTripStatus();
 
 loadRealRoutes();
 
-/* Mobile sidebar toggle — attached via DOMContentLoaded at end of script */
+/* ============================================================
+   BOTTOM DOCK TIMELINE ENGINE
+   ============================================================ */
+
+(function () {
+  // Build timeline items: updates first (newest→oldest), then segments in order
+  function buildDockItems() {
+    var items = [];
+    // Journey updates (newest first)
+    var updates = tripStatus.updates || [];
+    updates.forEach(function (u, i) {
+      items.push({ type: 'update', idx: i, date: u.date, title: u.location, sub: u.date, text: u.text, photo: u.photo || null, lat: u.lat || null, lng: u.lng || null, status: 'update' });
+    });
+    // Segments in route order
+    segments.forEach(function (seg) {
+      var st = tripStatus.active
+        ? (seg.id < tripStatus.currentSegment ? 'done'
+          : seg.id === tripStatus.currentSegment ? 'current' : 'upcoming')
+        : 'upcoming';
+      var icon = seg.transport === 'train' ? '🚆' : seg.transport === 'ferry' ? '⛴' : '🚴';
+      items.push({ type: 'segment', seg: seg, status: st, icon: icon });
+    });
+    return items;
+  }
+
+  function getNodeIcon(item) {
+    if (item.type === 'update') {
+      if (item.photo) return '<img class="dock-node-thumb" src="' + item.photo + '" alt="" loading="lazy">';
+      return '<span class="dock-node-icon">📍</span>';
+    }
+    return '<span class="dock-node-icon">' + item.icon + '</span>';
+  }
+
+  function getNodeLabel(item) {
+    if (item.type === 'update') return item.title;
+    var seg = item.seg;
+    var city = seg.waypoints && seg.waypoints.length ? seg.waypoints[0].name : seg.title;
+    return city;
+  }
+
+  function renderDetailUpdate(item) {
+    var inner = document.getElementById('dock-detail-inner');
+    var photoHtml = item.photo ? '<img class="dock-detail-photo" src="' + item.photo + '" alt="" onclick="window.open(this.src)">' : '';
+    inner.innerHTML = photoHtml +
+      '<div class="dock-detail-meta">' +
+        '<span class="dock-detail-badge update">Update</span>' +
+        '<span class="dock-detail-date">' + (item.date || '') + '</span>' +
+      '</div>' +
+      '<div class="dock-detail-title">' + item.title + '</div>' +
+      '<div class="dock-detail-body" id="ddb">' + (item.text || '') + '</div>';
+    var body = inner.querySelector('#ddb');
+    if (body && body.scrollHeight > body.clientHeight + 4) {
+      var btn = document.createElement('button');
+      btn.className = 'dock-detail-more'; btn.textContent = 'Read more';
+      btn.onclick = function () { body.classList.add('expanded'); btn.remove(); };
+      inner.appendChild(btn);
+    }
+    if (item.lat && item.lng) {
+      map.setView([item.lat, item.lng], 11, { animate: true });
+    }
+  }
+
+  function renderDetailSegment(item) {
+    var inner = document.getElementById('dock-detail-inner');
+    var seg = item.seg;
+    var bc = seg.transport==='train'?'b-train':seg.transport==='ferry'?'b-ferry':'b-bike';
+    var bt = seg.transport==='train'?'Train':seg.transport==='ferry'?'Ferry':'Cycling';
+    var stagesHtml = '';
+    if (seg.stages && seg.stages.length) {
+      stagesHtml = '<div class="dock-stages"><div class="dock-stages-title">Stages</div>' +
+        seg.stages.map(function (s) {
+          return '<div class="dock-stage"><div style="display:flex;justify-content:space-between;align-items:baseline"><span class="dock-stage-name">' + s.name + '</span><span class="dock-stage-dist">' + s.dist + '</span></div><div class="dock-stage-desc">' + s.desc + '</div></div>';
+        }).join('') + '</div>';
+    }
+    var detoursHtml = '';
+    if (seg.detours && seg.detours.length) {
+      var vc = function (d) { return d.verdict==='must'?'verdict-must':d.verdict==='highly'?'verdict-highly':'verdict-nice'; };
+      var vl = function (d) { return d.verdict==='must'?'MUST DO':d.verdict==='highly'?'HIGHLY RECOMMENDED':'NICE IF TIME'; };
+      detoursHtml = '<div class="dock-stages" style="margin-top:8px"><div class="dock-stages-title" style="color:#f59e0b">Detours</div>' +
+        seg.detours.map(function (d) {
+          return '<div class="detour-card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span class="detour-name">' + d.name + '</span><span class="detour-meta">' + d.dist + ' · ' + d.time + '</span></div><div class="detour-desc">' + d.desc + '</div><div class="detour-verdict ' + vc(d) + '">' + vl(d) + '</div></div>';
+        }).join('') + '</div>';
+    }
+    inner.innerHTML =
+      '<div class="dock-detail-meta">' +
+        '<span class="dock-detail-badge ' + item.status + '">' +
+          (item.status === 'done' ? '✓ Done' : item.status === 'current' ? '● Here' : 'Upcoming') +
+        '</span>' +
+        '<span class="badge ' + bc + '" style="font-size:9px">' + bt + '</span>' +
+        '<span class="dock-detail-date">' + seg.distance + ' · ' + seg.days + '</span>' +
+      '</div>' +
+      '<div class="dock-detail-title">' + seg.title + '</div>' +
+      '<div class="dock-detail-sub">' + (seg.routeName || '') + '</div>' +
+      '<div class="dock-detail-body" id="ddb">' + (seg.description || '') + '</div>' +
+      stagesHtml + detoursHtml;
+    var body = inner.querySelector('#ddb');
+    if (body && body.scrollHeight > body.clientHeight + 4) {
+      var btn = document.createElement('button');
+      btn.className = 'dock-detail-more'; btn.textContent = 'Read more';
+      btn.onclick = function () { body.classList.add('expanded'); btn.remove(); };
+      inner.appendChild(btn);
+    }
+    // Fly map to segment bounds
+    var bounds = [];
+    seg.waypoints.forEach(function (wp) { bounds.push([wp.lat, wp.lng]); });
+    if (seg.route) seg.route.forEach(function (p) { bounds.push(p); });
+    if (bounds.length > 1) map.fitBounds(bounds, { padding: [60, 60], maxZoom: 9, animate: true });
+    else if (bounds.length === 1) map.setView(bounds[0], 8, { animate: true });
+    // Highlight segment on map
+    highlightSeg(seg.id);
+  }
+
+  var currentDockIdx = -1;
+
+  function selectDockNode(idx) {
+    var items = buildDockItems();
+    if (idx < 0 || idx >= items.length) return;
+    currentDockIdx = idx;
+    document.querySelectorAll('.dock-node').forEach(function (n, i) {
+      n.classList.toggle('selected', i === idx);
+    });
+    var item = items[idx];
+    var detail = document.getElementById('dock-detail');
+    detail.classList.remove('collapsed');
+    if (item.type === 'update') renderDetailUpdate(item);
+    else renderDetailSegment(item);
+    // Scroll node into view
+    var nodes = document.querySelectorAll('.dock-node');
+    if (nodes[idx]) nodes[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
+
+  function initDock() {
+    var items = buildDockItems();
+    var track = document.getElementById('dock-track');
+    if (!track) return;
+    track.innerHTML = '';
+
+    // Progress fill: fraction of segments done
+    var totalSegs = segments.length;
+    var doneSegs = tripStatus.active ? Math.max(0, tripStatus.currentSegment - 1) : 0;
+    var pct = totalSegs > 0 ? Math.round((doneSegs / totalSegs) * 100) : 0;
+    var fill = document.getElementById('dock-progress-fill');
+    if (fill) fill.style.width = pct + '%';
+
+    items.forEach(function (item, idx) {
+      var btn = document.createElement('button');
+      btn.className = 'dock-node ' + item.status;
+      btn.setAttribute('type', 'button');
+      btn.innerHTML = '<div class="dock-node-ring">' + getNodeIcon(item) + '</div>' +
+        '<div class="dock-node-label">' + getNodeLabel(item) + '</div>';
+      btn.addEventListener('click', function () {
+        if (currentDockIdx === idx) {
+          // Tap selected node again → collapse detail
+          document.getElementById('dock-detail').classList.add('collapsed');
+          btn.classList.remove('selected');
+          currentDockIdx = -1;
+          unhighlightAll();
+        } else {
+          selectDockNode(idx);
+        }
+      });
+      track.appendChild(btn);
+    });
+
+    // Auto-select current segment if trip is active, else first segment
+    var autoIdx = 0;
+    if (tripStatus.active) {
+      var updCount = (tripStatus.updates || []).length;
+      // updates come first; current segment follows at updCount + (currentSegment - 1 index in segments array)
+      var segIdx = segments.findIndex(function (s) { return s.id === tripStatus.currentSegment; });
+      autoIdx = updCount + (segIdx >= 0 ? segIdx : 0);
+    } else {
+      // No active trip: start at first segment node (after any updates)
+      autoIdx = (tripStatus.updates || []).length;
+    }
+    // Scroll dock track to auto-selected node but don't open detail on load — let user discover
+    var nodes = document.querySelectorAll('.dock-node');
+    if (nodes[autoIdx]) {
+      setTimeout(function () {
+        nodes[autoIdx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        nodes[autoIdx].classList.add(tripStatus.active ? 'selected' : '');
+        if (tripStatus.active) { currentDockIdx = autoIdx; selectDockNode(autoIdx); }
+      }, 400);
+    }
+  }
+
+  // Update HUD live indicator
+  function initHudLive() {
+    if (!tripStatus.active) return;
+    var wrap = document.getElementById('hud-live-wrap');
+    var txt = document.getElementById('hud-live-text');
+    if (wrap && txt) {
+      txt.textContent = tripStatus.currentCity + (tripStatus.dayNumber ? ' · Day ' + tripStatus.dayNumber : '');
+      wrap.style.display = 'block';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    initDock();
+    initHudLive();
+    // Pad map bottom so routes don't hide behind dock
+    var dock = document.getElementById('trip-dock');
+    if (dock) {
+      var padBottom = dock.offsetHeight + 16;
+      map.getContainer().style.bottom = '0'; // map fills whole screen; we use fitBounds padding instead
+    }
+  });
+})();
 
 /* PWA service worker */
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register(new URL('sw.js', window.location.href)).catch(function () {});
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-  var tk = document.getElementById('total-km');
-  if (tk) tk.textContent = '\u007e' + TRIP_TOTAL_KM.toLocaleString();
-  var btn = document.getElementById('mob-route-toggle');
-  var side = document.getElementById('sidebar');
-  var closeB = document.getElementById('mob-sidebar-close');
-  if (btn && side) {
-    btn.addEventListener('click', function () {
-      side.classList.add('open');
-      btn.classList.add('hidden');
-      btn.setAttribute('aria-expanded', 'true');
-    });
-  }
-  if (closeB && side && btn) {
-    closeB.addEventListener('click', function () {
-      side.classList.remove('open');
-      btn.classList.remove('hidden');
-      btn.setAttribute('aria-expanded', 'false');
-    });
-  }
-});
 </script>
-<button type="button" class="mob-toggle" id="mob-route-toggle" aria-controls="sidebar" aria-expanded="false" aria-label="Open route plan sidebar">&#x1f6b2; Route Plan</button>
 </body>
 </html>
