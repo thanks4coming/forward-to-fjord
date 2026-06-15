@@ -232,7 +232,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
     </div>
   </div>
   <div class="hud-controls">
-    <label class="hud-pill"><input type="checkbox" id="photo-checkbox"><span class="toggle-track"></span> Photos</label>
+    <label class="hud-pill"><input type="checkbox" id="photo-checkbox" checked><span class="toggle-track"></span> Photos</label>
     <label class="hud-pill"><input type="checkbox" id="trail-checkbox" checked><span class="toggle-track"></span> Trail</label>
   </div>
 </div>
@@ -1263,6 +1263,7 @@ function rebuildPhotoLayer() {
 rebuildPhotoLayer();
 const phCb = document.getElementById('photo-checkbox');
 phCb.addEventListener('change', function(){ this.checked ? map.addLayer(photoGroup) : map.removeLayer(photoGroup); });
+if (phCb.checked) map.addLayer(photoGroup);
 
 // --- LOCATION TRAIL ---
 const trailGroup = L.layerGroup();
