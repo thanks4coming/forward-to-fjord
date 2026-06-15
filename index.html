@@ -65,9 +65,11 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
 /* Bottom trip dock */
 #trip-dock{position:absolute;bottom:0;left:0;right:0;z-index:600;display:flex;flex-direction:column;background:linear-gradient(to top,rgba(8,15,28,.95) 0%,rgba(12,20,38,.88) 55%,rgba(15,23,42,.75) 100%);backdrop-filter:blur(24px) saturate(1.1);-webkit-backdrop-filter:blur(24px) saturate(1.1);border-top:1px solid rgba(148,163,184,.12);box-shadow:0 -16px 64px rgba(0,0,0,.5);padding-bottom:env(safe-area-inset-bottom,0)}
 /* Expandable detail panel above the scrubber */
-#dock-detail{flex:0 1 auto;min-height:0;overflow-y:auto;border-bottom:1px solid rgba(51,65,85,.4);transition:max-height .32s cubic-bezier(.4,0,.2,1),opacity .22s}
+#dock-detail{flex:0 1 auto;min-height:0;border-bottom:1px solid rgba(51,65,85,.4);transition:max-height .32s cubic-bezier(.4,0,.2,1),opacity .22s;max-height:min(56vh,480px)}
 #dock-detail.collapsed{max-height:0;opacity:0;border-bottom:none;overflow:hidden;pointer-events:none}
-#dock-detail-inner{padding:16px 20px 12px;max-height:min(44vh,360px);overflow-y:auto}
+#dock-detail-inner{padding:14px 20px 14px;height:min(56vh,480px);overflow-y:auto}
+#dock-detail-close{position:sticky;top:0;float:right;margin:-4px -8px 4px 8px;background:rgba(30,41,59,.7);border:1px solid rgba(148,163,184,.18);border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#94a3b8;font-size:13px;line-height:1;z-index:2;flex-shrink:0}
+#dock-detail-close:hover{background:rgba(51,65,85,.9);color:#fff}
 .dock-detail-photo{width:100%;max-height:150px;object-fit:cover;border-radius:10px;margin-bottom:12px;display:block;cursor:pointer;border:1px solid rgba(148,163,184,.12)}
 .dock-detail-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:6px}
 .dock-detail-badge{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.45px;padding:2px 9px;border-radius:999px}
@@ -1052,43 +1054,6 @@ leg.onAdd = function(){
 leg.addTo(map);
 
 var lastGpsMarker = null;
-var locateCtrl = L.control({ position: 'topleft' });
-locateCtrl.onAdd = function () {
-  var btn = L.DomUtil.create('button', 'leaflet-bar leaflet-control sc-map-locate');
-  btn.type = 'button';
-  btn.title = 'Centre map on my location (GPS)';
-  btn.setAttribute('aria-label', 'Centre map on my location using device GPS');
-  btn.innerHTML = '\u2316';
-  btn.style.cssText = 'width:34px;height:34px;line-height:30px;text-align:center;background:#1e293b!important;color:#60a5fa!important;border:2px solid #334155!important;border-radius:4px;font-size:18px;cursor:pointer;padding:0';
-  L.DomEvent.disableClickPropagation(btn);
-  L.DomEvent.on(btn, 'click', function (ev) {
-    L.DomEvent.stop(ev);
-    if (!navigator.geolocation) {
-      showTravelToast('Location not supported on this browser', true);
-      return;
-    }
-    btn.disabled = true;
-    navigator.geolocation.getCurrentPosition(
-      function (pos) {
-        btn.disabled = false;
-        var lat = pos.coords.latitude, lng = pos.coords.longitude;
-        map.setView([lat, lng], Math.max(map.getZoom(), 13), { animate: true });
-        if (lastGpsMarker) map.removeLayer(lastGpsMarker);
-        lastGpsMarker = L.circleMarker([lat, lng], { radius: 9, color: '#22c55e', weight: 2, fillColor: '#22c55e', fillOpacity: 0.25 })
-          .addTo(map)
-          .bindPopup('Your location (approx.)');
-        lastGpsMarker.openPopup();
-      },
-      function () {
-        btn.disabled = false;
-        showTravelToast('Could not read GPS (permission, timeout, or signal)', true);
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 120000 }
-    );
-  });
-  return btn;
-};
-locateCtrl.addTo(map);
 
 // --- BROUTER REAL GPS ROUTING ---
 const routingSegments = {
@@ -1462,6 +1427,20 @@ loadRealRoutes();
     return city;
   }
 
+  function addCloseBtn(inner) {
+    var cb = document.createElement('div');
+    cb.id = 'dock-detail-close';
+    cb.innerHTML = '&#x2715;';
+    cb.title = 'Close';
+    cb.addEventListener('click', function () {
+      document.getElementById('dock-detail').classList.add('collapsed');
+      document.querySelectorAll('.dock-node').forEach(function (n) { n.classList.remove('selected'); });
+      currentDockIdx = -1;
+      unhighlightAll();
+    });
+    inner.insertBefore(cb, inner.firstChild);
+  }
+
   function renderDetailUpdate(item) {
     var inner = document.getElementById('dock-detail-inner');
     var photoHtml = item.photo ? '<img class="dock-detail-photo" src="' + item.photo + '" alt="" onclick="window.open(this.src)">' : '';
@@ -1471,17 +1450,9 @@ loadRealRoutes();
         '<span class="dock-detail-date">' + (item.date || '') + '</span>' +
       '</div>' +
       '<div class="dock-detail-title">' + item.title + '</div>' +
-      '<div class="dock-detail-body" id="ddb">' + (item.text || '') + '</div>';
-    var body = inner.querySelector('#ddb');
-    if (body && body.scrollHeight > body.clientHeight + 4) {
-      var btn = document.createElement('button');
-      btn.className = 'dock-detail-more'; btn.textContent = 'Read more';
-      btn.onclick = function () { body.classList.add('expanded'); btn.remove(); };
-      inner.appendChild(btn);
-    }
-    if (item.lat && item.lng) {
-      map.setView([item.lat, item.lng], 11, { animate: true });
-    }
+      '<div class="dock-detail-body expanded">' + (item.text || '') + '</div>';
+    addCloseBtn(inner);
+    if (item.lat && item.lng) map.setView([item.lat, item.lng], 11, { animate: true });
   }
 
   function renderDetailSegment(item) {
@@ -1489,48 +1460,62 @@ loadRealRoutes();
     var seg = item.seg;
     var bc = seg.transport==='train'?'b-train':seg.transport==='ferry'?'b-ferry':'b-bike';
     var bt = seg.transport==='train'?'Train':seg.transport==='ferry'?'Ferry':'Cycling';
+
     var stagesHtml = '';
     if (seg.stages && seg.stages.length) {
       stagesHtml = '<div class="dock-stages"><div class="dock-stages-title">Stages</div>' +
         seg.stages.map(function (s) {
-          return '<div class="dock-stage"><div style="display:flex;justify-content:space-between;align-items:baseline"><span class="dock-stage-name">' + s.name + '</span><span class="dock-stage-dist">' + s.dist + '</span></div><div class="dock-stage-desc">' + s.desc + '</div></div>';
+          var hiHtml = (s.highlights || []).map(function (h) {
+            return '<li>' + h + '</li>';
+          }).join('');
+          return '<div class="dock-stage">' +
+            '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">' +
+              '<span class="dock-stage-name">' + s.name + '</span>' +
+              '<span class="dock-stage-dist">' + s.dist + '</span>' +
+            '</div>' +
+            '<div class="dock-stage-desc">' + s.desc + '</div>' +
+            (hiHtml ? '<ul style="margin:5px 0 0 14px;padding:0;list-style:disc;font-size:10.5px;color:#64748b;line-height:1.6">' + hiHtml + '</ul>' : '') +
+          '</div>';
         }).join('') + '</div>';
     }
+
     var detoursHtml = '';
     if (seg.detours && seg.detours.length) {
       var vc = function (d) { return d.verdict==='must'?'verdict-must':d.verdict==='highly'?'verdict-highly':'verdict-nice'; };
-      var vl = function (d) { return d.verdict==='must'?'MUST DO':d.verdict==='highly'?'HIGHLY RECOMMENDED':'NICE IF TIME'; };
-      detoursHtml = '<div class="dock-stages" style="margin-top:8px"><div class="dock-stages-title" style="color:#f59e0b">Detours</div>' +
+      var vl = function (d) { return d.verdict==='must'?'★ MUST DO':d.verdict==='highly'?'↑ HIGHLY RECOMMENDED':'◇ NICE IF TIME'; };
+      detoursHtml = '<div class="dock-stages" style="margin-top:10px"><div class="dock-stages-title" style="color:#f59e0b">Recommended Detours</div>' +
         seg.detours.map(function (d) {
-          return '<div class="detour-card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span class="detour-name">' + d.name + '</span><span class="detour-meta">' + d.dist + ' · ' + d.time + '</span></div><div class="detour-desc">' + d.desc + '</div><div class="detour-verdict ' + vc(d) + '">' + vl(d) + '</div></div>';
+          return '<div class="detour-card">' +
+            '<div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:4px">' +
+              '<span class="detour-name">' + d.name + '</span>' +
+              '<span class="detour-meta">' + d.dist + ' · ' + d.time + '</span>' +
+            '</div>' +
+            '<div class="detour-desc">' + d.desc + '</div>' +
+            '<div class="detour-verdict ' + vc(d) + '" style="margin-top:5px">' + vl(d) + '</div>' +
+          '</div>';
         }).join('') + '</div>';
     }
+
     inner.innerHTML =
       '<div class="dock-detail-meta">' +
         '<span class="dock-detail-badge ' + item.status + '">' +
-          (item.status === 'done' ? '✓ Done' : item.status === 'current' ? '● Here' : 'Upcoming') +
+          (item.status === 'done' ? '✓ Done' : item.status === 'current' ? '● Here now' : 'Upcoming') +
         '</span>' +
         '<span class="badge ' + bc + '" style="font-size:9px">' + bt + '</span>' +
         '<span class="dock-detail-date">' + seg.distance + ' · ' + seg.days + '</span>' +
       '</div>' +
       '<div class="dock-detail-title">' + seg.title + '</div>' +
       '<div class="dock-detail-sub">' + (seg.routeName || '') + '</div>' +
-      '<div class="dock-detail-body" id="ddb">' + (seg.description || '') + '</div>' +
+      '<div class="dock-detail-body expanded">' + (seg.description || '') + '</div>' +
       stagesHtml + detoursHtml;
-    var body = inner.querySelector('#ddb');
-    if (body && body.scrollHeight > body.clientHeight + 4) {
-      var btn = document.createElement('button');
-      btn.className = 'dock-detail-more'; btn.textContent = 'Read more';
-      btn.onclick = function () { body.classList.add('expanded'); btn.remove(); };
-      inner.appendChild(btn);
-    }
+    addCloseBtn(inner);
+
     // Fly map to segment bounds
     var bounds = [];
     seg.waypoints.forEach(function (wp) { bounds.push([wp.lat, wp.lng]); });
     if (seg.route) seg.route.forEach(function (p) { bounds.push(p); });
     if (bounds.length > 1) map.fitBounds(bounds, { padding: [60, 60], maxZoom: 9, animate: true });
     else if (bounds.length === 1) map.setView(bounds[0], 8, { animate: true });
-    // Highlight segment on map
     highlightSeg(seg.id);
   }
 
