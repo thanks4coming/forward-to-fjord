@@ -134,6 +134,10 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
 .leaflet-popup-content{font-family:'Segoe UI',system-ui,sans-serif;font-size:11.5px;line-height:1.5;max-width:260px}
 .leaflet-popup-content b{color:#f8fafc}
 .leaflet-popup-content .pt{font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;font-weight:700}
+/* Push Leaflet bottom controls above the dock — JS will set precise value after render */
+.leaflet-bottom{padding-bottom:var(--dock-h,130px)}
+.leaflet-bottom.leaflet-right{padding-right:8px}
+.leaflet-bottom.leaflet-left{padding-left:8px}
 @media(max-width:600px){
 .hud-brand h1{font-size:14px}
 .hud-brand{max-width:calc(100vw - 100px)}
@@ -274,7 +278,8 @@ function showTravelToast(msg, isErr) {
   var bg = isErr ? '#7f1d1d' : '#1e293b';
   var br = isErr ? '#dc2626' : '#334155';
   var fg = isErr ? '#fecaca' : '#60a5fa';
-  el.style.cssText = 'position:fixed;bottom:calc(64px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:' + bg + ';color:' + fg + ';padding:10px 16px;border-radius:8px;font-size:11px;font-family:Segoe UI,system-ui,sans-serif;z-index:1001;border:1px solid ' + br + ';box-shadow:0 4px 12px rgba(0,0,0,.5);max-width:92vw;text-align:center;line-height:1.45';
+  var dockH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--dock-h')) || 130;
+  el.style.cssText = 'position:fixed;bottom:calc(' + (dockH + 12) + 'px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:' + bg + ';color:' + fg + ';padding:10px 16px;border-radius:8px;font-size:11px;font-family:Segoe UI,system-ui,sans-serif;z-index:1001;border:1px solid ' + br + ';box-shadow:0 4px 12px rgba(0,0,0,.5);max-width:92vw;text-align:center;line-height:1.45';
   el.textContent = msg;
   document.body.appendChild(el);
   setTimeout(function () { el.style.opacity = '0'; el.style.transition = 'opacity .4s'; setTimeout(function () { el.remove(); }, 400); }, 4200);
@@ -607,7 +612,8 @@ const segments = [
 ];
 
 // --- MAP ---
-const map = L.map('map', { center: [57.5, 19], zoom: 5, zoomControl: true, minZoom: 3 });
+const map = L.map('map', { center: [57.5, 19], zoom: 5, zoomControl: false, minZoom: 3 });
+L.control.zoom({ position: 'bottomleft' }).addTo(map);
 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
   attribution: '&copy; <a href="https://www.esri.com/">Esri</a> &mdash; Esri, Maxar, Earthstar Geographics, and the GIS User Community',
   maxZoom: 19
@@ -1040,14 +1046,14 @@ segments.forEach(seg => {
 const leg = L.control({position:'bottomright'});
 leg.onAdd = function(){
   const d = L.DomUtil.create('div');
-  d.style.cssText = 'background:#1e293b;padding:10px 14px;border-radius:8px;border:1px solid #334155;font-family:Segoe UI,system-ui,sans-serif;box-shadow:0 2px 14px rgba(0,0,0,.55);';
+  d.style.cssText = 'background:rgba(15,23,42,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:8px 12px;border-radius:10px;border:1px solid rgba(148,163,184,.18);font-family:Segoe UI,system-ui,sans-serif;box-shadow:0 2px 14px rgba(0,0,0,.4);';
   d.innerHTML = `
-    <div style="font-size:10px;font-weight:700;color:#f1f5f9;margin-bottom:5px">Legend</div>
-    <div style="font-size:9.5px;color:#94a3b8;display:flex;flex-direction:column;gap:3px">
-      <div><span style="display:inline-block;width:16px;height:3px;background:#3b82f6;vertical-align:middle;margin-right:5px"></span>Cycling</div>
-      <div><span style="display:inline-block;width:16px;height:0;border-bottom:2px dashed #a855f7;vertical-align:middle;margin-right:5px"></span>Train</div>
-      <div><span style="display:inline-block;width:16px;height:0;border-bottom:2px dashed #5eead4;vertical-align:middle;margin-right:5px"></span>Ferry</div>
-      <div><span style="display:inline-block;width:12px;height:12px;background:#f59e0b;transform:rotate(45deg);vertical-align:middle;margin-right:7px;margin-left:2px"></span>Detour</div>
+    <div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Legend</div>
+    <div style="font-size:9.5px;color:#94a3b8;display:flex;flex-direction:column;gap:4px">
+      <div style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:16px;height:3px;background:#3b82f6;border-radius:2px"></span>Cycling</div>
+      <div style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:16px;height:0;border-bottom:2px dashed #a855f7"></span>Train</div>
+      <div style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:16px;height:0;border-bottom:2px dashed #5eead4"></span>Ferry</div>
+      <div style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:10px;height:10px;background:#f59e0b;transform:rotate(45deg);flex-shrink:0;margin-left:3px"></span>Detour</div>
     </div>`;
   return d;
 };
@@ -1604,15 +1610,21 @@ loadRealRoutes();
     }
   }
 
+  function updateDockHeight() {
+    var dock = document.getElementById('trip-dock');
+    if (!dock) return;
+    var h = dock.offsetHeight;
+    document.documentElement.style.setProperty('--dock-h', h + 'px');
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     initDock();
     initHudLive();
-    // Pad map bottom so routes don't hide behind dock
-    var dock = document.getElementById('trip-dock');
-    if (dock) {
-      var padBottom = dock.offsetHeight + 16;
-      map.getContainer().style.bottom = '0'; // map fills whole screen; we use fitBounds padding instead
-    }
+    updateDockHeight();
+    // Re-measure when detail panel opens/closes
+    var detail = document.getElementById('dock-detail');
+    if (detail) new MutationObserver(updateDockHeight).observe(detail, { attributes: true, attributeFilter: ['class'] });
+    window.addEventListener('resize', updateDockHeight);
   });
 })();
 
