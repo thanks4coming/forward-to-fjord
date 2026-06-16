@@ -1,0 +1,14 @@
+---
+description: One-prompt location check-in — city name or coordinates in chat
+globs:
+alwaysApply: false
+---
+
+# Update my location
+
+User includes where they are in the same message:
+
+- `update my location — Turku` → `node scripts/apply-location-stash.js --place "Turku"`
+- `update my location — 59.33, 18.07` → `node scripts/apply-location-stash.js --coords 59.33,18.07`
+
+Then commit and push. If no place given, ask once what city they're in.

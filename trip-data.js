@@ -5,14 +5,21 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 1,           // segment id: 1, 3, 4, 5, 6, 7, 8, 9 (no segment 2)
-  currentCity: 'Perth Airport',   // most recent city/town name
+  currentCity: 'Ho Chi Minh City',   // most recent city/town name
   dayNumber: 1,                // day number of the trip
   kmRidden: 0,                 // total km covered so far
-  countries: ['Australia'],               // e.g. ['Sweden','Finland']
-  lat: -31.941521,                   // precise current lat (preferred over city fallback)
-  lng: 115.965577,                   // precise current lng
-  lastUpdated: '2026-06-15',           // e.g. '2026-06-08' — shown in live banner when set
+  countries: ['Australia', 'Vietnam'],               // e.g. ['Sweden','Finland']
+  lat: 10.817979,                   // precise current lat (preferred over city fallback)
+  lng: 106.656265,                   // precise current lng
+  lastUpdated: '2026-06-16',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-06-16T00:59:34.919Z',
+      lat: 10.817979,
+      lng: 106.656265,
+      location: 'Ho Chi Minh City, Vietnam',
+      note: 'Tan Son Nhat Airport — layover en route to Scandinavia',
+    },
     {
       at: '2026-06-15T15:22:30.817Z',
       lat: -31.941521,

@@ -12,6 +12,48 @@ Share that URL with anyone following along. The repo is public — commits and f
 
 ---
 
+## Update my location
+
+In **Cursor mobile**, say where you are in one message:
+
+> **update my location — Turku**
+
+or
+
+> **update my location — Stockholm, Sweden**
+
+Cloud Agent looks up the coordinates, updates the map, and pushes live. **No apps to install, no tokens, no setup.**
+
+### Examples
+
+| You say | What happens |
+|---------|----------------|
+| `update my location — Turku` | Map pin at Turku |
+| `update my location — camped outside Helsinki` | Pin near Helsinki |
+| `update my location — 59.3293, 18.0686` | Exact coords (see below) |
+| `update my location — Kraków, 120 km today` | Pin at Kraków + note on timeline |
+
+If you only say `update my location`, the agent will ask what city you're in.
+
+### Precise GPS (optional, 10 seconds)
+
+When you want your exact spot, not just the city:
+
+1. Open **Google Maps** → long-press where you are → **Copy coordinates**
+2. `update my location — 59.3293, 18.0686`
+
+### What visitors see
+
+- **You Are Here** pin (latest coordinates)
+- **Location Timeline** in the sidebar — every GPS check-in, newest first; tap an entry to pan the map
+- **Show Location Trail** toggle — green dashed line connecting all check-ins on the map
+
+`location-stash.json` holds the last phone sync. Coordinates are public trip data — never put API tokens in it.
+
+Cloud Agent entry point: [AGENTS.md](AGENTS.md)
+
+---
+
 ## Check-in workflow (while traveling)
 
 Each update is a small edit plus an optional photo. You only need to touch **`trip-data.js`** (not the full HTML).
@@ -38,6 +80,7 @@ Open [`trip-data.js`](trip-data.js) and update:
 | `countries` | Array of countries visited, e.g. `['Sweden','Finland']` |
 | `lat` / `lng` | Your current coordinates — preferred over city-name guessing on the map |
 | `lastUpdated` | Today's date string, e.g. `'2026-06-08'` — shown in the live banner |
+| `locationHistory` | Auto-filled on GPS check-ins (newest first) — powers the timeline and map trail |
 | `updates` | Prepend a new entry (newest first) — see example below |
 | `photos` | Optional map pins — same image paths as in `updates` |
 
@@ -98,6 +141,7 @@ When `active: true`:
 - Stats bar (km ridden, day, country count)
 - Progress bar vs total planned distance (~5025 km)
 - “You Are Here” map pin from `lat`/`lng`
+- Location Timeline and map trail from `locationHistory`
 - Journey Updates feed in the sidebar
 - Optional photo pins on the map (toggle “Show Photos”)
 

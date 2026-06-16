@@ -64,6 +64,8 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
 #trail-checkbox:checked+.toggle-track{background:#22c55e}
 /* Bottom trip dock */
 #trip-dock{position:absolute;bottom:0;left:0;right:0;z-index:600;display:flex;flex-direction:column;background:linear-gradient(to top,rgba(8,15,28,.95) 0%,rgba(12,20,38,.88) 55%,rgba(15,23,42,.75) 100%);backdrop-filter:blur(24px) saturate(1.1);-webkit-backdrop-filter:blur(24px) saturate(1.1);border-top:1px solid rgba(148,163,184,.12);box-shadow:0 -16px 64px rgba(0,0,0,.5);padding-bottom:env(safe-area-inset-bottom,0)}
+/* Drag handle hint */
+#dock-scrub-wrap::before{content:'';display:block;width:36px;height:4px;background:rgba(148,163,184,.25);border-radius:2px;margin:0 auto 6px;}
 /* Expandable detail panel above the scrubber */
 #dock-detail{flex:0 1 auto;min-height:0;border-bottom:1px solid rgba(51,65,85,.4);transition:max-height .32s cubic-bezier(.4,0,.2,1),opacity .22s;max-height:min(56vh,480px)}
 #dock-detail.collapsed{max-height:0;opacity:0;border-bottom:none;overflow:hidden;pointer-events:none}
@@ -134,10 +136,11 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
 .leaflet-popup-content{font-family:'Segoe UI',system-ui,sans-serif;font-size:11.5px;line-height:1.5;max-width:260px}
 .leaflet-popup-content b{color:#f8fafc}
 .leaflet-popup-content .pt{font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;font-weight:700}
-/* Push Leaflet bottom controls above the dock — JS will set precise value after render */
-.leaflet-bottom{padding-bottom:var(--dock-h,130px)}
-.leaflet-bottom.leaflet-right{padding-right:8px}
-.leaflet-bottom.leaflet-left{padding-left:8px}
+/* Push Leaflet bottom controls above the dock */
+.leaflet-bottom .leaflet-control{margin-bottom:var(--dock-h,130px)}
+.leaflet-bottom.leaflet-right{right:8px}
+.leaflet-bottom.leaflet-left{left:8px}
+.leaflet-control-attribution{font-size:9px!important;opacity:.7;background:rgba(15,23,42,.6)!important;color:#94a3b8!important;border-radius:4px 4px 0 0}
 @media(max-width:600px){
 .hud-brand h1{font-size:14px}
 .hud-brand{max-width:calc(100vw - 100px)}
@@ -1388,7 +1391,6 @@ function renderUpdatesFeed() {
 
 // Always render updates feed (shows "check back" message before trip starts)
 renderUpdatesFeed();
-renderLocationTimeline();
 initTripStatus();
 
 loadRealRoutes();
@@ -1614,7 +1616,8 @@ loadRealRoutes();
     var dock = document.getElementById('trip-dock');
     if (!dock) return;
     var h = dock.offsetHeight;
-    document.documentElement.style.setProperty('--dock-h', h + 'px');
+    // Add a small extra buffer so controls sit clearly above the dock
+    document.documentElement.style.setProperty('--dock-h', (h + 8) + 'px');
   }
 
   document.addEventListener('DOMContentLoaded', function () {
