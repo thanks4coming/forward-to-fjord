@@ -67,9 +67,9 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
 /* Drag handle hint */
 #dock-scrub-wrap::before{content:'';display:block;width:36px;height:4px;background:rgba(148,163,184,.25);border-radius:2px;margin:0 auto 6px;}
 /* Expandable detail panel above the scrubber */
-#dock-detail{flex:0 1 auto;min-height:0;border-bottom:1px solid rgba(51,65,85,.4);transition:max-height .32s cubic-bezier(.4,0,.2,1),opacity .22s;max-height:min(56vh,480px)}
+#dock-detail{flex:0 1 auto;min-height:0;border-bottom:1px solid rgba(51,65,85,.4);transition:max-height .32s cubic-bezier(.4,0,.2,1),opacity .22s;max-height:min(38vh,320px)}
 #dock-detail.collapsed{max-height:0;opacity:0;border-bottom:none;overflow:hidden;pointer-events:none}
-#dock-detail-inner{padding:14px 20px 14px;height:min(56vh,480px);overflow-y:auto}
+#dock-detail-inner{padding:14px 20px 14px;max-height:min(38vh,320px);overflow-y:auto}
 #dock-detail-close{position:sticky;top:0;float:right;margin:-4px -8px 4px 8px;background:rgba(30,41,59,.7);border:1px solid rgba(148,163,184,.18);border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#94a3b8;font-size:13px;line-height:1;z-index:2;flex-shrink:0}
 #dock-detail-close:hover{background:rgba(51,65,85,.9);color:#fff}
 .dock-detail-photo{width:100%;max-height:150px;object-fit:cover;border-radius:10px;margin-bottom:12px;display:block;cursor:pointer;border:1px solid rgba(148,163,184,.12)}
@@ -140,7 +140,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
 .leaflet-bottom .leaflet-control{margin-bottom:var(--dock-h,130px)}
 .leaflet-bottom.leaflet-right{right:8px}
 .leaflet-bottom.leaflet-left{left:8px}
-.leaflet-control-attribution{font-size:9px!important;opacity:.7;background:rgba(15,23,42,.6)!important;color:#94a3b8!important;border-radius:4px 4px 0 0}
+.leaflet-control-attribution{font-size:9px!important;opacity:.7;background:rgba(15,23,42,.6)!important;color:#94a3b8!important;border-radius:4px 4px 0 0;margin-bottom:130px!important}
 @media(max-width:600px){
 .hud-brand h1{font-size:14px}
 .hud-brand{max-width:calc(100vw - 100px)}
@@ -1514,9 +1514,28 @@ loadRealRoutes();
       '</div>' +
       '<div class="dock-detail-title">' + seg.title + '</div>' +
       '<div class="dock-detail-sub">' + (seg.routeName || '') + '</div>' +
-      '<div class="dock-detail-body expanded">' + (seg.description || '') + '</div>' +
-      stagesHtml + detoursHtml;
+      '<div class="dock-detail-body" id="dock-desc-body">' + (seg.description || '') + '</div>' +
+      '<button class="dock-detail-more" id="dock-desc-more">Read more ▾</button>' +
+      stagesHtml + detoursHtml +
+      (seg.transport === 'bike' ? '<div class="elev-wrap"><div class="elev-container" id="dock-elev-container"><div class="elev-pending">Elevation data loads when routes are calculated…</div></div></div>' : '');
     addCloseBtn(inner);
+    // Wire read-more toggle
+    var descBody = inner.querySelector('#dock-desc-body');
+    var descMore = inner.querySelector('#dock-desc-more');
+    if (descMore && descBody) {
+      descMore.addEventListener('click', function () {
+        descBody.classList.toggle('expanded');
+        descMore.textContent = descBody.classList.contains('expanded') ? 'Show less ▴' : 'Read more ▾';
+      });
+    }
+    // Elevation chart
+    var elevContainer = inner.querySelector('#dock-elev-container');
+    if (elevContainer) {
+      renderElevationChart(elevContainer, seg.id);
+      // Also trigger route-based stage charts when route data arrives
+      var segDiv = document.querySelector('.seg[data-seg="' + seg.id + '"]');
+      if (segDiv) renderStageCharts(segDiv, seg.id);
+    }
 
     // Fly map to segment bounds
     var bounds = [];
