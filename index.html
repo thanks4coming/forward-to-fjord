@@ -43,18 +43,22 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172a;color:#e2e8f0}
-/* === FULL-MAP + BOTTOM DOCK LAYOUT === */
-#app{position:relative;width:100%;height:100vh;height:100dvh;overflow:hidden}
-#map{position:absolute;inset:0;z-index:0;background:#1a1a1a}
-/* Top HUD (brand + toggles) */
-#map-hud{position:absolute;top:0;left:0;right:0;z-index:500;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:calc(14px + env(safe-area-inset-top,0px)) 16px 12px;pointer-events:none}
-.hud-brand{pointer-events:auto;background:rgba(15,23,42,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(148,163,184,.18);border-radius:14px;padding:10px 16px;box-shadow:0 4px 24px rgba(0,0,0,.35);max-width:min(360px,58vw)}
-.hud-brand h1{font-size:15px;font-weight:700;color:#f8fafc;letter-spacing:-.02em;line-height:1.2}
-.hud-brand .hud-sub{font-size:10px;color:#94a3b8;margin-top:2px}
-.hud-brand .hud-live{display:inline-flex;align-items:center;gap:5px;margin-top:6px;font-size:10px;font-weight:600;color:#4ade80}
-.hud-brand .hud-live-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e;animation:here-pulse 2s infinite}
-.hud-controls{pointer-events:auto;display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;align-items:flex-start}
-.hud-pill{display:flex;align-items:center;gap:6px;padding:7px 11px;background:rgba(15,23,42,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(148,163,184,.18);border-radius:999px;cursor:pointer;user-select:none;font-size:10px;color:#cbd5e1;font-weight:500;box-shadow:0 2px 12px rgba(0,0,0,.25);transition:background .15s}
+/* === SIDEBAR + MAP LAYOUT === */
+#app{display:flex;height:100vh;height:100dvh;overflow:hidden}
+#sidebar{width:400px;min-width:400px;background:#1e293b;overflow-y:auto;border-right:1px solid #334155;display:flex;flex-direction:column;flex-shrink:0;-webkit-overflow-scrolling:touch}
+#map{flex:1;background:#1a1a1a;position:relative}
+/* Sidebar header */
+#sidebar-header{padding:16px 20px 10px;background:linear-gradient(135deg,#1e3a5f,#1e293b);border-bottom:1px solid #334155;position:sticky;top:0;z-index:10;flex-shrink:0}
+#sidebar-header-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+#sidebar-header h1{font-size:16px;font-weight:700;color:#f8fafc;letter-spacing:-.02em;line-height:1.2}
+#sidebar-header .hud-sub{font-size:10px;color:#94a3b8;margin-top:2px}
+#sidebar-header .hud-live{display:inline-flex;align-items:center;gap:5px;margin-top:6px;font-size:10px;font-weight:600;color:#4ade80}
+#sidebar-header .hud-live-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e;animation:here-pulse 2s infinite}
+#sidebar-close-btn{background:rgba(51,65,85,.7);border:1px solid rgba(148,163,184,.15);border-radius:6px;padding:5px 10px;color:#94a3b8;font-size:12px;cursor:pointer;display:none;flex-shrink:0;line-height:1.4}
+#sidebar-close-btn:hover{background:#334155;color:#fff}
+/* Map-top toggles (Photos / Trail) — small overlay on the map */
+#map-hud{position:absolute;top:0;right:0;z-index:500;display:flex;gap:6px;padding:calc(12px + env(safe-area-inset-top,0px)) 12px 12px;pointer-events:none}
+.hud-pill{display:flex;align-items:center;gap:6px;padding:7px 11px;background:rgba(15,23,42,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(148,163,184,.18);border-radius:999px;cursor:pointer;user-select:none;font-size:10px;color:#cbd5e1;font-weight:500;box-shadow:0 2px 12px rgba(0,0,0,.25);transition:background .15s;pointer-events:auto}
 .hud-pill:hover{background:rgba(30,41,59,.88)}
 .hud-pill input{display:none}
 .hud-pill .toggle-track{width:26px;height:14px;background:#334155;border-radius:7px;position:relative;transition:background .2s;flex-shrink:0}
@@ -62,58 +66,18 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
 .hud-pill input:checked+.toggle-track{background:#2563eb}
 .hud-pill input:checked+.toggle-track::after{transform:translateX(12px);background:#fff}
 #trail-checkbox:checked+.toggle-track{background:#22c55e}
-/* Bottom trip dock */
-#trip-dock{position:absolute;bottom:0;left:0;right:0;z-index:600;display:flex;flex-direction:column;background:linear-gradient(to top,rgba(8,15,28,.95) 0%,rgba(12,20,38,.88) 55%,rgba(15,23,42,.75) 100%);backdrop-filter:blur(24px) saturate(1.1);-webkit-backdrop-filter:blur(24px) saturate(1.1);border-top:1px solid rgba(148,163,184,.12);box-shadow:0 -16px 64px rgba(0,0,0,.5);padding-bottom:env(safe-area-inset-bottom,0)}
-/* Drag handle hint */
-#dock-scrub-wrap::before{content:'';display:block;width:36px;height:4px;background:rgba(148,163,184,.25);border-radius:2px;margin:0 auto 6px;}
-/* Expandable detail panel above the scrubber */
-#dock-detail{flex:0 1 auto;min-height:0;border-bottom:1px solid rgba(51,65,85,.4);transition:max-height .32s cubic-bezier(.4,0,.2,1),opacity .22s;max-height:min(38vh,320px)}
-#dock-detail.collapsed{max-height:0;opacity:0;border-bottom:none;overflow:hidden;pointer-events:none}
-#dock-detail-inner{padding:14px 20px 14px;max-height:min(38vh,320px);overflow-y:auto}
-#dock-detail-close{position:sticky;top:0;float:right;margin:-4px -8px 4px 8px;background:rgba(30,41,59,.7);border:1px solid rgba(148,163,184,.18);border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#94a3b8;font-size:13px;line-height:1;z-index:2;flex-shrink:0}
-#dock-detail-close:hover{background:rgba(51,65,85,.9);color:#fff}
-.dock-detail-photo{width:100%;max-height:150px;object-fit:cover;border-radius:10px;margin-bottom:12px;display:block;cursor:pointer;border:1px solid rgba(148,163,184,.12)}
-.dock-detail-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:6px}
-.dock-detail-badge{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.45px;padding:2px 9px;border-radius:999px}
-.dock-detail-badge.done{background:rgba(34,197,94,.12);color:#4ade80;border:1px solid rgba(34,197,94,.22)}
-.dock-detail-badge.current{background:rgba(59,130,246,.12);color:#93c5fd;border:1px solid rgba(59,130,246,.28)}
-.dock-detail-badge.upcoming{background:rgba(100,116,139,.1);color:#94a3b8;border:1px solid rgba(100,116,139,.2)}
-.dock-detail-badge.update{background:rgba(96,165,250,.1);color:#93c5fd;border:1px solid rgba(96,165,250,.2)}
-.dock-detail-date{font-size:10px;color:#64748b;font-weight:600}
-.dock-detail-title{font-size:17px;font-weight:700;color:#f1f5f9;line-height:1.22;margin-bottom:3px;letter-spacing:-.025em}
-.dock-detail-sub{font-size:11px;color:#64748b;margin-bottom:9px}
-.dock-detail-body{font-size:12px;color:#cbd5e1;line-height:1.6;max-height:80px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical}
-.dock-detail-body.expanded{max-height:none;-webkit-line-clamp:unset;display:block}
-.dock-detail-more{margin-top:8px;background:none;border:none;color:#60a5fa;font-size:10.5px;font-weight:600;cursor:pointer;padding:0}
-.dock-stages{margin-top:12px;padding-top:10px;border-top:1px solid rgba(51,65,85,.45)}
-.dock-stages-title{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#475569;margin-bottom:7px}
-.dock-stage{background:rgba(30,41,59,.6);border-radius:7px;padding:8px 11px;margin-bottom:5px}
-.dock-stage-name{font-size:11px;font-weight:600;color:#e2e8f0;margin-bottom:2px}
-.dock-stage-dist{font-size:10px;color:#475569;font-weight:600}
-.dock-stage-desc{font-size:10.5px;color:#94a3b8;line-height:1.5;margin-top:3px}
-/* Scrubber track */
-#dock-scrub-wrap{flex:0 0 auto;padding:10px 0 12px;position:relative}
-#dock-progress-bar{height:3px;background:rgba(51,65,85,.5);margin:0 20px 10px;border-radius:2px;overflow:hidden}
-#dock-progress-fill{height:100%;background:linear-gradient(90deg,#22c55e,#3b82f6,#a855f7);border-radius:2px;transition:width .4s ease}
-#dock-track{display:flex;gap:0;overflow-x:auto;overflow-y:hidden;padding:4px 28px 6px;scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-#dock-track::-webkit-scrollbar{display:none}
-.dock-node{position:relative;z-index:1;flex:0 0 auto;width:80px;scroll-snap-align:center;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;padding:4px 2px 2px;border:none;background:none;font:inherit;color:inherit;-webkit-tap-highlight-color:transparent;transition:transform .15s}
-.dock-node:hover{transform:translateY(-2px)}
-/* Connector line between nodes */
-.dock-node::before{content:'';position:absolute;top:22px;right:-20px;width:40px;height:2px;background:rgba(51,65,85,.6);z-index:0}
-.dock-node:last-child::before{display:none}
-.dock-node.done::before{background:rgba(34,197,94,.35)}
-.dock-node-ring{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid rgba(148,163,184,.3);background:rgba(15,23,42,.8);overflow:hidden;transition:box-shadow .2s,border-color .2s;position:relative;z-index:1}
-.dock-node.selected .dock-node-ring{box-shadow:0 0 0 3px rgba(96,165,250,.4),0 0 20px rgba(59,130,246,.3)}
-.dock-node.done .dock-node-ring{border-color:rgba(34,197,94,.5);background:rgba(34,197,94,.1)}
-.dock-node.current .dock-node-ring{width:44px;height:44px;border-color:#60a5fa;background:rgba(59,130,246,.18);animation:here-pulse 2.5s infinite}
-.dock-node.upcoming .dock-node-ring{opacity:.75}
-.dock-node-thumb{width:100%;height:100%;object-fit:cover}
-.dock-node-icon{font-size:14px;line-height:1}
-.dock-node-label{font-size:9px;font-weight:600;color:#94a3b8;text-align:center;line-height:1.25;max-width:76px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.dock-node.selected .dock-node-label{color:#e2e8f0}
-.dock-node.current .dock-node-label{color:#93c5fd;font-weight:700}
-.dock-node.done .dock-node-label{color:#4ade80}
+/* Mobile open button */
+#sidebar-open-btn{display:none;position:fixed;bottom:calc(20px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);z-index:999;background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;border:none;border-radius:28px;padding:12px 24px;font-size:14px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.5);cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent;align-items:center;gap:6px}
+#sidebar-open-btn:active{transform:translateX(-50%) scale(.95)}
+@media(max-width:900px){
+#app{position:relative}
+#sidebar{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1000;transform:translateX(-100%);transition:transform .3s cubic-bezier(.4,0,.2,1);min-width:0;box-sizing:border-box;padding-bottom:env(safe-area-inset-bottom,0)}
+#sidebar.open{transform:translateX(0)}
+#map{width:100%;height:100vh;height:100dvh}
+#sidebar-open-btn{display:flex}
+#sidebar-close-btn{display:block}
+#map-hud{top:0;right:0}
+}
 /* badge / type styles kept for detour cards inside detail panel */
 .badge{display:inline-flex;padding:1px 6px;border-radius:3px;font-size:9px;font-weight:700;text-transform:uppercase}
 .b-bike{background:#1e3a5f;color:#60a5fa}
@@ -136,19 +100,11 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
 .leaflet-popup-content{font-family:'Segoe UI',system-ui,sans-serif;font-size:11.5px;line-height:1.5;max-width:260px}
 .leaflet-popup-content b{color:#f8fafc}
 .leaflet-popup-content .pt{font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;font-weight:700}
-/* Push Leaflet bottom controls above the dock */
-.leaflet-bottom .leaflet-control{margin-bottom:var(--dock-h,130px)}
 .leaflet-bottom.leaflet-right{right:8px}
 .leaflet-bottom.leaflet-left{left:8px}
-.leaflet-control-attribution{font-size:9px!important;opacity:.7;background:rgba(15,23,42,.6)!important;color:#94a3b8!important;border-radius:4px 4px 0 0;margin-bottom:130px!important}
+.leaflet-control-attribution{font-size:9px!important;opacity:.7;background:rgba(15,23,42,.6)!important;color:#94a3b8!important;border-radius:4px 4px 0 0}
 @media(max-width:600px){
-.hud-brand h1{font-size:14px}
-.hud-brand{max-width:calc(100vw - 100px)}
-.dock-node{width:68px}
-.dock-node-ring{width:34px;height:34px}
-.dock-node.current .dock-node-ring{width:40px;height:40px}
-#dock-detail-inner{padding:12px 14px 10px}
-.dock-detail-title{font-size:15px}
+#sidebar-header h1{font-size:14px}
 }
 .elev-wrap{margin-top:10px;background:#0a1628;border-radius:6px;padding:10px;border:1px solid #1e3a5f;overflow:hidden}
 .elev-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
@@ -229,43 +185,41 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
 </head>
 <body>
 <div id="app">
-<div id="map"></div>
 
-<!-- Top HUD: brand + layer toggles -->
-<div id="map-hud">
-  <div class="hud-brand">
-    <h1>Forward to Fjord</h1>
-    <div class="hud-sub">Scandinavia &rarr; Balkans &bull; E-bike journey</div>
+<!-- Left sidebar -->
+<div id="sidebar">
+  <div id="sidebar-header">
+    <div id="sidebar-header-top">
+      <div>
+        <h1>Forward to Fjord</h1>
+        <div class="hud-sub">Scandinavia &rarr; Balkans &bull; E-bike journey</div>
+      </div>
+      <button id="sidebar-close-btn" type="button">&#x2715; Close</button>
+    </div>
     <div id="hud-live-wrap" style="display:none">
       <span class="hud-live"><span class="hud-live-dot"></span><span id="hud-live-text"></span></span>
     </div>
   </div>
-  <div class="hud-controls">
-    <label class="hud-pill"><input type="checkbox" id="photo-checkbox" checked><span class="toggle-track"></span> Photos</label>
-    <label class="hud-pill"><input type="checkbox" id="trail-checkbox" checked><span class="toggle-track"></span> Trail</label>
-  </div>
+  <div id="trip-status-banner"></div>
+  <div id="live-stats-wrap"></div>
+  <div id="live-prog-wrap"></div>
+  <div id="updates-feed-wrap"></div>
+  <div id="location-timeline-wrap"></div>
+  <div id="segments-container"></div>
 </div>
 
-<!-- Bottom timeline dock -->
-<div id="trip-dock">
-  <!-- Expandable segment/update detail -->
-  <div id="dock-detail" class="collapsed">
-    <div id="dock-detail-inner"></div>
-  </div>
-  <!-- Scrubber -->
-  <div id="dock-scrub-wrap">
-    <div id="dock-progress-bar"><div id="dock-progress-fill" style="width:0%"></div></div>
-    <div id="dock-track"></div>
-  </div>
+<!-- Map -->
+<div id="map"></div>
+
+<!-- Photos + Trail toggles floating on map -->
+<div id="map-hud">
+  <label class="hud-pill"><input type="checkbox" id="photo-checkbox" checked><span class="toggle-track"></span> Photos</label>
+  <label class="hud-pill"><input type="checkbox" id="trail-checkbox" checked><span class="toggle-track"></span> Trail</label>
 </div>
 
-<!-- Hidden containers kept for JS rendering (not shown in UI directly) -->
-<div id="location-timeline-wrap" style="display:none"></div>
-<div id="updates-feed-wrap" style="display:none"></div>
-<div id="trip-status-banner" style="display:none"></div>
-<div id="live-stats-wrap" style="display:none"></div>
-<div id="live-prog-wrap" style="display:none"></div>
-<div id="segments-container" style="display:none"></div>
+<!-- Mobile: open sidebar -->
+<button id="sidebar-open-btn" type="button">&#9776; Route Plan</button>
+
 </div>
 
 <script>
@@ -1396,11 +1350,26 @@ initTripStatus();
 loadRealRoutes();
 
 /* ============================================================
-   BOTTOM DOCK TIMELINE ENGINE
+   SIDEBAR ENGINE
    ============================================================ */
 
 (function () {
-  // Build timeline items: updates first (newest→oldest), then segments in order
+  // Sidebar open/close (mobile)
+  function initSidebar() {
+    var sidebar = document.getElementById('sidebar');
+    var openBtn = document.getElementById('sidebar-open-btn');
+    var closeBtn = document.getElementById('sidebar-close-btn');
+    if (openBtn) openBtn.addEventListener('click', function () { sidebar.classList.add('open'); });
+    if (closeBtn) closeBtn.addEventListener('click', function () { sidebar.classList.remove('open'); });
+    // Close sidebar when a segment is clicked on mobile
+    sidebar.addEventListener('click', function (e) {
+      if (window.innerWidth <= 900 && e.target.closest('.seg')) {
+        setTimeout(function () { sidebar.classList.remove('open'); }, 280);
+      }
+    });
+  }
+
+  // ---- Dead code kept for structure reference only ----
   function buildDockItems() {
     var items = [];
     // Journey updates (newest first)
@@ -1640,13 +1609,8 @@ loadRealRoutes();
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    initDock();
+    initSidebar();
     initHudLive();
-    updateDockHeight();
-    // Re-measure when detail panel opens/closes
-    var detail = document.getElementById('dock-detail');
-    if (detail) new MutationObserver(updateDockHeight).observe(detail, { attributes: true, attributeFilter: ['class'] });
-    window.addEventListener('resize', updateDockHeight);
   });
 })();
 
