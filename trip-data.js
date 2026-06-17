@@ -5,14 +5,20 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 1,           // segment id: 1, 3, 4, 5, 6, 7, 8, 9 (no segment 2)
-  currentCity: 'London Heathrow Airport, Southern Perimeter Road',   // most recent city/town name
+  currentCity: 'Clink261, King\'s Cross, London', Southern Perimeter Road',   // most recent city/town name
   dayNumber: 1,                // day number of the trip
   kmRidden: 0,                 // total km covered so far
   countries: ['Australia', 'Vietnam', 'United Kingdom'],               // e.g. ['Sweden','Finland']
-  lat: 51.467739,                   // precise current lat (preferred over city fallback)
-  lng: -0.45878,                   // precise current lng
-  lastUpdated: '2026-06-16',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 51.529061,                   // precise current lat (preferred over city fallback)
+  lng: -0.120123,                   // precise current lng
+  lastUpdated: '2026-06-17',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-06-17T02:54:05.870Z',
+      lat: 51.529061,
+      lng: -0.120123,
+      location: 'Clink261, King\'s Cross, London',
+    },
     {
       at: '2026-06-16T17:48:53.409Z',
       lat: 51.467739,
