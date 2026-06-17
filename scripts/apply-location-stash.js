@@ -105,8 +105,10 @@ function formatEntry(entry) {
 }
 
 function upsertField(src, field, valueLiteral) {
-  const re = new RegExp('(' + field + ':)\\s*[^,\\n]+');
-  if (re.test(src)) return src.replace(re, '$1 ' + valueLiteral);
+  const quoted = new RegExp('(' + field + ':)\\s*\'(?:\\\\.|[^\'])*\'');
+  if (quoted.test(src)) return src.replace(quoted, '$1 ' + valueLiteral);
+  const bare = new RegExp('(' + field + ':)\\s*[^,\\n]+');
+  if (bare.test(src)) return src.replace(bare, '$1 ' + valueLiteral);
   throw new Error('Field not found in trip-data.js: ' + field);
 }
 

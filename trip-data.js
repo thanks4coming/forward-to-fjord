@@ -5,7 +5,7 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 1,           // segment id: 1, 3, 4, 5, 6, 7, 8, 9 (no segment 2)
-  currentCity: 'Clink261, King\'s Cross, London', Southern Perimeter Road',   // most recent city/town name
+  currentCity: 'Clink261, King\'s Cross, London',   // most recent city/town name
   dayNumber: 1,                // day number of the trip
   kmRidden: 0,                 // total km covered so far
   countries: ['Australia', 'Vietnam', 'United Kingdom'],               // e.g. ['Sweden','Finland']
