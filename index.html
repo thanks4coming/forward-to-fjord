@@ -77,6 +77,11 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
 #sidebar-open-btn{display:flex}
 #sidebar-close-btn{display:block}
 #map-hud{top:0;right:0}
+.seg-hdr{padding:12px 14px}
+.seg-title{font-size:13px}
+.stage-name{font-size:11.5px}
+.stage-desc{font-size:11px}
+.seg-tab{font-size:10px;padding:8px 4px}
 }
 /* badge / type styles kept for detour cards inside detail panel */
 .badge{display:inline-flex;padding:1px 6px;border-radius:3px;font-size:9px;font-weight:700;text-transform:uppercase}
@@ -169,6 +174,72 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
 #trail-checkbox:checked+.toggle-track{background:#22c55e}
 .trail-pin{width:10px;height:10px;background:#22c55e;border-radius:50%;border:2px solid #fff;box-shadow:0 0 4px rgba(34,197,94,.7)}
 .trail-pin-latest{width:12px;height:12px;background:#3b82f6;border:2px solid #fff;box-shadow:0 0 6px rgba(59,130,246,.8)}
+/* ---- ROUTE PLAN (segment cards) ---- */
+.route-plan-hdr{margin:4px 12px 8px;padding:10px 14px;background:linear-gradient(135deg,#0a2040,#0a1628);border:1px solid #1e3a5f;border-radius:10px;display:flex;align-items:center;justify-content:space-between}
+.route-plan-hdr h2{font-size:11.5px;font-weight:700;color:#93c5fd;margin:0;letter-spacing:.02em}
+.route-plan-hdr .rp-count{font-size:9px;background:#3b82f622;color:#60a5fa;border:1px solid #3b82f644;padding:1px 7px;border-radius:10px;font-weight:600}
+#segments-container{padding:0 0 16px}
+.seg{margin:0 12px 8px;background:#0f172a;border-radius:10px;border:1px solid #1e293b;overflow:hidden;transition:border-color .2s,box-shadow .2s}
+.seg:hover{border-color:#475569}
+.seg.active{border-color:#60a5fa;box-shadow:0 0 0 1px rgba(96,165,250,.15)}
+.seg.seg-hl{border-color:#94a3b8}
+.seg-hdr{display:flex;align-items:flex-start;gap:10px;padding:11px 12px;cursor:pointer;user-select:none}
+.seg-hdr:hover{background:rgba(30,41,59,.35)}
+.seg-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;margin-top:1px}
+.seg-title{font-size:12.5px;font-weight:600;color:#f1f5f9;line-height:1.3;flex:1;min-width:0}
+.seg-title-row{display:flex;align-items:flex-start;gap:6px;margin-bottom:2px}
+.seg-hdr-main{flex:1;min-width:0}
+.seg-meta{display:flex;gap:6px;font-size:10px;color:#94a3b8;margin-top:4px;flex-wrap:wrap;align-items:center}
+.seg-meta .meta-chip{padding:2px 7px;border-radius:999px;background:#1e293b;border:1px solid #334155;font-size:9px;font-weight:600;color:#cbd5e1}
+.seg-chevron{margin-left:auto;flex-shrink:0;font-size:11px;color:#64748b;transition:transform .2s,color .2s;line-height:1;padding-top:6px}
+.seg.active .seg-chevron{transform:rotate(180deg);color:#60a5fa}
+.seg-body{padding:0 12px 14px;display:none;border-top:1px solid #1e293b55}
+.seg.active .seg-body{display:block}
+.seg-body .route-name{font-size:9.5px;color:#60a5fa;font-weight:700;margin:10px 0 0;text-transform:uppercase;letter-spacing:.5px;line-height:1.45}
+.seg-tabs{display:flex;gap:4px;margin:10px 0 8px;padding:3px;background:#0a1628;border-radius:8px;border:1px solid #1e293b}
+.seg-tab{flex:1;border:none;background:transparent;color:#64748b;font-size:9.5px;font-weight:700;padding:7px 4px;border-radius:6px;cursor:pointer;transition:background .15s,color .15s;white-space:nowrap}
+.seg-tab:hover{color:#94a3b8}
+.seg-tab.active{background:#1e293b;color:#e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.seg-panel{display:none}
+.seg-panel.active{display:block}
+.seg-overview-list{margin:0;padding:0;list-style:none}
+.seg-overview-list li{position:relative;padding:0 0 8px 14px;font-size:11px;color:#cbd5e1;line-height:1.55}
+.seg-overview-list li::before{content:'';position:absolute;left:0;top:.55em;width:5px;height:5px;border-radius:50%;background:#3b82f6;opacity:.85}
+.seg-overview-list li:last-child{padding-bottom:0}
+.seg-overview-more{margin-top:8px;font-size:10.5px;color:#94a3b8;line-height:1.6;display:none}
+.seg-overview-more.show{display:block}
+.seg-read-more{margin-top:6px;background:none;border:none;color:#60a5fa;font-size:10px;font-weight:600;cursor:pointer;padding:0}
+.seg-read-more:hover{text-decoration:underline}
+.stages-timeline{position:relative;margin-top:4px}
+.stage{position:relative;padding:0 0 0 22px;margin-bottom:0;border:none;border-radius:0;background:transparent}
+.stage::before{content:'';position:absolute;left:5px;top:14px;bottom:-2px;width:2px;background:#334155}
+.stage:last-child::before{bottom:auto;height:14px}
+.stage::after{content:'';position:absolute;left:1px;top:10px;width:10px;height:10px;border-radius:50%;background:#1e293b;border:2px solid #475569;z-index:1;transition:border-color .15s,background .15s}
+.stage.open::after{border-color:#60a5fa;background:#1e3a5f}
+.stage-hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:8px 8px 8px 0;cursor:pointer;border-radius:6px;transition:background .15s}
+.stage-hdr:hover{background:rgba(30,41,59,.5)}
+.stage-title-wrap{flex:1;min-width:0}
+.stage-idx{font-size:8px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px}
+.stage-name{font-size:11px;font-weight:600;color:#e2e8f0;line-height:1.35;display:block}
+.stage-dist{font-size:9px;color:#64748b;font-weight:600;white-space:nowrap;flex-shrink:0;padding:3px 7px;border-radius:999px;background:#0f172a;border:1px solid #334155;margin-top:2px}
+.stage-toggle{font-size:9px;color:#64748b;flex-shrink:0;padding-top:4px;transition:transform .2s}
+.stage.open .stage-toggle{transform:rotate(180deg);color:#60a5fa}
+.stage-desc{font-size:10.5px;color:#94a3b8;line-height:1.55;padding:0 8px 10px 0;display:none}
+.stage.open .stage-desc{display:block}
+.detours-block{margin-top:2px}
+.detour-card{background:linear-gradient(135deg,#141c2e,#101827);border:1px solid #f59e0b33;border-radius:8px;padding:10px 11px;margin-bottom:8px}
+.detour-card:last-child{margin-bottom:0}
+.detour-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
+.detour-hdr{display:flex;align-items:center;gap:6px;flex:1;min-width:0}
+.detour-icon{font-size:9px;flex-shrink:0;color:#fbbf24}
+.detour-name{font-size:11px;font-weight:600;color:#fbbf24;line-height:1.35}
+.detour-meta{font-size:9px;color:#92400e;font-weight:600;margin-top:3px}
+.detour-verdict-badge{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.35px;padding:2px 8px;border-radius:999px;white-space:nowrap;flex-shrink:0}
+.detour-verdict-badge.verdict-must{background:#22c55e18;color:#4ade80;border:1px solid #22c55e44}
+.detour-verdict-badge.verdict-highly{background:#3b82f618;color:#93c5fd;border:1px solid #3b82f644}
+.detour-verdict-badge.verdict-nice{background:#64748b18;color:#94a3b8;border:1px solid #64748b44}
+.detour-desc{font-size:10.5px;color:#94a3b8;line-height:1.55}
+.detour-verdict{display:none}
 .seg-status{padding:1px 7px;border-radius:3px;font-size:8px;font-weight:700;text-transform:uppercase;flex-shrink:0;align-self:flex-start;margin-top:2px}
 .ss-done{background:#22c55e22;color:#22c55e;border:1px solid #22c55e44}
 .ss-here{background:#3b82f622;color:#60a5fa;border:1px solid #3b82f644;animation:here-pulse 2s infinite}
@@ -205,6 +276,10 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
   <div id="live-prog-wrap"></div>
   <div id="updates-feed-wrap"></div>
   <div id="location-timeline-wrap"></div>
+  <div class="route-plan-hdr">
+    <h2>Route Plan</h2>
+    <span class="rp-count" id="route-plan-count"></span>
+  </div>
   <div id="segments-container"></div>
 </div>
 
@@ -894,7 +969,115 @@ function renderElevationChart(container, segId) {
     ${terrainNote}`;
 }
 
+// --- SIDEBAR HELPERS ---
+function splitSentences(text) {
+  return text.split(/(?<=[.!?])\s+/).map(function (s) { return s.trim(); }).filter(Boolean);
+}
+
+function buildOverviewPanel(desc) {
+  var sentences = splitSentences(desc);
+  if (sentences.length <= 1) {
+    return '<p class="seg-overview-more show" style="margin:0">' + desc + '</p>';
+  }
+  var lead = sentences.slice(0, Math.min(3, sentences.length));
+  var rest = sentences.slice(lead.length);
+  var listHtml = lead.map(function (s) { return '<li>' + s + '</li>'; }).join('');
+  var moreHtml = rest.length
+    ? '<div class="seg-overview-more overview-more">' + rest.join(' ') + '</div>' +
+      '<button type="button" class="seg-read-more" data-action="overview-more">Read full overview</button>'
+    : '';
+  return '<ul class="seg-overview-list">' + listHtml + '</ul>' + moreHtml;
+}
+
+function buildStagesPanel(stages) {
+  return '<div class="stages-timeline">' + stages.map(function (s, i) {
+    return '<div class="stage" data-stage="' + i + '">' +
+      '<div class="stage-hdr">' +
+        '<div class="stage-title-wrap">' +
+          '<span class="stage-idx">Stage ' + (i + 1) + '</span>' +
+          '<span class="stage-name">' + s.name + '</span>' +
+        '</div>' +
+        '<span class="stage-dist">' + s.dist + '</span>' +
+        '<span class="stage-toggle" aria-hidden="true">▾</span>' +
+      '</div>' +
+      '<div class="stage-desc">' + s.desc + '</div>' +
+    '</div>';
+  }).join('') + '</div>';
+}
+
+function buildDetoursPanel(detours) {
+  return detours.map(function (d) {
+    var vc = d.verdict === 'must' ? 'verdict-must' : d.verdict === 'highly' ? 'verdict-highly' : 'verdict-nice';
+    var vl = d.verdict === 'must' ? 'Must do' : d.verdict === 'highly' ? 'Highly recommended' : 'Nice if time';
+    return '<div class="detour-card">' +
+      '<div class="detour-top">' +
+        '<div>' +
+          '<div class="detour-hdr"><span class="detour-icon">◆</span><span class="detour-name">' + d.name + '</span></div>' +
+          '<div class="detour-meta">' + d.dist + ' · ' + d.time + '</div>' +
+        '</div>' +
+        '<span class="detour-verdict-badge ' + vc + '">' + vl + '</span>' +
+      '</div>' +
+      '<div class="detour-desc">' + d.desc + '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function wireSegmentTabs(segEl) {
+  var tabs = segEl.querySelectorAll('.seg-tab');
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var name = tab.getAttribute('data-tab');
+      segEl.querySelectorAll('.seg-tab').forEach(function (t) { t.classList.toggle('active', t === tab); });
+      segEl.querySelectorAll('.seg-panel').forEach(function (p) {
+        p.classList.toggle('active', p.getAttribute('data-panel') === name);
+      });
+    });
+  });
+}
+
+function wireStageToggles(segEl) {
+  segEl.querySelectorAll('.stage-hdr').forEach(function (hdr) {
+    hdr.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var stage = hdr.closest('.stage');
+      if (!stage) return;
+      var opening = !stage.classList.contains('open');
+      segEl.querySelectorAll('.stage.open').forEach(function (s) { s.classList.remove('open'); });
+      if (opening) stage.classList.add('open');
+    });
+  });
+}
+
+function wireOverviewMore(segEl) {
+  var btn = segEl.querySelector('[data-action="overview-more"]');
+  if (!btn) return;
+  btn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    var more = segEl.querySelector('.overview-more');
+    if (more) more.classList.add('show');
+    btn.remove();
+  });
+}
+
+function activateSegment(div, seg) {
+  document.querySelectorAll('.seg').forEach(function (s) { s.classList.remove('active'); });
+  div.classList.add('active');
+  var bounds = [];
+  seg.waypoints.forEach(function (wp) { bounds.push([wp.lat, wp.lng]); });
+  if (seg.route) seg.route.forEach(function (p) { bounds.push(p); });
+  if (seg.ferryRoute) seg.ferryRoute.forEach(function (p) { bounds.push(p); });
+  if (seg.trainRoute) seg.trainRoute.forEach(function (p) { bounds.push(p); });
+  if (bounds.length) map.fitBounds(bounds, { padding: [60, 60], maxZoom: 9 });
+  var ec = div.querySelector('.elev-container');
+  if (ec) renderElevationChart(ec, seg.id);
+  renderStageCharts(div, seg.id);
+}
+
 // --- SIDEBAR ---
+const routePlanCount = document.getElementById('route-plan-count');
+if (routePlanCount) routePlanCount.textContent = segments.length + ' segments';
+
 const container = document.getElementById('segments-container');
 segments.forEach(seg => {
   const div = document.createElement('div');
@@ -917,65 +1100,61 @@ segments.forEach(seg => {
     ? '<span class="seg-status ss-next">Next</span>'
     : '';
 
-  let stagesHtml = seg.stages.map((s, i) => `
-    <div class="stage" data-stage="${i}">
-      <div class="stage-hdr"><span class="stage-name">${s.name}</span><span class="stage-dist">${s.dist}</span></div>
-      <div class="stage-desc">${s.desc}</div>
-    </div>`).join('');
-
-  let detoursHtml = (seg.detours||[]).map(d => {
-    const vc = d.verdict==='must'?'verdict-must':d.verdict==='highly'?'verdict-highly':'verdict-nice';
-    const vl = d.verdict==='must'?'MUST DO':d.verdict==='highly'?'HIGHLY RECOMMENDED':'NICE IF TIME';
-    return `<div class="detour-card">
-      <div class="detour-hdr"><span class="detour-icon">\u2B25</span><span class="detour-name">${d.name}</span><span class="detour-meta">${d.dist} \u2022 ${d.time}</span></div>
-      <div class="detour-desc">${d.desc}</div>
-      <div class="detour-verdict ${vc}">${vl}</div>
-    </div>`;
-  }).join('');
+  let stagesHtml = buildStagesPanel(seg.stages);
 
   const elevWrap = seg.transport === 'bike'
     ? `<div class="elev-wrap"><div class="elev-container"><div class="elev-pending">Elevation data loads when routes are calculated\u2026</div></div></div>`
     : '';
 
+  var detourCount = (seg.detours || []).length;
+  var tabsHtml =
+    '<div class="seg-tabs">' +
+      '<button type="button" class="seg-tab active" data-tab="overview">Overview</button>' +
+      '<button type="button" class="seg-tab" data-tab="stages">Stages <span style="opacity:.65">(' + seg.stages.length + ')</span></button>' +
+      (detourCount ? '<button type="button" class="seg-tab" data-tab="detours">Detours <span style="opacity:.65">(' + detourCount + ')</span></button>' : '') +
+    '</div>';
+
   div.innerHTML = `
     <div class="seg-hdr">
       <div class="seg-num" style="background:${seg.color}">${seg.id}</div>
-      <div style="flex:1;min-width:0">
-        <div class="seg-title">${seg.title}</div>
+      <div class="seg-hdr-main">
+        <div class="seg-title-row">
+          <div class="seg-title">${seg.title}</div>
+          ${statusBadge}
+        </div>
         <div class="seg-meta">
           <span class="badge ${bc}">${bt}</span>${sb}
-          <span>${seg.distance}</span><span>${seg.days}</span>
+          <span class="meta-chip">${seg.distance}</span>
+          <span class="meta-chip">${seg.days}</span>
         </div>
       </div>
-      ${statusBadge}
+      <span class="seg-chevron" aria-hidden="true">▾</span>
     </div>
     <div class="seg-body">
       <div class="route-name">${seg.routeName}</div>
-      <p>${seg.description}</p>
-      ${stagesHtml}
-      ${detoursHtml ? '<div style="margin-top:8px;font-size:10px;font-weight:700;color:#fbbf24;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">\u2B25 Recommended Detours</div>' + detoursHtml : ''}
+      ${tabsHtml}
+      <div class="seg-panel active" data-panel="overview">${buildOverviewPanel(seg.description)}</div>
+      <div class="seg-panel" data-panel="stages">${stagesHtml}</div>
+      ${detourCount ? '<div class="seg-panel" data-panel="detours"><div class="detours-block">' + detoursHtml + '</div></div>' : ''}
       ${elevWrap}
     </div>`;
+
+  wireSegmentTabs(div);
+  wireStageToggles(div);
+  wireOverviewMore(div);
 
   div.addEventListener('mouseenter', () => highlightSeg(seg.id));
   div.addEventListener('mouseleave', () => unhighlightAll());
 
-  div.addEventListener('click', () => {
+  div.querySelector('.seg-hdr').addEventListener('click', function (e) {
+    e.stopPropagation();
     const wasActive = div.classList.contains('active');
-    document.querySelectorAll('.seg').forEach(s => s.classList.remove('active'));
-    if (!wasActive) {
-      div.classList.add('active');
-      const bounds = [];
-      seg.waypoints.forEach(wp => bounds.push([wp.lat, wp.lng]));
-      if (seg.route) seg.route.forEach(p => bounds.push(p));
-      if (seg.ferryRoute) seg.ferryRoute.forEach(p => bounds.push(p));
-      if (seg.trainRoute) seg.trainRoute.forEach(p => bounds.push(p));
-      if (bounds.length) map.fitBounds(bounds, {padding:[60,60], maxZoom:9});
-      // Render elevation chart if data ready
-      const ec = div.querySelector('.elev-container');
-      if (ec) renderElevationChart(ec, seg.id);
-      renderStageCharts(div, seg.id);
+    if (wasActive) {
+      div.classList.remove('active');
+      unhighlightAll();
+      return;
     }
+    activateSegment(div, seg);
   });
   container.appendChild(div);
 
@@ -998,6 +1177,12 @@ segments.forEach(seg => {
     });
   }
 });
+
+var currentSegEl = container.querySelector('.seg.seg-current');
+if (currentSegEl && tripStatus.active) {
+  var curSeg = segments.find(function (s) { return s.id === tripStatus.currentSegment; });
+  if (curSeg) activateSegment(currentSegEl, curSeg);
+}
 
 // --- LEGEND ---
 const leg = L.control({position:'bottomright'});
@@ -1363,7 +1548,7 @@ loadRealRoutes();
     if (closeBtn) closeBtn.addEventListener('click', function () { sidebar.classList.remove('open'); });
     // Close sidebar when a segment is clicked on mobile
     sidebar.addEventListener('click', function (e) {
-      if (window.innerWidth <= 900 && e.target.closest('.seg')) {
+      if (window.innerWidth <= 900 && e.target.closest('.seg-hdr')) {
         setTimeout(function () { sidebar.classList.remove('open'); }, 280);
       }
     });
