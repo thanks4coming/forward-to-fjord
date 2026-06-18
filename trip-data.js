@@ -73,7 +73,7 @@ const tripStatus = {
     { lat: 51.480643, lng: -0.160602, src: 'photos/2026-06-18-chelsea-gardens.jpg', caption: 'Battersea Park', location: 'Battersea, London' },
     { lat: 51.564915, lng: -0.157231, src: 'photos/2026-06-18-parliament-gardens.jpg', caption: 'Parliament Hill', location: 'Parliament Hill, London' },
     { lat: 51.4966, lng: -0.1764, src: 'photos/2026-06-18-natural-history-museum.jpg', caption: 'Natural History Museum — star dust, the oldest thing you\'ll ever see', location: 'South Kensington, London' },
-    { lat: 51.5227, lng: -0.0706, src: 'photos/2026-06-18-carpenters-arms.jpg', caption: 'The Carpenters Arms, near Brick Lane', location: 'Brick Lane, London' },
+    { lat: 51.5239546, lng: -0.0673675, src: 'photos/2026-06-18-carpenters-arms.jpg', caption: 'The Carpenters Arms, Cheshire St', location: 'Shoreditch, London' },
     // Map photo pins — add as you go
     // { lat: 0.0, lng: 0.0, src: 'photos/2026-XX-XX-city.jpg', caption: 'Caption', location: 'City' }
   ]
