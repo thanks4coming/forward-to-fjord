@@ -243,6 +243,22 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
 .dock-stage-desc{font-size:10.5px;color:#94a3b8;line-height:1.55;margin-top:3px}
 /* ---- UPDATE TEXT — preserve paragraph breaks ---- */
 .uc-text{font-size:11px;color:#cbd5e1;line-height:1.6;white-space:pre-line}
+/* ---- PHOTO LIGHTBOX ---- */
+#photo-lightbox{display:none;position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.96);flex-direction:column;align-items:center;justify-content:center}
+#photo-lightbox.open{display:flex}
+#lb-img-wrap{flex:1;display:flex;align-items:center;justify-content:center;width:100%;padding:52px 64px 8px;min-height:0;overflow:hidden}
+#lb-img{max-width:100%;max-height:100%;object-fit:contain;border-radius:4px;display:block;user-select:none;-webkit-user-drag:none}
+#lb-footer{padding:10px 16px 20px;text-align:center;flex-shrink:0}
+#lb-caption{font-size:13px;font-weight:600;color:#f1f5f9;margin-bottom:3px}
+#lb-location{font-size:11px;color:#64748b}
+#lb-counter{font-size:10px;color:#475569;margin-top:6px;letter-spacing:.5px}
+#lb-close{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));right:14px;background:rgba(30,41,59,.8);border:1px solid rgba(148,163,184,.2);border-radius:8px;color:#94a3b8;font-size:18px;width:36px;height:36px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:1;transition:background .15s}
+#lb-close:hover{background:#334155;color:#fff}
+#lb-prev,#lb-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(30,41,59,.7);border:1px solid rgba(148,163,184,.15);border-radius:10px;color:#e2e8f0;font-size:28px;width:44px;height:64px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;z-index:1;padding-bottom:2px}
+#lb-prev:hover,#lb-next:hover{background:rgba(59,130,246,.5)}
+#lb-prev{left:8px}
+#lb-next{right:8px}
+#lb-prev.hidden,#lb-next.hidden{opacity:.2;pointer-events:none}
 </style>
 </head>
 <body>
@@ -282,6 +298,21 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
 <!-- Mobile: open sidebar -->
 <button id="sidebar-open-btn" type="button">&#9776; Route Plan</button>
 
+</div>
+
+<!-- Photo lightbox -->
+<div id="photo-lightbox" role="dialog" aria-modal="true">
+  <button id="lb-close" aria-label="Close">&#x2715;</button>
+  <button id="lb-prev" aria-label="Previous photo">&#8249;</button>
+  <div id="lb-img-wrap">
+    <img id="lb-img" src="" alt="">
+  </div>
+  <button id="lb-next" aria-label="Next photo">&#8250;</button>
+  <div id="lb-footer">
+    <div id="lb-caption"></div>
+    <div id="lb-location"></div>
+    <div id="lb-counter"></div>
+  </div>
 </div>
 
 <script>
@@ -1228,25 +1259,82 @@ async function loadRealRoutes() {
   }
 }
 
+// --- PHOTO LIGHTBOX ---
+var lbIndex = 0;
+var lbPhotos = [];
+
+function lbOpen(idx) {
+  lbPhotos = (tripStatus.photos || []).filter(function(p){ return p.src; });
+  if (!lbPhotos.length) return;
+  lbIndex = ((idx % lbPhotos.length) + lbPhotos.length) % lbPhotos.length;
+  lbRender();
+  document.getElementById('photo-lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function lbClose() {
+  document.getElementById('photo-lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function lbRender() {
+  var p = lbPhotos[lbIndex];
+  document.getElementById('lb-img').src = p.src;
+  document.getElementById('lb-img').alt = p.caption || '';
+  document.getElementById('lb-caption').textContent = p.caption || '';
+  document.getElementById('lb-location').textContent = p.location || '';
+  document.getElementById('lb-counter').textContent = (lbIndex + 1) + ' / ' + lbPhotos.length;
+  document.getElementById('lb-prev').classList.toggle('hidden', lbPhotos.length <= 1);
+  document.getElementById('lb-next').classList.toggle('hidden', lbPhotos.length <= 1);
+  if (p.lat && p.lng) map.flyTo([p.lat, p.lng], 15, { animate: true, duration: 0.8 });
+}
+
+function lbGo(dir) {
+  lbIndex = ((lbIndex + dir) + lbPhotos.length) % lbPhotos.length;
+  lbRender();
+}
+
+document.getElementById('lb-close').addEventListener('click', lbClose);
+document.getElementById('lb-prev').addEventListener('click', function(){ lbGo(-1); });
+document.getElementById('lb-next').addEventListener('click', function(){ lbGo(1); });
+
+document.addEventListener('keydown', function(e) {
+  if (!document.getElementById('photo-lightbox').classList.contains('open')) return;
+  if (e.key === 'Escape') lbClose();
+  if (e.key === 'ArrowLeft') lbGo(-1);
+  if (e.key === 'ArrowRight') lbGo(1);
+});
+
+// Swipe support
+(function() {
+  var el = document.getElementById('photo-lightbox');
+  var sx = null;
+  el.addEventListener('touchstart', function(e){ sx = e.touches[0].clientX; }, { passive: true });
+  el.addEventListener('touchend', function(e) {
+    if (sx === null) return;
+    var dx = e.changedTouches[0].clientX - sx;
+    if (Math.abs(dx) > 40) lbGo(dx < 0 ? 1 : -1);
+    sx = null;
+  }, { passive: true });
+})();
+
 // --- PHOTO LAYER ---
 const photoGroup = L.layerGroup();
 function rebuildPhotoLayer() {
   photoGroup.clearLayers();
-  tripStatus.photos.forEach(function(p) {
+  var photos = (tripStatus.photos || []).filter(function(p){ return p.src; });
+  photos.forEach(function(p, idx) {
     var icon = L.divIcon({
       className: '',
       html: '<div class="photo-pin-wrap"><img src="' + p.src + '" alt="' + (p.caption||'') + '"></div>',
       iconSize: [53, 69],
       iconAnchor: [26, 69]
     });
-    var m = L.marker([p.lat, p.lng], {icon: icon});
-    m.bindPopup(
-      '<div style="text-align:center">' +
-      '<img src="' + p.src + '" style="width:220px;height:280px;object-fit:cover;object-position:center;border-radius:6px;display:block;margin-bottom:8px">' +
-      '<div style="font-size:11.5px;color:#f1f5f9;font-weight:600">' + (p.caption||'') + '</div>' +
-      '<div style="font-size:10px;color:#64748b;margin-top:3px">' + (p.location||'') + '</div>' +
-      '</div>'
-    );
+    var m = L.marker([p.lat, p.lng], {icon: icon, interactive: true});
+    m.on('click', function(e) {
+      L.DomEvent.stopPropagation(e);
+      lbOpen(idx);
+    });
     m.addTo(photoGroup);
   });
 }
