@@ -1147,6 +1147,88 @@ const routingSegments = {
 
 const realRoutePolylines = {};
 const realDistances = {};
+const GOTHENBURG_LATLNG = [57.7089, 11.9746];
+
+function getStageRouteLatLngs(segId, stageName) {
+  const full = realRoutePolylines[segId];
+  if (!full || full.length < 2) return null;
+  const seg = segments.find(s => s.id == segId);
+  if (!seg) return null;
+  const cleaned = cleanStageName(stageName);
+  const parts = cleaned.split('\u2192').map(p => p.trim());
+  const startWp = wpByName(parts[0], seg.waypoints);
+  const endWp = wpByName(parts[parts.length - 1], seg.waypoints);
+  if (!startWp || !endWp) return null;
+  const i0 = closestRouteIdx(full, startWp.lat, startWp.lng);
+  const i1 = closestRouteIdx(full, endWp.lat, endWp.lng);
+  const lo = Math.min(i0, i1), hi = Math.max(i0, i1);
+  const slice = full.slice(lo, hi + 1);
+  return slice.length > 1 ? slice : null;
+}
+
+function routeMidpoint(latlngs) {
+  if (!latlngs || latlngs.length < 2) return latlngs ? latlngs[0] : null;
+  let total = 0;
+  const segLens = [];
+  for (let i = 1; i < latlngs.length; i++) {
+    const dlat = latlngs[i][0] - latlngs[i - 1][0];
+    const dlng = latlngs[i][1] - latlngs[i - 1][1];
+    const d = Math.sqrt(dlat * dlat + dlng * dlng);
+    segLens.push(d);
+    total += d;
+  }
+  if (!total) return latlngs[Math.floor(latlngs.length / 2)];
+  let half = total / 2;
+  for (let i = 0; i < segLens.length; i++) {
+    if (half <= segLens[i]) {
+      const t = half / segLens[i];
+      return [
+        latlngs[i][0] + t * (latlngs[i + 1][0] - latlngs[i][0]),
+        latlngs[i][1] + t * (latlngs[i + 1][1] - latlngs[i][1])
+      ];
+    }
+    half -= segLens[i];
+  }
+  return latlngs[latlngs.length - 1];
+}
+
+function isUkCheckin(h) {
+  return h.lat >= 49 && h.lat <= 59 && h.lng >= -8 && h.lng <= 2;
+}
+
+function isSwedenCheckin(h) {
+  return h.lat >= 55 && h.lng >= 10 && h.lng <= 24;
+}
+
+function buildTrailSegmentPaths(chronological) {
+  const paths = [];
+  for (let i = 0; i < chronological.length - 1; i++) {
+    const from = chronological[i];
+    const to = chronological[i + 1];
+    const fromPt = [from.lat, from.lng];
+    const toPt = [to.lat, to.lng];
+
+    if (isUkCheckin(from) && isSwedenCheckin(to)) {
+      paths.push([fromPt, GOTHENBURG_LATLNG]);
+      const bikeRoute = getStageRouteLatLngs(1, 'Gothenburg \u2192 Alings\u00e5s');
+      if (bikeRoute) paths.push(bikeRoute);
+      else paths.push([GOTHENBURG_LATLNG, toPt]);
+    } else {
+      paths.push([fromPt, toPt]);
+    }
+  }
+  return paths;
+}
+
+function photoLatLng(p) {
+  if (p.location === 'Gothenburg \u2192 Alings\u00e5s') {
+    const route = getStageRouteLatLngs(1, 'Gothenburg \u2192 Alings\u00e5s');
+    const mid = route ? routeMidpoint(route) : null;
+    if (mid) return mid;
+  }
+  if (p.lat != null && p.lng != null) return [p.lat, p.lng];
+  return null;
+}
 
 async function fetchBRouterRoute(coordString) {
   const url = `https://brouter.de/brouter?lonlats=${coordString}&profile=fastbike-lowtraffic&alternativeidx=0&format=geojson`;
@@ -1208,6 +1290,7 @@ async function loadRealRoutes() {
     }
 
     if (segLatLngs.length > 0) {
+      realRoutePolylines[segId] = segLatLngs.flat();
       const group = layerGroups[segId];
       if (group) {
         group.eachLayer(l => {
@@ -1251,6 +1334,8 @@ async function loadRealRoutes() {
   }
 
   if (totalRealKm > 0) {
+    rebuildPhotoLayer();
+    rebuildTrailLayer();
     statusEl.innerHTML = `<span style="color:#22c55e;font-weight:700">GPS routes loaded</span> &mdash; ${loadedCount} segments, ${totalRealKm.toLocaleString()} km total cycling distance`;
     setTimeout(() => { statusEl.style.opacity = '0'; statusEl.style.transition = 'opacity 2s'; setTimeout(() => statusEl.remove(), 2000); }, 6000);
   } else {
@@ -1324,13 +1409,15 @@ function rebuildPhotoLayer() {
   photoGroup.clearLayers();
   var photos = (tripStatus.photos || []).filter(function(p){ return p.src; });
   photos.forEach(function(p, idx) {
+    var coords = photoLatLng(p);
+    if (!coords) return;
     var icon = L.divIcon({
       className: '',
       html: '<div class="photo-pin-wrap"><img src="' + p.src + '" alt="' + (p.caption||'') + '"></div>',
       iconSize: [53, 69],
       iconAnchor: [26, 69]
     });
-    var m = L.marker([p.lat, p.lng], {icon: icon, interactive: true});
+    var m = L.marker(coords, {icon: icon, interactive: true});
     m.on('click', function(e) {
       L.DomEvent.stopPropagation(e);
       lbOpen(idx);
@@ -1359,10 +1446,13 @@ function rebuildTrailLayer() {
   if (!history.length) return;
   var chronological = history.slice().reverse();
   if (chronological.length > 1) {
-    var line = L.polyline(chronological.map(function(h){ return [h.lat, h.lng]; }), {
-      color: '#22c55e', weight: 3, opacity: 0.75, dashArray: '6,8', lineCap: 'round'
+    buildTrailSegmentPaths(chronological).forEach(function(path) {
+      if (path.length > 1) {
+        L.polyline(path, {
+          color: '#22c55e', weight: 3, opacity: 0.75, dashArray: '6,8', lineCap: 'round'
+        }).addTo(trailGroup);
+      }
     });
-    line.addTo(trailGroup);
   }
   chronological.forEach(function(h, idx) {
     var isLatest = idx === chronological.length - 1;
