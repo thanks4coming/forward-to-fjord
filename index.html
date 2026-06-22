@@ -1148,6 +1148,24 @@ const routingSegments = {
 const realRoutePolylines = {};
 const realDistances = {};
 const GOTHENBURG_LATLNG = [57.7089, 11.9746];
+const trailBikeRoutes = {};
+
+function latLngsFromLayer(ll) {
+  if (!ll || !ll.length) return null;
+  return ll.map(function(p) { return Array.isArray(p) ? p : [p.lat, p.lng]; });
+}
+
+function getGothenburgAlingsasTrailRoute() {
+  if (trailBikeRoutes.gothenburgAlingsas && trailBikeRoutes.gothenburgAlingsas.length > 1) {
+    return trailBikeRoutes.gothenburgAlingsas;
+  }
+  const stagePl = stagePolylines[1] && stagePolylines[1][0];
+  if (stagePl) {
+    const ll = latLngsFromLayer(stagePl.getLatLngs());
+    if (ll && ll.length > 1) return ll;
+  }
+  return getStageRouteLatLngs(1, 'Gothenburg \u2192 Alings\u00e5s');
+}
 
 function getStageRouteLatLngs(segId, stageName) {
   const full = realRoutePolylines[segId];
@@ -1210,7 +1228,7 @@ function buildTrailSegmentPaths(chronological) {
 
     if (isUkCheckin(from) && isSwedenCheckin(to)) {
       paths.push([fromPt, GOTHENBURG_LATLNG]);
-      const bikeRoute = getStageRouteLatLngs(1, 'Gothenburg \u2192 Alings\u00e5s');
+      const bikeRoute = getGothenburgAlingsasTrailRoute();
       if (bikeRoute) paths.push(bikeRoute);
       else paths.push([GOTHENBURG_LATLNG, toPt]);
     } else {
@@ -1222,7 +1240,7 @@ function buildTrailSegmentPaths(chronological) {
 
 function photoLatLng(p) {
   if (p.location === 'Gothenburg \u2192 Alings\u00e5s') {
-    const route = getStageRouteLatLngs(1, 'Gothenburg \u2192 Alings\u00e5s');
+    const route = getGothenburgAlingsasTrailRoute();
     const mid = route ? routeMidpoint(route) : null;
     if (mid) return mid;
   }
@@ -1290,7 +1308,12 @@ async function loadRealRoutes() {
     }
 
     if (segLatLngs.length > 0) {
-      realRoutePolylines[segId] = segLatLngs.flat();
+      const flatRoute = segLatLngs.flat();
+      realRoutePolylines[segId] = flatRoute;
+      if (segId == 1) {
+        const stageRoute = getStageRouteLatLngs(1, 'Gothenburg \u2192 Alings\u00e5s');
+        if (stageRoute) trailBikeRoutes.gothenburgAlingsas = stageRoute;
+      }
       const group = layerGroups[segId];
       if (group) {
         group.eachLayer(l => {
@@ -1305,7 +1328,12 @@ async function loadRealRoutes() {
           pl.on('mouseout', () => unhighlightAll());
         });
         // Rebuild stage overlays with accurate GPS geometry
-        buildStagePolylines(segId, segLatLngs.flat());
+        buildStagePolylines(segId, flatRoute);
+      }
+
+      if (segId == 1 && trailBikeRoutes.gothenburgAlingsas) {
+        rebuildPhotoLayer();
+        rebuildTrailLayer();
       }
 
       const km = Math.round(segDistM / 1000);
@@ -1587,6 +1615,19 @@ function renderUpdatesFeed() {
 renderUpdatesFeed();
 initTripStatus();
 
+function loadTrailBikeRoutes() {
+  return fetch('gothenburg-alingsas-route.json')
+    .then(function(resp) { return resp.ok ? resp.json() : null; })
+    .then(function(route) {
+      if (!route || route.length < 2) return;
+      trailBikeRoutes.gothenburgAlingsas = route;
+      rebuildPhotoLayer();
+      rebuildTrailLayer();
+    })
+    .catch(function() {});
+}
+
+loadTrailBikeRoutes();
 loadRealRoutes();
 
 /* ============================================================

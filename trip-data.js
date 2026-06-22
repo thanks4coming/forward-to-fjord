@@ -85,12 +85,12 @@ const tripStatus = {
     // { date: '2026-XX-XX', location: 'City, Country', text: 'Your update here.', photo: 'photos/2026-XX-XX-city.jpg', lat: 0.0, lng: 0.0 }
   ],
   photos: [
-    { lat: 57.77227, lng: 12.28883, src: 'photos/2026-06-22-gothenburg-alingsas-01.jpg', caption: 'Säveån valley — open fields', location: 'Gothenburg → Alingsås' },
-    { lat: 57.77227, lng: 12.28883, src: 'photos/2026-06-22-gothenburg-alingsas-02.jpg', caption: 'Lantbrukets Mjölk roadside', location: 'Gothenburg → Alingsås' },
-    { lat: 57.77227, lng: 12.28883, src: 'photos/2026-06-22-gothenburg-alingsas-03.jpg', caption: 'Rock face by the water', location: 'Gothenburg → Alingsås' },
-    { lat: 57.77227, lng: 12.28883, src: 'photos/2026-06-22-gothenburg-alingsas-04.jpg', caption: 'Country road with horses', location: 'Gothenburg → Alingsås' },
-    { lat: 57.77227, lng: 12.28883, src: 'photos/2026-06-22-gothenburg-alingsas-05.jpg', caption: 'Lake view from the shore', location: 'Gothenburg → Alingsås' },
-    { lat: 57.77227, lng: 12.28883, src: 'photos/2026-06-22-gothenburg-alingsas-06.jpg', caption: 'New bike path into Alingsås', location: 'Gothenburg → Alingsås' },
+    { lat: 57.77325, lng: 12.29521, src: 'photos/2026-06-22-gothenburg-alingsas-01.jpg', caption: 'Säveån valley — open fields', location: 'Gothenburg → Alingsås' },
+    { lat: 57.77325, lng: 12.29521, src: 'photos/2026-06-22-gothenburg-alingsas-02.jpg', caption: 'Lantbrukets Mjölk roadside', location: 'Gothenburg → Alingsås' },
+    { lat: 57.77325, lng: 12.29521, src: 'photos/2026-06-22-gothenburg-alingsas-03.jpg', caption: 'Rock face by the water', location: 'Gothenburg → Alingsås' },
+    { lat: 57.77325, lng: 12.29521, src: 'photos/2026-06-22-gothenburg-alingsas-04.jpg', caption: 'Country road with horses', location: 'Gothenburg → Alingsås' },
+    { lat: 57.77325, lng: 12.29521, src: 'photos/2026-06-22-gothenburg-alingsas-05.jpg', caption: 'Lake view from the shore', location: 'Gothenburg → Alingsås' },
+    { lat: 57.77325, lng: 12.29521, src: 'photos/2026-06-22-gothenburg-alingsas-06.jpg', caption: 'New bike path into Alingsås', location: 'Gothenburg → Alingsås' },
     { lat: 51.480643, lng: -0.160602, src: 'photos/2026-06-18-chelsea-gardens.jpg', caption: 'Battersea Park', location: 'Battersea, London' },
     { lat: 51.564915, lng: -0.157231, src: 'photos/2026-06-18-parliament-gardens.jpg', caption: 'Parliament Hill', location: 'Parliament Hill, London' },
     { lat: 51.4966, lng: -0.1764, src: 'photos/2026-06-18-natural-history-museum.jpg', caption: 'Natural History Museum — star dust, the oldest thing you\'ll ever see', location: 'South Kensington, London' },
