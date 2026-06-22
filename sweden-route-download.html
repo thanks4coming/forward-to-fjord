@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Download Sweden route (GPX)</title>
+  <title>Sweden route — Google Maps (mobile)</title>
   <style>
     * { box-sizing: border-box; }
     body {
@@ -12,85 +12,95 @@
       font-family: system-ui, -apple-system, Segoe UI, sans-serif;
       background: #0f172a;
       color: #e2e8f0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
+      padding: 20px 16px 32px;
     }
-    .card {
-      max-width: 420px;
-      width: 100%;
-      background: rgba(30, 41, 59, 0.95);
-      border: 1px solid rgba(148, 163, 184, 0.2);
-      border-radius: 16px;
-      padding: 28px 24px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    .wrap { max-width: 480px; margin: 0 auto; }
+    h1 { margin: 0 0 6px; font-size: 1.35rem; }
+    .lead { margin: 0 0 18px; color: #94a3b8; line-height: 1.5; font-size: 0.92rem; }
+    .note {
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 18px;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      color: #bfdbfe;
     }
-    h1 { margin: 0 0 8px; font-size: 1.35rem; }
-    p { margin: 0 0 16px; color: #94a3b8; line-height: 1.5; font-size: 0.95rem; }
-    .btn {
+    .day {
       display: block;
       width: 100%;
-      margin: 10px 0;
+      margin: 0 0 10px;
       padding: 14px 16px;
-      border: none;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-weight: 600;
-      text-align: center;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 12px;
+      background: rgba(30, 41, 59, 0.95);
+      color: #e2e8f0;
       text-decoration: none;
-      cursor: pointer;
     }
-    .btn-primary { background: #3b82f6; color: #fff; }
-    .btn-secondary { background: #334155; color: #e2e8f0; }
-    ol { margin: 12px 0 0; padding-left: 1.2rem; color: #cbd5e1; font-size: 0.9rem; line-height: 1.55; }
-    li { margin-bottom: 8px; }
-    .meta { margin-top: 18px; font-size: 0.8rem; color: #64748b; }
+    .day:active { background: rgba(51, 65, 85, 0.95); }
+    .day-title { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+    .day-meta { color: #94a3b8; font-size: 0.85rem; }
+    .section { margin: 22px 0 10px; font-size: 0.75rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #64748b; }
+    .small { margin-top: 18px; font-size: 0.8rem; color: #64748b; line-height: 1.5; }
+    .small a { color: #93c5fd; }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Sweden route GPX</h1>
-    <p>Gothenburg → Stockholm · ~555 km · BRouter cycling track</p>
+  <div class="wrap">
+    <h1>Sweden — Google Maps</h1>
+    <p class="lead">Gothenburg → Stockholm. Tap a day to open <strong>cycling directions</strong> in the Google Maps app.</p>
 
-    <a class="btn btn-primary" href="sweden-gothenburg-stockholm.zip" download="sweden-gothenburg-stockholm.zip">
-      Download ZIP (best on iPhone)
+    <div class="note">
+      GPX files don’t give turn-by-turn in Google Maps on phone. These links do — Google routes between the towns (not the exact cycle path from the site map, but proper mobile GPS nav).
+    </div>
+
+    <div class="section">Daily legs — tap to navigate</div>
+
+    <a class="day" href="https://www.google.com/maps/dir/?api=1&amp;origin=57.7089,11.9746&amp;destination=57.9300,12.5330&amp;travelmode=bicycling&amp;dir_action=navigate">
+      <div class="day-title">Day 1 · Gothenburg → Alingsås</div>
+      <div class="day-meta">~60 km · fika capital</div>
     </a>
-    <button class="btn btn-secondary" type="button" id="gpx-btn">Download GPX file</button>
 
-    <p><strong>iPhone:</strong></p>
-    <ol>
-      <li>Tap <strong>Download ZIP</strong> above.</li>
-      <li>Tap the <strong>↓</strong> icon in Safari’s address bar (or open Downloads).</li>
-      <li>Tap the zip → <strong>Save to Files</strong> or share to Google Drive.</li>
-      <li>Unzip in Files, then import the <code>.gpx</code> into Google My Maps on a computer.</li>
-    </ol>
+    <a class="day" href="https://www.google.com/maps/dir/?api=1&amp;origin=57.9300,12.5330&amp;destination=57.7905,13.4175&amp;travelmode=bicycling&amp;dir_action=navigate">
+      <div class="day-title">Day 2 · Alingsås → Ulricehamn</div>
+      <div class="day-meta">~75 km</div>
+    </a>
 
-    <p class="meta">Includes waypoints: Gothenburg, Alingsås, Ulricehamn, Jönköping, Gränna, Vadstena, Linköping, Norrköping, Nyköping, Stockholm.</p>
+    <a class="day" href="https://www.google.com/maps/dir/?api=1&amp;origin=57.7905,13.4175&amp;destination=57.7826,14.1618&amp;travelmode=bicycling&amp;dir_action=navigate">
+      <div class="day-title">Day 3 · Ulricehamn → Jönköping</div>
+      <div class="day-meta">~80 km · Lake Vättern</div>
+    </a>
+
+    <a class="day" href="https://www.google.com/maps/dir/?api=1&amp;origin=57.7826,14.1618&amp;destination=58.4497,14.8839&amp;waypoints=58.0225,14.4686&amp;travelmode=bicycling&amp;dir_action=navigate">
+      <div class="day-title">Day 4–5 · Jönköping → Gränna → Vadstena</div>
+      <div class="day-meta">~105 km · split over 2 days if you like</div>
+    </a>
+
+    <a class="day" href="https://www.google.com/maps/dir/?api=1&amp;origin=58.4497,14.8839&amp;destination=58.4108,15.6214&amp;waypoints=58.5370,15.0360&amp;travelmode=bicycling&amp;dir_action=navigate">
+      <div class="day-title">Day 6 · Vadstena → Motala → Linköping</div>
+      <div class="day-meta">~85 km · Göta Canal</div>
+    </a>
+
+    <a class="day" href="https://www.google.com/maps/dir/?api=1&amp;origin=58.4108,15.6214&amp;destination=58.5877,16.1924&amp;travelmode=bicycling&amp;dir_action=navigate">
+      <div class="day-title">Day 7 · Linköping → Norrköping</div>
+      <div class="day-meta">~50 km · canal towpath</div>
+    </a>
+
+    <a class="day" href="https://www.google.com/maps/dir/?api=1&amp;origin=58.5877,16.1924&amp;destination=58.7530,17.0092&amp;travelmode=bicycling&amp;dir_action=navigate">
+      <div class="day-title">Day 8 · Norrköping → Nyköping</div>
+      <div class="day-meta">~90 km</div>
+    </a>
+
+    <a class="day" href="https://www.google.com/maps/dir/?api=1&amp;origin=58.7530,17.0092&amp;destination=59.3293,18.0586&amp;travelmode=bicycling&amp;dir_action=navigate">
+      <div class="day-title">Day 9 · Nyköping → Stockholm</div>
+      <div class="day-meta">~85 km</div>
+    </a>
+
+    <p class="small">
+      <strong>Tip:</strong> each link opens Maps in <em>bicycle</em> mode and starts navigation from your current location when possible. For tomorrow’s leg while you’re still in Alingsås, tap <strong>Day 2</strong>.<br><br>
+      Need the exact plotted track? <a href="sweden-gothenburg-stockholm.zip">GPX zip</a> (use BikeGPX/Komoot — Google Maps can’t nav GPX on mobile).
+    </p>
   </div>
-
-  <script>
-    document.getElementById('gpx-btn').addEventListener('click', async function () {
-      const btn = this;
-      btn.disabled = true;
-      btn.textContent = 'Preparing…';
-      try {
-        const resp = await fetch('sweden-gothenburg-stockholm.gpx');
-        const blob = await resp.blob();
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'sweden-gothenburg-stockholm.gpx';
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
-        btn.textContent = 'Download GPX file';
-      } catch (e) {
-        btn.textContent = 'Failed — use ZIP button';
-      }
-      btn.disabled = false;
-    });
-  </script>
 </body>
 </html>
