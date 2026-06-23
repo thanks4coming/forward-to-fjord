@@ -5,14 +5,46 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 1,           // segment id: 1, 3, 4, 5, 6, 7, 8, 9 (no segment 2)
-  currentCity: 'Ettermaden, Vårgårda kommun',   // most recent city/town name
-  dayNumber: 8,                // day number of the trip
-  kmRidden: 60,                 // total km covered so far
+  currentCity: 'Håkabo, near Nitta',   // most recent city/town name
+  dayNumber: 9,                // day number of the trip
+  kmRidden: 126,                 // total km covered so far
   countries: ['Australia', 'Vietnam', 'United Kingdom', 'Sweden'],               // e.g. ['Sweden','Finland']
-  lat: 57.940895,                   // precise current lat (preferred over city fallback)
-  lng: 12.656936,                   // precise current lng
-  lastUpdated: '2026-06-22',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 57.825694,                   // precise current lat (preferred over city fallback)
+  lng: 13.348511,                   // precise current lng
+  lastUpdated: '2026-06-23',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-06-23T18:00:00.000Z',
+      lat: 57.825694,
+      lng: 13.348511,
+      location: 'Håkabo, near Nitta',
+      note: 'Day 2 — Alingsås → Ljur → Fristad → Nitta. Camp by the lake.',
+    },
+    {
+      at: '2026-06-23T15:00:00.000Z',
+      lat: 57.8275891,
+      lng: 13.1885655,
+      location: 'Nitta',
+    },
+    {
+      at: '2026-06-23T12:30:00.000Z',
+      lat: 57.8238811,
+      lng: 13.0100197,
+      location: 'Fristad',
+    },
+    {
+      at: '2026-06-23T10:00:00.000Z',
+      lat: 57.9526935,
+      lng: 12.8416736,
+      location: 'Ljur',
+    },
+    {
+      at: '2026-06-23T08:00:00.000Z',
+      lat: 57.92824,
+      lng: 12.533119,
+      location: 'Alingsås bibliotek, Södra Ringgatan',
+      note: 'Day 2 start — heading east via Ljur and Fristad.',
+    },
     {
       at: '2026-06-22T20:30:00.000Z',
       lat: 57.940895,
@@ -59,6 +91,14 @@ const tripStatus = {
   ],
   updates: [
     {
+      date: '2026-06-23',
+      location: 'Håkabo, near Nitta',
+      text: 'Day 2 — Alingsås → Ljur → Fristad → Nitta. Camp by the lake.',
+      photo: 'photos/2026-06-23-hakabo-camp-02.jpg',
+      lat: 57.825694,
+      lng: 13.348511
+    },
+    {
       date: '2026-06-22',
       location: 'Ettermaden, Vårgårda kommun',
       text: 'First night camping — tarp in the pines. Same day as Gothenburg → Alingsås.',
@@ -100,6 +140,9 @@ const tripStatus = {
     // { date: '2026-XX-XX', location: 'City, Country', text: 'Your update here.', photo: 'photos/2026-XX-XX-city.jpg', lat: 0.0, lng: 0.0 }
   ],
   photos: [
+    { lat: 57.825694, lng: 13.348511, src: 'photos/2026-06-23-hakabo-camp-01.jpg', caption: 'Loaded bike in the pines', location: 'Håkabo' },
+    { lat: 57.825694, lng: 13.348511, src: 'photos/2026-06-23-hakabo-camp-02.jpg', caption: 'Camp by the lake', location: 'Håkabo' },
+    { lat: 57.825694, lng: 13.348511, src: 'photos/2026-06-23-hakabo-camp-03.jpg', caption: 'Lake camp setup', location: 'Håkabo' },
     { lat: 57.940895, lng: 12.656936, src: 'photos/2026-06-22-forest-camp-02.jpg', caption: 'Tarp setup in the pines', location: 'Ettermaden' },
     { lat: 57.940895, lng: 12.656936, src: 'photos/2026-06-22-forest-camp-01.jpg', caption: 'Loaded bike at camp', location: 'Ettermaden' },
     { lat: 57.77325, lng: 12.29521, src: 'photos/2026-06-22-gothenburg-alingsas-01.jpg', caption: 'Säveån valley — open fields', location: 'Gothenburg → Alingsås' },
