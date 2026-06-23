@@ -5,14 +5,21 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 1,           // segment id: 1, 3, 4, 5, 6, 7, 8, 9 (no segment 2)
-  currentCity: 'Alingsås bibliotek, Södra Ringgatan',   // most recent city/town name
+  currentCity: 'Ettermaden, Vårgårda kommun',   // most recent city/town name
   dayNumber: 8,                // day number of the trip
   kmRidden: 60,                 // total km covered so far
   countries: ['Australia', 'Vietnam', 'United Kingdom', 'Sweden'],               // e.g. ['Sweden','Finland']
-  lat: 57.92824,                   // precise current lat (preferred over city fallback)
-  lng: 12.533119,                   // precise current lng
+  lat: 57.940895,                   // precise current lat (preferred over city fallback)
+  lng: 12.656936,                   // precise current lng
   lastUpdated: '2026-06-22',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-06-22T20:30:00.000Z',
+      lat: 57.940895,
+      lng: 12.656936,
+      location: 'Ettermaden, Vårgårda kommun',
+      note: 'First night camping — tarp in the pines. Same day as Gothenburg → Alingsås.',
+    },
     {
       at: '2026-06-22T12:18:33.371Z',
       lat: 57.92824,
@@ -53,6 +60,14 @@ const tripStatus = {
   updates: [
     {
       date: '2026-06-22',
+      location: 'Ettermaden, Vårgårda kommun',
+      text: 'First night camping — tarp in the pines. Same day as Gothenburg → Alingsås.',
+      photo: 'photos/2026-06-22-forest-camp-02.jpg',
+      lat: 57.940895,
+      lng: 12.656936
+    },
+    {
+      date: '2026-06-22',
       location: 'Alingsås bibliotek, Södra Ringgatan',
       text: 'Day 1 on the bike — Gothenburg to Alingsås. Charging the e-bike at the library. First night camping tonight.',
       photo: 'photos/2026-06-22-gothenburg-alingsas-06.jpg',
@@ -85,6 +100,8 @@ const tripStatus = {
     // { date: '2026-XX-XX', location: 'City, Country', text: 'Your update here.', photo: 'photos/2026-XX-XX-city.jpg', lat: 0.0, lng: 0.0 }
   ],
   photos: [
+    { lat: 57.940895, lng: 12.656936, src: 'photos/2026-06-22-forest-camp-02.jpg', caption: 'Tarp setup in the pines', location: 'Ettermaden' },
+    { lat: 57.940895, lng: 12.656936, src: 'photos/2026-06-22-forest-camp-01.jpg', caption: 'Loaded bike at camp', location: 'Ettermaden' },
     { lat: 57.77325, lng: 12.29521, src: 'photos/2026-06-22-gothenburg-alingsas-01.jpg', caption: 'Säveån valley — open fields', location: 'Gothenburg → Alingsås' },
     { lat: 57.77325, lng: 12.29521, src: 'photos/2026-06-22-gothenburg-alingsas-02.jpg', caption: 'Lantbrukets Mjölk roadside', location: 'Gothenburg → Alingsås' },
     { lat: 57.77325, lng: 12.29521, src: 'photos/2026-06-22-gothenburg-alingsas-03.jpg', caption: 'Rock face by the water', location: 'Gothenburg → Alingsås' },
