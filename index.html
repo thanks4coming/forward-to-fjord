@@ -1218,8 +1218,57 @@ function isSwedenCheckin(h) {
   return h.lat >= 55 && h.lng >= 10 && h.lng <= 24;
 }
 
+const TRAIL_ON_ROUTE_DEG = 0.004;      // ~400 m — on the cycling path
+const TRAIL_ROUTE_CORRIDOR_DEG = 0.15; // ~15 km — still snap to the planned route
+
+function distDeg(lat1, lng1, lat2, lng2) {
+  const dlat = lat1 - lat2, dlng = lng1 - lng2;
+  return Math.sqrt(dlat * dlat + dlng * dlng);
+}
+
+function nearestOnRoute(route, lat, lng) {
+  const idx = closestRouteIdx(route, lat, lng);
+  return { idx: idx, pt: route[idx], dist: distDeg(route[idx][0], route[idx][1], lat, lng) };
+}
+
+function appendPathPoints(path, pts) {
+  pts.forEach(function(pt) {
+    const last = path[path.length - 1];
+    if (!last || last[0] !== pt[0] || last[1] !== pt[1]) path.push(pt);
+  });
+}
+
+function buildPathAlongRoute(fromPt, toPt, route) {
+  const fromNR = nearestOnRoute(route, fromPt[0], fromPt[1]);
+  const toNR = nearestOnRoute(route, toPt[0], toPt[1]);
+  const fromOff = fromNR.dist > TRAIL_ON_ROUTE_DEG;
+  const toOff = toNR.dist > TRAIL_ON_ROUTE_DEG;
+  const path = [];
+
+  if (fromOff) appendPathPoints(path, [fromPt, fromNR.pt]);
+  else appendPathPoints(path, [fromPt]);
+
+  const lo = Math.min(fromNR.idx, toNR.idx);
+  const hi = Math.max(fromNR.idx, toNR.idx);
+  appendPathPoints(path, route.slice(lo, hi + 1));
+
+  if (toOff) appendPathPoints(path, [toNR.pt, toPt]);
+  else if (path[path.length - 1][0] !== toPt[0] || path[path.length - 1][1] !== toPt[1]) {
+    appendPathPoints(path, [toPt]);
+  }
+  return path;
+}
+
+function shouldUseBikeRoute(from, to, route) {
+  if (!route || route.length < 2) return false;
+  const fromNR = nearestOnRoute(route, from.lat, from.lng);
+  const toNR = nearestOnRoute(route, to.lat, to.lng);
+  return fromNR.dist <= TRAIL_ROUTE_CORRIDOR_DEG || toNR.dist <= TRAIL_ROUTE_CORRIDOR_DEG;
+}
+
 function buildTrailSegmentPaths(chronological) {
   const paths = [];
+  const bikeRoute = getGothenburgAlingsasTrailRoute();
   for (let i = 0; i < chronological.length - 1; i++) {
     const from = chronological[i];
     const to = chronological[i + 1];
@@ -1228,9 +1277,13 @@ function buildTrailSegmentPaths(chronological) {
 
     if (isUkCheckin(from) && isSwedenCheckin(to)) {
       paths.push([fromPt, GOTHENBURG_LATLNG]);
-      const bikeRoute = getGothenburgAlingsasTrailRoute();
-      if (bikeRoute) paths.push(bikeRoute);
-      else paths.push([GOTHENBURG_LATLNG, toPt]);
+      if (bikeRoute && bikeRoute.length > 1) {
+        paths.push(buildPathAlongRoute(GOTHENBURG_LATLNG, toPt, bikeRoute));
+      } else {
+        paths.push([GOTHENBURG_LATLNG, toPt]);
+      }
+    } else if (isSwedenCheckin(from) && isSwedenCheckin(to) && shouldUseBikeRoute(from, to, bikeRoute)) {
+      paths.push(buildPathAlongRoute(fromPt, toPt, bikeRoute));
     } else {
       paths.push([fromPt, toPt]);
     }
