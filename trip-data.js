@@ -37,6 +37,7 @@ const tripStatus = {
       lat: 57.9526935,
       lng: 12.8416736,
       location: 'Ljur',
+      note: 'Met Conny at the servo — invited home for fika, table tennis, and touring wisdom.',
     },
     {
       at: '2026-06-23T08:00:00.000Z',
@@ -99,6 +100,14 @@ const tripStatus = {
       lng: 13.348511
     },
     {
+      date: '2026-06-23',
+      location: 'Ljur',
+      text: 'I met Conny at the servo who invited me home for fika. We exchanged wisdom for a few hours, played table tennis. He used to tour and shared 4 huge emails on what hes learned over his years. Conny your hospitality is top tier you represent the Swedes well. Thanks mate 🦘',
+      photo: 'photos/2026-06-23-ljur-conny.jpg',
+      lat: 57.9526935,
+      lng: 12.8416736
+    },
+    {
       date: '2026-06-22',
       location: 'Ettermaden, Vårgårda kommun',
       text: 'First night camping — tarp in the pines. Same day as Gothenburg → Alingsås.',
@@ -140,6 +149,7 @@ const tripStatus = {
     // { date: '2026-XX-XX', location: 'City, Country', text: 'Your update here.', photo: 'photos/2026-XX-XX-city.jpg', lat: 0.0, lng: 0.0 }
   ],
   photos: [
+    { lat: 57.9526935, lng: 12.8416736, src: 'photos/2026-06-23-ljur-conny.jpg', caption: 'Fika with Conny', location: 'Ljur' },
     { lat: 57.825694, lng: 13.348511, src: 'photos/2026-06-23-hakabo-camp-01.jpg', caption: 'Loaded bike in the pines', location: 'Håkabo' },
     { lat: 57.825694, lng: 13.348511, src: 'photos/2026-06-23-hakabo-camp-02.jpg', caption: 'Camp by the lake', location: 'Håkabo' },
     { lat: 57.825694, lng: 13.348511, src: 'photos/2026-06-23-hakabo-camp-03.jpg', caption: 'Lake camp setup', location: 'Håkabo' },
