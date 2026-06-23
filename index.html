@@ -1295,7 +1295,8 @@ function buildPathAlongRoute(fromPt, toPt, route) {
 
   const lo = Math.min(fromNR.idx, toNR.idx);
   const hi = Math.max(fromNR.idx, toNR.idx);
-  appendPathPoints(path, route.slice(lo, hi + 1));
+  const routeSlice = route.slice(lo, hi + 1);
+  appendPathPoints(path, fromNR.idx <= toNR.idx ? routeSlice : routeSlice.slice().reverse());
 
   if (toOff) appendPathPoints(path, [toNR.pt, toPt]);
   else if (path[path.length - 1][0] !== toPt[0] || path[path.length - 1][1] !== toPt[1]) {
@@ -1410,7 +1411,7 @@ async function loadRealRoutes() {
     if (segLatLngs.length > 0) {
       const flatRoute = segLatLngs.flat();
       realRoutePolylines[segId] = flatRoute;
-      if (segId == 1) {
+      if (segId == 1 && !trailBikeRoutes.gothenburgAlingsas) {
         const stageRoute = getStageRouteLatLngs(1, 'Gothenburg \u2192 Alings\u00e5s');
         if (stageRoute) trailBikeRoutes.gothenburgAlingsas = stageRoute;
       }
