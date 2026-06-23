@@ -1113,7 +1113,7 @@ var lastGpsMarker = null;
 
 // --- BROUTER REAL GPS ROUTING ---
 const routingSegments = {
-  1: { parts: [{ type:'bike', coords:'11.97,57.71|12.53,57.93|13.42,57.79|14.16,57.78|14.47,58.02|14.88,58.45|15.62,58.41|16.19,58.59|17.01,58.75|18.06,59.33' }] },
+  1: { parts: [{ type:'bike', coords:'11.97,57.71|12.53,57.93|12.84,57.95|13.01,57.82|13.19,57.83|13.35,57.83|13.42,57.79|14.16,57.78|14.47,58.02|14.88,58.45|15.62,58.41|16.19,58.59|17.01,58.75|18.06,59.33' }] },
   3: { parts: [
     { type:'bike', coords:'18.06,59.33|18.36,59.40|18.70,59.75|18.82,60.11' },
     { type:'bike', coords:'19.55,60.23|19.96,60.23|20.10,60.22|19.93,60.10' }
@@ -1149,6 +1149,7 @@ const realRoutePolylines = {};
 const realDistances = {};
 const GOTHENBURG_LATLNG = [57.7089, 11.9746];
 const trailBikeRoutes = {};
+let actualStage2Polyline = null;
 
 function latLngsFromLayer(ll) {
   if (!ll || !ll.length) return null;
@@ -1165,6 +1166,50 @@ function getGothenburgAlingsasTrailRoute() {
     if (ll && ll.length > 1) return ll;
   }
   return getStageRouteLatLngs(1, 'Gothenburg \u2192 Alings\u00e5s');
+}
+
+function getTrailBikeRoutes() {
+  const routes = [];
+  if (trailBikeRoutes.gothenburgAlingsas && trailBikeRoutes.gothenburgAlingsas.length > 1) {
+    routes.push(trailBikeRoutes.gothenburgAlingsas);
+  }
+  if (trailBikeRoutes.alingsasNittaCamp && trailBikeRoutes.alingsasNittaCamp.length > 1) {
+    routes.push(trailBikeRoutes.alingsasNittaCamp);
+  }
+  return routes;
+}
+
+function findBestTrailRoute(from, to) {
+  let best = null;
+  let bestScore = Infinity;
+  getTrailBikeRoutes().forEach(function(route) {
+    if (!shouldUseBikeRoute(from, to, route)) return;
+    const fromNR = nearestOnRoute(route, from.lat, from.lng);
+    const toNR = nearestOnRoute(route, to.lat, to.lng);
+    const score = fromNR.dist + toNR.dist;
+    if (score < bestScore) {
+      bestScore = score;
+      best = route;
+    }
+  });
+  return best;
+}
+
+function overlayActualStage2Route() {
+  const route = trailBikeRoutes.alingsasNittaCamp;
+  const group = layerGroups[1];
+  if (!route || !group || route.length < 2) return;
+  if (actualStage2Polyline) group.removeLayer(actualStage2Polyline);
+  const seg = segments.find(function(s) { return s.id == 1; });
+  actualStage2Polyline = L.polyline(route, {
+    color: seg ? seg.color : '#3b82f6',
+    weight: 3,
+    opacity: 0.85
+  }).addTo(group);
+  if (stagePolylines[1] && stagePolylines[1][1]) {
+    group.removeLayer(stagePolylines[1][1]);
+    stagePolylines[1][1] = actualStage2Polyline;
+  }
 }
 
 function getStageRouteLatLngs(segId, stageName) {
@@ -1268,7 +1313,7 @@ function shouldUseBikeRoute(from, to, route) {
 
 function buildTrailSegmentPaths(chronological) {
   const paths = [];
-  const bikeRoute = getGothenburgAlingsasTrailRoute();
+  const gbgRoute = getGothenburgAlingsasTrailRoute();
   for (let i = 0; i < chronological.length - 1; i++) {
     const from = chronological[i];
     const to = chronological[i + 1];
@@ -1277,13 +1322,15 @@ function buildTrailSegmentPaths(chronological) {
 
     if (isUkCheckin(from) && isSwedenCheckin(to)) {
       paths.push([fromPt, GOTHENBURG_LATLNG]);
-      if (bikeRoute && bikeRoute.length > 1) {
-        paths.push(buildPathAlongRoute(GOTHENBURG_LATLNG, toPt, bikeRoute));
+      if (gbgRoute && gbgRoute.length > 1) {
+        paths.push(buildPathAlongRoute(GOTHENBURG_LATLNG, toPt, gbgRoute));
       } else {
         paths.push([GOTHENBURG_LATLNG, toPt]);
       }
-    } else if (isSwedenCheckin(from) && isSwedenCheckin(to) && shouldUseBikeRoute(from, to, bikeRoute)) {
-      paths.push(buildPathAlongRoute(fromPt, toPt, bikeRoute));
+    } else if (isSwedenCheckin(from) && isSwedenCheckin(to)) {
+      const bikeRoute = findBestTrailRoute(from, to);
+      if (bikeRoute) paths.push(buildPathAlongRoute(fromPt, toPt, bikeRoute));
+      else paths.push([fromPt, toPt]);
     } else {
       paths.push([fromPt, toPt]);
     }
@@ -1384,9 +1431,12 @@ async function loadRealRoutes() {
         buildStagePolylines(segId, flatRoute);
       }
 
-      if (segId == 1 && trailBikeRoutes.gothenburgAlingsas) {
-        rebuildPhotoLayer();
-        rebuildTrailLayer();
+      if (segId == 1) {
+        if (trailBikeRoutes.gothenburgAlingsas) {
+          rebuildPhotoLayer();
+          rebuildTrailLayer();
+        }
+        overlayActualStage2Route();
       }
 
       const km = Math.round(segDistM / 1000);
@@ -1669,15 +1719,18 @@ renderUpdatesFeed();
 initTripStatus();
 
 function loadTrailBikeRoutes() {
-  return fetch('gothenburg-alingsas-route.json')
-    .then(function(resp) { return resp.ok ? resp.json() : null; })
-    .then(function(route) {
-      if (!route || route.length < 2) return;
-      trailBikeRoutes.gothenburgAlingsas = route;
+  return Promise.all([
+    fetch('gothenburg-alingsas-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
+    fetch('alingsas-nitta-camp-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
+  ]).then(function(results) {
+    if (results[0] && results[0].length > 1) trailBikeRoutes.gothenburgAlingsas = results[0];
+    if (results[1] && results[1].length > 1) trailBikeRoutes.alingsasNittaCamp = results[1];
+    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp) {
       rebuildPhotoLayer();
       rebuildTrailLayer();
-    })
-    .catch(function() {});
+      overlayActualStage2Route();
+    }
+  }).catch(function() {});
 }
 
 loadTrailBikeRoutes();
