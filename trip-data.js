@@ -47,13 +47,6 @@ const tripStatus = {
       note: 'Met Conny at the servo — invited home for fika, table tennis, and touring wisdom.',
     },
     {
-      at: '2026-06-23T08:00:00.000Z',
-      lat: 57.92824,
-      lng: 12.533119,
-      location: 'Alingsås bibliotek, Södra Ringgatan',
-      note: 'Day 2 start — heading east via Ljur and Fristad.',
-    },
-    {
       at: '2026-06-22T20:30:00.000Z',
       lat: 57.940895,
       lng: 12.656936,
