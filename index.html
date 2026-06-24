@@ -674,6 +674,9 @@ L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/Worl
   opacity: 0.9
 }).addTo(map);
 
+map.createPane('trailPane');
+map.getPane('trailPane').style.zIndex = 450;
+
 function mkIcon(color, type) {
   const sz = type==='start'||type==='end'?14:type==='ferry'||type==='train'?11:7;
   const sym = type==='start'?'\u25B6':type==='end'?'\u2605':type==='ferry'?'\u26F4':type==='train'?'\u{1F686}':'';
@@ -1580,7 +1583,8 @@ function rebuildTrailLayer() {
     buildTrailSegmentPaths(chronological).forEach(function(path) {
       if (path.length > 1) {
         L.polyline(path, {
-          color: '#22c55e', weight: 3, opacity: 0.75, dashArray: '6,8', lineCap: 'round'
+          color: '#22c55e', weight: 3, opacity: 0.75, dashArray: '6,8', lineCap: 'round',
+          pane: 'trailPane'
         }).addTo(trailGroup);
       }
     });
