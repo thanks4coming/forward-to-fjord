@@ -5,14 +5,21 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 1,           // segment id: 1, 3, 4, 5, 6, 7, 8, 9 (no segment 2)
-  currentCity: 'Håkabo, near Nitta',   // most recent city/town name
-  dayNumber: 9,                // day number of the trip
-  kmRidden: 126,                 // total km covered so far
+  currentCity: 'Ulricehamn bibliotek',   // most recent city/town name
+  dayNumber: 10,                // day number of the trip
+  kmRidden: 138,                 // total km covered so far
   countries: ['Australia', 'Vietnam', 'United Kingdom', 'Sweden'],               // e.g. ['Sweden','Finland']
-  lat: 57.825694,                   // precise current lat (preferred over city fallback)
-  lng: 13.348511,                   // precise current lng
-  lastUpdated: '2026-06-23',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 57.790342,                   // precise current lat (preferred over city fallback)
+  lng: 13.410234,                   // precise current lng
+  lastUpdated: '2026-06-24',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-06-24T08:01:38.600Z',
+      lat: 57.790342,
+      lng: 13.410234,
+      location: 'Ulricehamn bibliotek',
+      note: 'Charging the e-bike at the library.',
+    },
     {
       at: '2026-06-23T18:00:00.000Z',
       lat: 57.825694,
@@ -92,6 +99,13 @@ const tripStatus = {
   ],
   updates: [
     {
+      date: '2026-06-24',
+      location: 'Ulricehamn bibliotek',
+      text: 'Charging the e-bike at the library.',
+      lat: 57.790342,
+      lng: 13.410234
+    },
+    {
       date: '2026-06-23',
       location: 'Håkabo, near Nitta',
       text: 'Day 2 — Alingsås → Ljur → Fristad → Nitta. Camp by the lake.',
@@ -149,6 +163,7 @@ const tripStatus = {
     // { date: '2026-XX-XX', location: 'City, Country', text: 'Your update here.', photo: 'photos/2026-XX-XX-city.jpg', lat: 0.0, lng: 0.0 }
   ],
   photos: [
+    { lat: 57.802309, lng: 13.399932, src: 'photos/2026-06-24-lake-video-poster.jpg', video: 'photos/2026-06-24-lake-video.mp4', caption: 'Morning at the lake', location: 'Ulricehamn' },
     { lat: 57.9526935, lng: 12.8416736, src: 'photos/2026-06-23-ljur-conny.jpg', caption: 'Fika with Conny', location: 'Ljur' },
     { lat: 57.825694, lng: 13.348511, src: 'photos/2026-06-23-hakabo-camp-01.jpg', caption: 'Loaded bike in the pines', location: 'Håkabo' },
     { lat: 57.825694, lng: 13.348511, src: 'photos/2026-06-23-hakabo-camp-02.jpg', caption: 'Camp by the lake', location: 'Håkabo' },

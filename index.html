@@ -181,8 +181,9 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
 .yah-wrap{position:relative;width:22px;height:22px;display:flex;align-items:center;justify-content:center}
 .yah-ring{position:absolute;width:28px;height:28px;border-radius:50%;background:rgba(59,130,246,.25);animation:yah-expand 1.8s ease-out infinite}
 .yah-dot{width:18px;height:18px;background:#3b82f6;border-radius:50%;border:3px solid #fff;box-shadow:0 0 8px rgba(59,130,246,.8);position:relative;z-index:1}
-.photo-pin-wrap{border-radius:5px;overflow:hidden;border:2.5px solid #60a5fa;box-shadow:0 2px 10px rgba(0,0,0,.6);cursor:pointer;background:#1e293b}
+.photo-pin-wrap{border-radius:5px;overflow:hidden;border:2.5px solid #60a5fa;box-shadow:0 2px 10px rgba(0,0,0,.6);cursor:pointer;background:#1e293b;position:relative}
 .photo-pin-wrap img{width:48px;height:64px;object-fit:cover;object-position:center;display:block}
+.photo-pin-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.8);pointer-events:none}
 /* ---- SEGMENT CARDS (sidebar) ---- */
 .seg{background:#0a1628;border:1px solid #1e3a5f;border-radius:10px;margin:0 12px 8px;overflow:hidden;cursor:pointer;transition:border-color .15s}
 .seg:hover,.seg.seg-hl{border-color:#3b82f688}
@@ -248,6 +249,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
 #photo-lightbox.open{display:flex}
 #lb-img-wrap{flex:1;display:flex;align-items:center;justify-content:center;width:100%;padding:52px 64px 8px;min-height:0;overflow:hidden}
 #lb-img{max-width:100%;max-height:100%;object-fit:contain;border-radius:4px;display:block;user-select:none;-webkit-user-drag:none}
+#lb-video{max-width:100%;max-height:100%;border-radius:4px;display:none;background:#000}
 #lb-footer{padding:10px 16px 20px;text-align:center;flex-shrink:0}
 #lb-caption{font-size:13px;font-weight:600;color:#f1f5f9;margin-bottom:3px}
 #lb-location{font-size:11px;color:#64748b}
@@ -306,6 +308,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
   <button id="lb-prev" aria-label="Previous photo">&#8249;</button>
   <div id="lb-img-wrap">
     <img id="lb-img" src="" alt="">
+    <video id="lb-video" controls playsinline></video>
   </div>
   <button id="lb-next" aria-label="Next photo">&#8250;</button>
   <div id="lb-footer">
@@ -1482,8 +1485,16 @@ async function loadRealRoutes() {
 var lbIndex = 0;
 var lbPhotos = [];
 
+function mediaPinSrc(p) {
+  return p.poster || p.src;
+}
+
+function mediaVideoSrc(p) {
+  return p.video || ((/\.(mp4|webm)(\?|$)/i.test(p.src || '')) ? p.src : null);
+}
+
 function lbOpen(idx) {
-  lbPhotos = (tripStatus.photos || []).filter(function(p){ return p.src; });
+  lbPhotos = (tripStatus.photos || []).filter(function(p){ return mediaPinSrc(p) || mediaVideoSrc(p); });
   if (!lbPhotos.length) return;
   lbIndex = ((idx % lbPhotos.length) + lbPhotos.length) % lbPhotos.length;
   lbRender();
@@ -1492,14 +1503,35 @@ function lbOpen(idx) {
 }
 
 function lbClose() {
+  var vid = document.getElementById('lb-video');
+  vid.pause();
+  vid.removeAttribute('src');
+  vid.load();
   document.getElementById('photo-lightbox').classList.remove('open');
   document.body.style.overflow = '';
 }
 
 function lbRender() {
   var p = lbPhotos[lbIndex];
-  document.getElementById('lb-img').src = p.src;
-  document.getElementById('lb-img').alt = p.caption || '';
+  var img = document.getElementById('lb-img');
+  var vid = document.getElementById('lb-video');
+  var videoSrc = mediaVideoSrc(p);
+  if (videoSrc) {
+    img.style.display = 'none';
+    vid.style.display = 'block';
+    if (vid.getAttribute('src') !== videoSrc) {
+      vid.setAttribute('src', videoSrc);
+      vid.load();
+    }
+    vid.poster = mediaPinSrc(p) || '';
+  } else {
+    vid.pause();
+    vid.style.display = 'none';
+    vid.removeAttribute('src');
+    img.style.display = 'block';
+    img.src = mediaPinSrc(p);
+    img.alt = p.caption || '';
+  }
   document.getElementById('lb-caption').textContent = p.caption || '';
   document.getElementById('lb-location').textContent = p.location || '';
   document.getElementById('lb-counter').textContent = (lbIndex + 1) + ' / ' + lbPhotos.length;
@@ -1509,6 +1541,8 @@ function lbRender() {
 }
 
 function lbGo(dir) {
+  var vid = document.getElementById('lb-video');
+  vid.pause();
   lbIndex = ((lbIndex + dir) + lbPhotos.length) % lbPhotos.length;
   lbRender();
 }
@@ -1541,13 +1575,15 @@ document.addEventListener('keydown', function(e) {
 const photoGroup = L.layerGroup();
 function rebuildPhotoLayer() {
   photoGroup.clearLayers();
-  var photos = (tripStatus.photos || []).filter(function(p){ return p.src; });
+  var photos = (tripStatus.photos || []).filter(function(p){ return mediaPinSrc(p) || mediaVideoSrc(p); });
   photos.forEach(function(p, idx) {
     var coords = photoLatLng(p);
     if (!coords) return;
+    var thumb = mediaPinSrc(p) || '';
+    var play = mediaVideoSrc(p) ? '<span class="photo-pin-play" aria-hidden="true">\u25B6</span>' : '';
     var icon = L.divIcon({
       className: '',
-      html: '<div class="photo-pin-wrap"><img src="' + p.src + '" alt="' + (p.caption||'') + '"></div>',
+      html: '<div class="photo-pin-wrap"><img src="' + thumb + '" alt="' + (p.caption||'') + '">' + play + '</div>',
       iconSize: [53, 69],
       iconAnchor: [26, 69]
     });
