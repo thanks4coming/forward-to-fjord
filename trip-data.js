@@ -22,8 +22,8 @@ const tripStatus = {
     },
     {
       at: '2026-06-25T10:31:17.000Z',
-      lat: 57.837082,
-      lng: 14.544994,
+      lat: 57.769429,
+      lng: 14.035379,
       location: 'Ryd',
     },
     {
@@ -177,7 +177,7 @@ const tripStatus = {
   ],
   photos: [
     { lat: 57.769429, lng: 14.035379, src: 'photos/2026-06-25-stacked-bike.jpg', caption: 'Stacked for the night', location: 'Sandbäck, Jönköping' },
-    { lat: 57.837082, lng: 14.544994, src: 'photos/2026-06-25-ulricehamn-jonkoping-03.jpg', caption: 'Approaching Jönköping', location: 'Ryd' },
+    { lat: 57.769429, lng: 14.035379, src: 'photos/2026-06-25-ulricehamn-jonkoping-03.jpg', caption: 'Arriving at Ryd', location: 'Ryd' },
     { lat: 57.687066, lng: 13.704877, src: 'photos/2026-06-25-ulricehamn-jonkoping-02.jpg', caption: 'South along Vättern', location: 'Mörkö' },
     { lat: 57.687066, lng: 13.704877, src: 'photos/2026-06-25-ulricehamn-jonkoping-01.jpg', caption: 'Leaving Ulricehamn behind', location: 'Mörkö' },
     { lat: 57.802309, lng: 13.399932, src: 'photos/2026-06-24-lake-video-poster.jpg', video: 'photos/2026-06-24-lake-video.mp4', caption: 'Morning at the lake', location: 'Ulricehamn' },
