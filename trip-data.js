@@ -47,25 +47,11 @@ const tripStatus = {
       note: 'Met Conny at the servo — invited home for fika, table tennis, and touring wisdom.',
     },
     {
-      at: '2026-06-23T08:00:00.000Z',
-      lat: 57.92824,
-      lng: 12.533119,
-      location: 'Alingsås bibliotek, Södra Ringgatan',
-      note: 'Day 2 start — heading east via Ljur and Fristad.',
-    },
-    {
       at: '2026-06-22T20:30:00.000Z',
       lat: 57.940895,
       lng: 12.656936,
       location: 'Ettermaden, Vårgårda kommun',
       note: 'First night camping — tarp in the pines. Same day as Gothenburg → Alingsås.',
-    },
-    {
-      at: '2026-06-22T12:18:33.371Z',
-      lat: 57.92824,
-      lng: 12.533119,
-      location: 'Alingsås bibliotek, Södra Ringgatan',
-      note: 'Day 1 on the bike — Gothenburg to Alingsås. Charging the e-bike at the library. First night camping tonight.',
     },
     {
       at: '2026-06-17T02:54:05.870Z',
