@@ -9,10 +9,16 @@ const tripStatus = {
   dayNumber: 11,                // day number of the trip
   kmRidden: 274,                 // total km covered so far
   countries: ['Australia', 'Vietnam', 'United Kingdom', 'Sweden'],               // e.g. ['Sweden','Finland']
-  lat: 57.769429,                   // precise current lat (preferred over city fallback)
-  lng: 14.035379,                   // precise current lng
+  lat: 57.782563,                   // precise current lat (preferred over city fallback)
+  lng: 14.165719,                   // precise current lng
   lastUpdated: '2026-06-25',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-06-25T14:35:24.110Z',
+      lat: 57.782563,
+      lng: 14.165719,
+      location: 'Jönköping',
+    },
     {
       at: '2026-06-25T13:59:17.126Z',
       lat: 57.769429,
