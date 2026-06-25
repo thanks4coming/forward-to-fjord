@@ -1191,6 +1191,8 @@ function getTrailBikeRoutes() {
 }
 
 function findBestTrailRoute(from, to) {
+  const forced = getAlingsasTrailRouteIfBothOnPath(from, to);
+  if (forced) return forced;
   let best = null;
   let bestScore = Infinity;
   getTrailBikeRoutes().forEach(function(route) {
@@ -1204,6 +1206,17 @@ function findBestTrailRoute(from, to) {
     }
   });
   return best;
+}
+
+function getAlingsasTrailRouteIfBothOnPath(from, to) {
+  const route = trailBikeRoutes.alingsasNittaCamp;
+  if (!route || route.length < 2) return null;
+  const fromNR = nearestOnRoute(route, from.lat, from.lng);
+  const toNR = nearestOnRoute(route, to.lat, to.lng);
+  if (fromNR.dist <= TRAIL_ROUTE_CORRIDOR_DEG && toNR.dist <= TRAIL_ROUTE_CORRIDOR_DEG) {
+    return route;
+  }
+  return null;
 }
 
 function overlayActualStage2Route() {
@@ -1330,6 +1343,7 @@ function buildTrailSegmentPaths(chronological) {
     const from = chronological[i];
     const to = chronological[i + 1];
     if (from.pinIcon === 'skull') continue;
+    if (distDeg(from.lat, from.lng, to.lat, to.lng) < 0.00002) continue;
     const fromPt = [from.lat, from.lng];
     const toPt = [to.lat, to.lng];
 
@@ -1681,7 +1695,6 @@ function rebuildTrailLayer() {
     }
   });
 }
-rebuildTrailLayer();
 const trailCb = document.getElementById('trail-checkbox');
 trailCb.addEventListener('change', function(){
   if (this.checked && (tripStatus.locationHistory || []).length) map.addLayer(trailGroup);
@@ -1805,10 +1818,11 @@ function loadTrailBikeRoutes() {
     if (results[1] && results[1].length > 1) trailBikeRoutes.alingsasNittaCamp = results[1];
     if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp) {
       rebuildPhotoLayer();
-      rebuildTrailLayer();
       overlayActualStage2Route();
     }
-  }).catch(function() {});
+  }).catch(function() {}).finally(function() {
+    rebuildTrailLayer();
+  });
 }
 
 loadTrailBikeRoutes();
