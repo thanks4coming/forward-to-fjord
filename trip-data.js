@@ -5,14 +5,33 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 1,           // segment id: 1, 3, 4, 5, 6, 7, 8, 9 (no segment 2)
-  currentCity: 'Ulricehamn bibliotek',   // most recent city/town name
-  dayNumber: 10,                // day number of the trip
-  kmRidden: 138,                 // total km covered so far
+  currentCity: 'Jönköping',   // most recent city/town name
+  dayNumber: 11,                // day number of the trip
+  kmRidden: 274,                 // total km covered so far
   countries: ['Australia', 'Vietnam', 'United Kingdom', 'Sweden'],               // e.g. ['Sweden','Finland']
-  lat: 57.790342,                   // precise current lat (preferred over city fallback)
-  lng: 13.410234,                   // precise current lng
-  lastUpdated: '2026-06-24',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 57.769429,                   // precise current lat (preferred over city fallback)
+  lng: 14.035379,                   // precise current lng
+  lastUpdated: '2026-06-25',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-06-25T13:59:17.126Z',
+      lat: 57.769429,
+      lng: 14.035379,
+      location: 'Jönköping',
+      note: 'Stacked the bike at Sportson. Front fork and brake pads bent — going too fast on gravel while fully loaded, apparently.',
+    },
+    {
+      at: '2026-06-25T10:31:17.000Z',
+      lat: 57.837082,
+      lng: 14.544994,
+      location: 'Ryd',
+    },
+    {
+      at: '2026-06-25T09:07:54.000Z',
+      lat: 57.687066,
+      lng: 13.704877,
+      location: 'Mörkö',
+    },
     {
       at: '2026-06-24T08:01:38.600Z',
       lat: 57.790342,
@@ -99,6 +118,14 @@ const tripStatus = {
   ],
   updates: [
     {
+      date: '2026-06-25',
+      location: 'Jönköping',
+      text: 'Ulricehamn → Mörkö → Ryd → Jönköping. I\'m fine, but the front fork and brake pads are bent — going too fast on gravel while fully loaded apparently causes problems. Stacked the bike at Sportson Jönköping; I trust they\'ll figure it out. Looks like a couple extra days here while it gets sorted.',
+      photo: 'photos/2026-06-25-stacked-bike.jpg',
+      lat: 57.769429,
+      lng: 14.035379
+    },
+    {
       date: '2026-06-24',
       location: 'Ulricehamn bibliotek',
       text: 'Charging the e-bike at the library.',
@@ -163,6 +190,10 @@ const tripStatus = {
     // { date: '2026-XX-XX', location: 'City, Country', text: 'Your update here.', photo: 'photos/2026-XX-XX-city.jpg', lat: 0.0, lng: 0.0 }
   ],
   photos: [
+    { lat: 57.769429, lng: 14.035379, src: 'photos/2026-06-25-stacked-bike.jpg', caption: 'Stacked at Sportson', location: 'Jönköping' },
+    { lat: 57.837082, lng: 14.544994, src: 'photos/2026-06-25-ulricehamn-jonkoping-03.jpg', caption: 'Approaching Jönköping', location: 'Ryd' },
+    { lat: 57.687066, lng: 13.704877, src: 'photos/2026-06-25-ulricehamn-jonkoping-02.jpg', caption: 'South along Vättern', location: 'Mörkö' },
+    { lat: 57.687066, lng: 13.704877, src: 'photos/2026-06-25-ulricehamn-jonkoping-01.jpg', caption: 'Leaving Ulricehamn behind', location: 'Mörkö' },
     { lat: 57.802309, lng: 13.399932, src: 'photos/2026-06-24-lake-video-poster.jpg', video: 'photos/2026-06-24-lake-video.mp4', caption: 'Morning at the lake', location: 'Ulricehamn' },
     { lat: 57.9526935, lng: 12.8416736, src: 'photos/2026-06-23-ljur-conny.jpg', caption: 'Fika with Conny', location: 'Ljur' },
     { lat: 57.825694, lng: 13.348511, src: 'photos/2026-06-23-hakabo-camp-01.jpg', caption: 'Loaded bike in the pines', location: 'Håkabo' },
