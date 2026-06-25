@@ -1110,6 +1110,7 @@ leg.onAdd = function(){
       <div style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:16px;height:3px;background:#3b82f6;border-radius:2px"></span>Cycling</div>
       <div style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:16px;height:0;border-bottom:2px dashed #a855f7"></span>Train</div>
       <div style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:16px;height:0;border-bottom:2px dashed #5eead4"></span>Ferry</div>
+      <div style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:16px;height:0;border-bottom:2px dashed #f97316"></span>Uber</div>
       <div style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:10px;height:10px;background:#f59e0b;transform:rotate(45deg);flex-shrink:0;margin-left:3px"></span>Detour</div>
     </div>`;
   return d;
@@ -1328,6 +1329,7 @@ function buildTrailSegmentPaths(chronological) {
   for (let i = 0; i < chronological.length - 1; i++) {
     const from = chronological[i];
     const to = chronological[i + 1];
+    if (from.pinIcon === 'skull') continue;
     const fromPt = [from.lat, from.lng];
     const toPt = [to.lat, to.lng];
 
@@ -1670,10 +1672,9 @@ function rebuildTrailLayer() {
     var m = L.marker([h.lat, h.lng], { icon: icon, zIndexOffset: isSkull ? 800 : (isLatest ? 900 : 500 + idx) });
     m.bindPopup(popup);
     m.addTo(trailGroup);
-    // Purple dotted Uber line from crash site to hotel
     if (isSkull && h.uberTo && h.uberTo.length === 2) {
       L.polyline([[h.lat, h.lng], h.uberTo], {
-        color: '#a855f7', weight: 3, opacity: 0.8, dashArray: '4,7', lineCap: 'round',
+        color: '#f97316', weight: 3, opacity: 0.8, dashArray: '4,7', lineCap: 'round',
         pane: 'trailPane'
       }).bindPopup('<b>Uber to hotel</b><br><span style="font-size:10px;color:#94a3b8">Jönköping</span>')
         .addTo(trailGroup);
