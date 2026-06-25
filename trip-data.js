@@ -184,7 +184,7 @@ const tripStatus = {
     // { date: '2026-XX-XX', location: 'City, Country', text: 'Your update here.', photo: 'photos/2026-XX-XX-city.jpg', lat: 0.0, lng: 0.0 }
   ],
   photos: [
-    { lat: 57.769429, lng: 14.035379, src: 'photos/2026-06-25-stacked-bike.jpg', caption: 'Stacked at Ryd', location: 'Ryd' },
+    { lat: 57.769429, lng: 14.035379, src: 'photos/2026-06-25-stacked-bike.jpg', caption: 'Stacked 8km from Jönköping', location: '8km from Jönköping' },
     { lat: 57.694631, lng: 13.914274, src: 'photos/2026-06-25-ulricehamn-jonkoping-03.jpg', caption: 'Approaching Ryd', location: 'Ulricehamn → Ryd' },
     { lat: 57.687568, lng: 13.783684, src: 'photos/2026-06-25-ulricehamn-jonkoping-02.jpg', caption: 'South along Vättern', location: 'Ulricehamn → Ryd' },
     { lat: 57.740160, lng: 13.538802, src: 'photos/2026-06-25-ulricehamn-jonkoping-01.jpg', caption: 'Leaving Ulricehamn behind', location: 'Ulricehamn → Ryd' },
