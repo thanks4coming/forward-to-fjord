@@ -171,6 +171,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
 #trail-checkbox:checked+.toggle-track{background:#22c55e}
 .trail-pin{width:10px;height:10px;background:#22c55e;border-radius:50%;border:2px solid #fff;box-shadow:0 0 4px rgba(34,197,94,.7)}
 .trail-pin-latest{width:12px;height:12px;background:#3b82f6;border:2px solid #fff;box-shadow:0 0 6px rgba(59,130,246,.8)}
+.trail-pin-skull{font-size:20px;line-height:1;filter:drop-shadow(0 1px 3px rgba(0,0,0,.8));cursor:pointer}
 .seg-status{padding:1px 7px;border-radius:3px;font-size:8px;font-weight:700;text-transform:uppercase;flex-shrink:0;align-self:flex-start;margin-top:2px}
 .ss-done{background:#22c55e22;color:#22c55e;border:1px solid #22c55e44}
 .ss-here{background:#3b82f622;color:#60a5fa;border:1px solid #3b82f644;animation:here-pulse 2s infinite}
@@ -1650,20 +1651,33 @@ function rebuildTrailLayer() {
   }
   chronological.forEach(function(h, idx) {
     var isLatest = idx === chronological.length - 1;
+    var isSkull = h.pinIcon === 'skull';
     var icon = L.divIcon({
       className: '',
-      html: '<div class="' + (isLatest ? 'trail-pin-latest' : 'trail-pin') + '"></div>',
-      iconSize: isLatest ? [12, 12] : [10, 10],
-      iconAnchor: isLatest ? [6, 6] : [5, 5]
+      html: isSkull
+        ? '<div class="trail-pin-skull">💀</div>'
+        : '<div class="' + (isLatest ? 'trail-pin-latest' : 'trail-pin') + '"></div>',
+      iconSize: isSkull ? [22, 22] : (isLatest ? [12, 12] : [10, 10]),
+      iconAnchor: isSkull ? [11, 11] : (isLatest ? [6, 6] : [5, 5])
     });
     var label = h.location || (h.lat + ', ' + h.lng);
-    var popup = '<div class="pt" style="color:#4ade80">' + (isLatest ? '\u25CF Latest' : 'Check-in') + '</div>' +
+    var pinColor = isSkull ? '#f97316' : '#4ade80';
+    var pinLabel = isSkull ? '💀 Stacked' : (isLatest ? '\u25CF Latest' : 'Check-in');
+    var popup = '<div class="pt" style="color:' + pinColor + '">' + pinLabel + '</div>' +
       '<b>' + label + '</b><br>' +
       '<span style="font-size:10px;color:#64748b">' + formatTimelineWhen(h.at) + '</span>';
     if (h.note) popup += '<br><span style="font-size:10px;color:#94a3b8">' + h.note + '</span>';
-    var m = L.marker([h.lat, h.lng], { icon: icon, zIndexOffset: isLatest ? 900 : 500 + idx });
+    var m = L.marker([h.lat, h.lng], { icon: icon, zIndexOffset: isSkull ? 800 : (isLatest ? 900 : 500 + idx) });
     m.bindPopup(popup);
     m.addTo(trailGroup);
+    // Purple dotted Uber line from crash site to hotel
+    if (isSkull && h.uberTo && h.uberTo.length === 2) {
+      L.polyline([[h.lat, h.lng], h.uberTo], {
+        color: '#a855f7', weight: 3, opacity: 0.8, dashArray: '4,7', lineCap: 'round',
+        pane: 'trailPane'
+      }).bindPopup('<b>Uber to hotel</b><br><span style="font-size:10px;color:#94a3b8">Jönköping</span>')
+        .addTo(trailGroup);
+    }
   });
 }
 rebuildTrailLayer();

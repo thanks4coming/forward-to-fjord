@@ -17,8 +17,10 @@ const tripStatus = {
       at: '2026-06-25T13:59:17.126Z',
       lat: 57.769429,
       lng: 14.035379,
-      location: 'Sandbäck, Jönköping',
-      note: 'Bike stacked here for tonight. Sportson tomorrow — front fork and brake pads bent from gravel with full load.',
+      location: 'Ryd',
+      note: 'Bike stacked. Front fork and brake pads bent — going too fast on gravel while fully loaded. Ubered to the hotel.',
+      pinIcon: 'skull',
+      uberTo: [57.7814, 14.1618],
     },
     {
       at: '2026-06-25T10:31:17.000Z',
@@ -176,10 +178,10 @@ const tripStatus = {
     // { date: '2026-XX-XX', location: 'City, Country', text: 'Your update here.', photo: 'photos/2026-XX-XX-city.jpg', lat: 0.0, lng: 0.0 }
   ],
   photos: [
-    { lat: 57.769429, lng: 14.035379, src: 'photos/2026-06-25-stacked-bike.jpg', caption: 'Stacked for the night', location: 'Sandbäck, Jönköping' },
-    { lat: 57.769429, lng: 14.035379, src: 'photos/2026-06-25-ulricehamn-jonkoping-03.jpg', caption: 'Arriving at Ryd', location: 'Ryd' },
-    { lat: 57.687066, lng: 13.704877, src: 'photos/2026-06-25-ulricehamn-jonkoping-02.jpg', caption: 'South along Vättern', location: 'Mörkö' },
-    { lat: 57.687066, lng: 13.704877, src: 'photos/2026-06-25-ulricehamn-jonkoping-01.jpg', caption: 'Leaving Ulricehamn behind', location: 'Mörkö' },
+    { lat: 57.769429, lng: 14.035379, src: 'photos/2026-06-25-stacked-bike.jpg', caption: 'Stacked at Ryd', location: 'Ryd' },
+    { lat: 57.694631, lng: 13.914274, src: 'photos/2026-06-25-ulricehamn-jonkoping-03.jpg', caption: 'Approaching Ryd', location: 'Ulricehamn → Ryd' },
+    { lat: 57.687568, lng: 13.783684, src: 'photos/2026-06-25-ulricehamn-jonkoping-02.jpg', caption: 'South along Vättern', location: 'Ulricehamn → Ryd' },
+    { lat: 57.740160, lng: 13.538802, src: 'photos/2026-06-25-ulricehamn-jonkoping-01.jpg', caption: 'Leaving Ulricehamn behind', location: 'Ulricehamn → Ryd' },
     { lat: 57.802309, lng: 13.399932, src: 'photos/2026-06-24-lake-video-poster.jpg', video: 'photos/2026-06-24-lake-video.mp4', caption: 'Morning at the lake', location: 'Ulricehamn' },
     { lat: 57.9526935, lng: 12.8416736, src: 'photos/2026-06-23-ljur-conny.jpg', caption: 'Fika with Conny', location: 'Ljur' },
     { lat: 57.825694, lng: 13.348511, src: 'photos/2026-06-23-hakabo-camp-01.jpg', caption: 'Loaded bike in the pines', location: 'Håkabo' },
