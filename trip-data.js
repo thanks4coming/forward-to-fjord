@@ -17,8 +17,8 @@ const tripStatus = {
       at: '2026-06-25T13:59:17.126Z',
       lat: 57.769429,
       lng: 14.035379,
-      location: 'Jönköping',
-      note: 'Stacked the bike at Sportson. Front fork and brake pads bent — going too fast on gravel while fully loaded, apparently.',
+      location: 'Sandbäck, Jönköping',
+      note: 'Bike stacked here for tonight. Sportson tomorrow — front fork and brake pads bent from gravel with full load.',
     },
     {
       at: '2026-06-25T10:31:17.000Z',
@@ -120,7 +120,7 @@ const tripStatus = {
     {
       date: '2026-06-25',
       location: 'Jönköping',
-      text: 'Ulricehamn → Mörkö → Ryd → Jönköping. I\'m fine, but the front fork and brake pads are bent — going too fast on gravel while fully loaded apparently causes problems. Stacked the bike at Sportson Jönköping; I trust they\'ll figure it out. Looks like a couple extra days here while it gets sorted.',
+      text: 'Ulricehamn → Mörkö → Ryd → Jönköping. I\'m fine, but the front fork and brake pads are bent — going too fast on gravel while fully loaded apparently causes problems. Stacked the bike here for tonight; Sportson tomorrow. I trust they\'ll figure it out. Looks like a couple extra days in Jönköping while it gets sorted.',
       photo: 'photos/2026-06-25-stacked-bike.jpg',
       lat: 57.769429,
       lng: 14.035379
@@ -190,7 +190,7 @@ const tripStatus = {
     // { date: '2026-XX-XX', location: 'City, Country', text: 'Your update here.', photo: 'photos/2026-XX-XX-city.jpg', lat: 0.0, lng: 0.0 }
   ],
   photos: [
-    { lat: 57.769429, lng: 14.035379, src: 'photos/2026-06-25-stacked-bike.jpg', caption: 'Stacked at Sportson', location: 'Jönköping' },
+    { lat: 57.769429, lng: 14.035379, src: 'photos/2026-06-25-stacked-bike.jpg', caption: 'Stacked for the night', location: 'Sandbäck, Jönköping' },
     { lat: 57.837082, lng: 14.544994, src: 'photos/2026-06-25-ulricehamn-jonkoping-03.jpg', caption: 'Approaching Jönköping', location: 'Ryd' },
     { lat: 57.687066, lng: 13.704877, src: 'photos/2026-06-25-ulricehamn-jonkoping-02.jpg', caption: 'South along Vättern', location: 'Mörkö' },
     { lat: 57.687066, lng: 13.704877, src: 'photos/2026-06-25-ulricehamn-jonkoping-01.jpg', caption: 'Leaving Ulricehamn behind', location: 'Mörkö' },
