@@ -7,7 +7,7 @@ const tripStatus = {
   currentSegment: 1,           // segment id: 1, 3, 4, 5, 6, 7, 8, 9 (no segment 2)
   currentCity: 'Jönköping',   // most recent city/town name
   dayNumber: 12,                // day number of the trip
-  kmRidden: 274,                 // total km covered so far
+  kmRidden: 175,                 // total km covered so far (Gothenburg → Ryd along ridden routes)
   countries: ['Australia', 'Vietnam', 'United Kingdom', 'Sweden'],               // e.g. ['Sweden','Finland']
   lat: 57.782563,                   // precise current lat (preferred over city fallback)
   lng: 14.165719,                   // precise current lng
