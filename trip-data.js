@@ -6,13 +6,20 @@ const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 1,           // segment id: 1, 3, 4, 5, 6, 7, 8, 9 (no segment 2)
   currentCity: 'Jönköping',   // most recent city/town name
-  dayNumber: 11,                // day number of the trip
+  dayNumber: 12,                // day number of the trip
   kmRidden: 274,                 // total km covered so far
   countries: ['Australia', 'Vietnam', 'United Kingdom', 'Sweden'],               // e.g. ['Sweden','Finland']
   lat: 57.782563,                   // precise current lat (preferred over city fallback)
   lng: 14.165719,                   // precise current lng
-  lastUpdated: '2026-06-25',           // e.g. '2026-06-08' — shown in live banner when set
+  lastUpdated: '2026-06-26',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-06-26T17:16:43.849Z',
+      lat: 57.782563,
+      lng: 14.165719,
+      location: 'Jönköping',
+      pinIcon: 'angel',
+    },
     {
       at: '2026-06-25T14:35:24.110Z',
       lat: 57.782563,
@@ -105,6 +112,13 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-06-26',
+      location: 'Jönköping',
+      text: 'Today I hired a car to pick up my one-wheeled bike I locked to a tree at the crash site. Stuffed it in the boot and took it to Sportson. They said the new fork will be ordered and arrive here on Wednesday. No good. My bike is an EcoRide, and their production warehouse is back in Gothenburg 150km away. So I drove back to my starting point. Hit the warehouse. Walked out with a new fork and a parking ticket. Drove back to Jönköping by 3:20pm. Either impressed or amused by my hustle the mechanic said "Hey if you\'re grinding then I\'m grinding too". I walked out with my fully functioning bike at 5:30. Tack sa in i helvete. Odeshog tomorrow.',
+      lat: 57.782563,
+      lng: 14.165719
+    },
     {
       date: '2026-06-25',
       location: 'Jönköping',
