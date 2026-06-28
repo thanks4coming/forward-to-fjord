@@ -1187,10 +1187,26 @@ function getTrailBikeRoutes() {
   if (trailBikeRoutes.alingsasNittaCamp && trailBikeRoutes.alingsasNittaCamp.length > 1) {
     routes.push(trailBikeRoutes.alingsasNittaCamp);
   }
+  if (trailBikeRoutes.jonkopingOdeshog && trailBikeRoutes.jonkopingOdeshog.length > 1) {
+    routes.push(trailBikeRoutes.jonkopingOdeshog);
+  }
   return routes;
 }
 
+function getJonkopingOdeshogTrailRouteIfBothOnPath(from, to) {
+  const route = trailBikeRoutes.jonkopingOdeshog;
+  if (!route || route.length < 2) return null;
+  const fromNR = nearestOnRoute(route, from.lat, from.lng);
+  const toNR = nearestOnRoute(route, to.lat, to.lng);
+  if (fromNR.dist <= TRAIL_ROUTE_CORRIDOR_DEG && toNR.dist <= TRAIL_ROUTE_CORRIDOR_DEG) {
+    return route;
+  }
+  return null;
+}
+
 function findBestTrailRoute(from, to) {
+  const forcedJonkoping = getJonkopingOdeshogTrailRouteIfBothOnPath(from, to);
+  if (forcedJonkoping) return forcedJonkoping;
   const forced = getAlingsasTrailRouteIfBothOnPath(from, to);
   if (forced) return forced;
   let best = null;
@@ -1815,11 +1831,13 @@ initTripStatus();
 function loadTrailBikeRoutes() {
   return Promise.all([
     fetch('gothenburg-alingsas-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
-    fetch('alingsas-nitta-camp-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
+    fetch('alingsas-nitta-camp-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
+    fetch('jonkoping-odeshog-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
   ]).then(function(results) {
     if (results[0] && results[0].length > 1) trailBikeRoutes.gothenburgAlingsas = results[0];
     if (results[1] && results[1].length > 1) trailBikeRoutes.alingsasNittaCamp = results[1];
-    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp) {
+    if (results[2] && results[2].length > 1) trailBikeRoutes.jonkopingOdeshog = results[2];
+    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp || trailBikeRoutes.jonkopingOdeshog) {
       rebuildPhotoLayer();
       overlayActualStage2Route();
     }

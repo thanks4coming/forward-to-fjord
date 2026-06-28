@@ -5,14 +5,28 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 1,           // segment id: 1, 3, 4, 5, 6, 7, 8, 9 (no segment 2)
-  currentCity: 'Jönköping',   // most recent city/town name
-  dayNumber: 12,                // day number of the trip
-  kmRidden: 175,                 // total km covered so far (Gothenburg → Ryd along ridden routes)
+  currentCity: 'Odeshög',   // most recent city/town name
+  dayNumber: 14,                // day number of the trip
+  kmRidden: 246,                 // total km cycled (Gothenburg → Ryd → Jönköping → Gränna → Odeshög)
   countries: ['Australia', 'Vietnam', 'United Kingdom', 'Sweden'],               // e.g. ['Sweden','Finland']
-  lat: 57.782563,                   // precise current lat (preferred over city fallback)
-  lng: 14.165719,                   // precise current lng
-  lastUpdated: '2026-06-26',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 58.273516,                   // precise current lat (preferred over city fallback)
+  lng: 14.625893,                   // precise current lng
+  lastUpdated: '2026-06-28',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-06-28T12:36:34.119Z',
+      lat: 58.273516,
+      lng: 14.625893,
+      location: 'Odeshög',
+      note: 'Camp — Gränna → Odeshög along Runt Vätternleden.',
+    },
+    {
+      at: '2026-06-27T18:00:00.000Z',
+      lat: 58.025058,
+      lng: 14.467315,
+      location: 'Gränna',
+      note: 'Jönköping → Gränna — back on the bike.',
+    },
     {
       at: '2026-06-26T17:16:43.849Z',
       lat: 57.782563,
@@ -113,6 +127,21 @@ const tripStatus = {
   ],
   updates: [
     {
+      date: '2026-06-28',
+      location: 'Odeshög',
+      text: 'Gränna → Odeshög along Runt Vätternleden. Camp for the night.',
+      photo: 'photos/2026-06-28-grenna-odeshog-04.jpg',
+      lat: 58.273516,
+      lng: 14.625893
+    },
+    {
+      date: '2026-06-27',
+      location: 'Gränna',
+      text: 'Jönköping → Gränna — first day back on the bike after the fork saga. North along Lake Vättern.',
+      lat: 58.025058,
+      lng: 14.467315
+    },
+    {
       date: '2026-06-26',
       location: 'Jönköping',
       text: 'Today I hired a car to pick up my one-wheeled bike I locked to a tree at the crash site. Stuffed it in the boot and took it to Sportson. They said the new fork will be ordered and arrive here on Wednesday. No good. My bike is an EcoRide, and their production warehouse is back in Gothenburg 150km away. So I drove back to my starting point. Hit the warehouse. Walked out with a new fork and a parking ticket. Drove back to Jönköping by 3:20pm. Either impressed or amused by my hustle the mechanic said "Hey if you\'re grinding then I\'m grinding too". I walked out with my fully functioning bike at 5:30. Tack sa in i helvete. Odeshog tomorrow.',
@@ -192,6 +221,10 @@ const tripStatus = {
     // { date: '2026-XX-XX', location: 'City, Country', text: 'Your update here.', photo: 'photos/2026-XX-XX-city.jpg', lat: 0.0, lng: 0.0 }
   ],
   photos: [
+    { lat: 58.266384, lng: 14.639779, src: 'photos/2026-06-28-grenna-odeshog-04.jpg', caption: 'Approaching Odeshög', location: 'Gränna → Odeshög' },
+    { lat: 58.208361, lng: 14.617667, src: 'photos/2026-06-28-grenna-odeshog-03.jpg', caption: 'North along Vättern', location: 'Gränna → Odeshög' },
+    { lat: 58.141005, lng: 14.567916, src: 'photos/2026-06-28-grenna-odeshog-02.jpg', caption: 'Runt Vätternleden', location: 'Gränna → Odeshög' },
+    { lat: 58.075258, lng: 14.51243, src: 'photos/2026-06-28-grenna-odeshog-01.jpg', caption: 'Leaving Gränna behind', location: 'Gränna → Odeshög' },
     { lat: 57.769429, lng: 14.035379, src: 'photos/2026-06-25-stacked-bike.jpg', caption: 'Stacked 8km from Jönköping', location: '8km from Jönköping' },
     { lat: 57.694631, lng: 13.914274, src: 'photos/2026-06-25-ulricehamn-jonkoping-03.jpg', caption: 'Approaching Ryd', location: 'Ulricehamn → Ryd' },
     { lat: 57.687568, lng: 13.783684, src: 'photos/2026-06-25-ulricehamn-jonkoping-02.jpg', caption: 'South along Vättern', location: 'Ulricehamn → Ryd' },
