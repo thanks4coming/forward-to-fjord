@@ -44,7 +44,7 @@ const tripStatus = {
       at: '2026-06-25T13:59:17.126Z',
       lat: 57.769429,
       lng: 14.035379,
-      location: 'Ryd',
+      location: 'Jönköping',
       note: 'Bike stacked. Front fork and brake pads bent — going too fast on gravel while fully loaded. Ubered to the hotel.',
       pinIcon: 'skull',
       uberTo: [57.7814, 14.1618],
