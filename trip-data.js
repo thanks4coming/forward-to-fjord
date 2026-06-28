@@ -145,6 +145,7 @@ const tripStatus = {
       date: '2026-06-26',
       location: 'Jönköping',
       text: 'Today I hired a car to pick up my one-wheeled bike I locked to a tree at the crash site. Stuffed it in the boot and took it to Sportson. They said the new fork will be ordered and arrive here on Wednesday. No good. My bike is an EcoRide, and their production warehouse is back in Gothenburg 150km away. So I drove back to my starting point. Hit the warehouse. Walked out with a new fork and a parking ticket. Drove back to Jönköping by 3:20pm. Either impressed or amused by my hustle the mechanic said "Hey if you\'re grinding then I\'m grinding too". I walked out with my fully functioning bike at 5:30. Tack sa in i helvete. Odeshog tomorrow.',
+      photo: 'photos/2026-06-26-jonkoping.jpg',
       lat: 57.782563,
       lng: 14.165719
     },
