@@ -1522,6 +1522,49 @@ async function loadRealRoutes() {
 var lbIndex = 0;
 var lbPhotos = [];
 
+function photoTripSortKey(p) {
+  var src = (p.src || '').split('/').pop();
+  var known = {
+    '2026-06-18-carpenters-arms.jpg': 100,
+    '2026-06-18-natural-history-museum.jpg': 101,
+    '2026-06-18-parliament-gardens.jpg': 102,
+    '2026-06-18-chelsea-gardens.jpg': 103,
+    '2026-06-22-gothenburg-alingsas-01.jpg': 200,
+    '2026-06-22-gothenburg-alingsas-02.jpg': 201,
+    '2026-06-22-gothenburg-alingsas-03.jpg': 202,
+    '2026-06-22-gothenburg-alingsas-04.jpg': 203,
+    '2026-06-22-gothenburg-alingsas-05.jpg': 204,
+    '2026-06-22-gothenburg-alingsas-06.jpg': 205,
+    '2026-06-22-forest-camp-01.jpg': 210,
+    '2026-06-22-forest-camp-02.jpg': 211,
+    '2026-06-23-hakabo-camp-01.jpg': 220,
+    '2026-06-23-hakabo-camp-02.jpg': 221,
+    '2026-06-23-hakabo-camp-03.jpg': 222,
+    '2026-06-23-ljur-conny.jpg': 230,
+    '2026-06-24-lake-video-poster.jpg': 240,
+    '2026-06-25-ulricehamn-jonkoping-01.jpg': 250,
+    '2026-06-25-ulricehamn-jonkoping-02.jpg': 251,
+    '2026-06-25-ulricehamn-jonkoping-03.jpg': 252,
+    '2026-06-25-stacked-bike.jpg': 253,
+    '2026-06-26-jonkoping.jpg': 260,
+    '2026-06-28-grenna-odeshog-01.jpg': 270,
+    '2026-06-28-grenna-odeshog-02.jpg': 271,
+    '2026-06-28-grenna-odeshog-03.jpg': 272,
+    '2026-06-28-grenna-odeshog-04.jpg': 273,
+    '2026-06-28-odeshog-camp.jpg': 280
+  };
+  if (known[src] != null) return known[src];
+  var dm = src.match(/^(\d{4}-\d{2}-\d{2})/);
+  var seq = parseInt((src.match(/-(\d{2})\./) || [])[1] || '50', 10);
+  return parseInt(dm ? dm[1].replace(/-/g, '') : '99999999', 10) * 100 + seq;
+}
+
+function sortedTripPhotos(photos) {
+  return photos.filter(function(p) { return mediaPinSrc(p) || mediaVideoSrc(p); }).slice().sort(function(a, b) {
+    return photoTripSortKey(a) - photoTripSortKey(b);
+  });
+}
+
 function mediaPinSrc(p) {
   return p.poster || p.src;
 }
@@ -1545,7 +1588,7 @@ function enforceMutedMedia(el) {
 }
 
 function lbOpen(idx) {
-  lbPhotos = (tripStatus.photos || []).filter(function(p){ return mediaPinSrc(p) || mediaVideoSrc(p); });
+  lbPhotos = sortedTripPhotos(tripStatus.photos || []);
   if (!lbPhotos.length) return;
   lbIndex = ((idx % lbPhotos.length) + lbPhotos.length) % lbPhotos.length;
   lbRender();
@@ -1628,7 +1671,7 @@ document.addEventListener('keydown', function(e) {
 const photoGroup = L.layerGroup();
 function rebuildPhotoLayer() {
   photoGroup.clearLayers();
-  var photos = (tripStatus.photos || []).filter(function(p){ return mediaPinSrc(p) || mediaVideoSrc(p); });
+  var photos = sortedTripPhotos(tripStatus.photos || []);
   photos.forEach(function(p, idx) {
     var coords = photoLatLng(p);
     if (!coords) return;
