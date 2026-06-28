@@ -130,7 +130,7 @@ const tripStatus = {
       date: '2026-06-28',
       location: 'Odeshög',
       text: 'Gränna → Odeshög along Runt Vätternleden. Camp for the night.',
-      photo: 'photos/2026-06-28-grenna-odeshog-04.jpg',
+      photo: 'photos/2026-06-28-odeshog-camp.jpg',
       lat: 58.273516,
       lng: 14.625893
     },
@@ -222,6 +222,7 @@ const tripStatus = {
     // { date: '2026-XX-XX', location: 'City, Country', text: 'Your update here.', photo: 'photos/2026-XX-XX-city.jpg', lat: 0.0, lng: 0.0 }
   ],
   photos: [
+    { lat: 58.273516, lng: 14.625893, src: 'photos/2026-06-28-odeshog-camp.jpg', caption: 'View from camp', location: 'Odeshög' },
     { lat: 57.782563, lng: 14.165719, src: 'photos/2026-06-26-jonkoping.jpg', caption: 'Jönköping', location: 'Jönköping' },
     { lat: 58.266384, lng: 14.639779, src: 'photos/2026-06-28-grenna-odeshog-04.jpg', caption: 'Approaching Odeshög', location: 'Gränna → Odeshög' },
     { lat: 58.208361, lng: 14.617667, src: 'photos/2026-06-28-grenna-odeshog-03.jpg', caption: 'North along Vättern', location: 'Gränna → Odeshög' },
