@@ -222,6 +222,7 @@ const tripStatus = {
     // { date: '2026-XX-XX', location: 'City, Country', text: 'Your update here.', photo: 'photos/2026-XX-XX-city.jpg', lat: 0.0, lng: 0.0 }
   ],
   photos: [
+    { lat: 57.782563, lng: 14.165719, src: 'photos/2026-06-26-jonkoping.jpg', caption: 'Jönköping', location: 'Jönköping' },
     { lat: 58.266384, lng: 14.639779, src: 'photos/2026-06-28-grenna-odeshog-04.jpg', caption: 'Approaching Odeshög', location: 'Gränna → Odeshög' },
     { lat: 58.208361, lng: 14.617667, src: 'photos/2026-06-28-grenna-odeshog-03.jpg', caption: 'North along Vättern', location: 'Gränna → Odeshög' },
     { lat: 58.141005, lng: 14.567916, src: 'photos/2026-06-28-grenna-odeshog-02.jpg', caption: 'Runt Vätternleden', location: 'Gränna → Odeshög' },
