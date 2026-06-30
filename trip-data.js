@@ -5,14 +5,21 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 1,           // segment id: 1, 3, 4, 5, 6, 7, 8, 9 (no segment 2)
-  currentCity: 'Linköping',   // most recent city/town name
-  dayNumber: 15,                // day number of the trip
-  kmRidden: 313,                 // total km cycled (Gothenburg → Ryd → Jönköping → Gränna → Odeshög → Linköping)
+  currentCity: 'Norrköping',   // most recent city/town name
+  dayNumber: 16,                // day number of the trip
+  kmRidden: 357,                 // total km cycled (Gothenburg → Ryd → Jönköping → Gränna → Odeshög → Linköping → Norrköping)
   countries: ['Australia', 'Vietnam', 'United Kingdom', 'Sweden'],               // e.g. ['Sweden','Finland']
-  lat: 58.409814,                   // precise current lat (preferred over city fallback)
-  lng: 15.624525,                   // precise current lng
-  lastUpdated: '2026-06-29',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 58.590912,                   // precise current lat (preferred over city fallback)
+  lng: 16.190351,                   // precise current lng
+  lastUpdated: '2026-06-30',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-06-30T19:41:46.941Z',
+      lat: 58.590912,
+      lng: 16.190351,
+      location: 'Norrköping',
+      note: 'Linköping → Norrköping. Inner tube blew out at Holmedal — roadside repair in the sun.',
+    },
     {
       at: '2026-06-29T16:57:31.608Z',
       lat: 58.409814,
@@ -133,6 +140,14 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-06-30',
+      location: 'Norrköping',
+      text: 'Linköping → Norrköping. Inner tube blew out at Holmedal — roadside emergency repair in the beating sun, then rolled into town.',
+      photo: 'photos/2026-06-30-holmedal-tube-repair.jpg',
+      lat: 58.590912,
+      lng: 16.190351
+    },
     {
       date: '2026-06-29',
       location: 'Linköping',
@@ -264,6 +279,7 @@ const tripStatus = {
     { lat: 58.208361, lng: 14.617667, src: 'photos/2026-06-28-grenna-odeshog-03.jpg', caption: 'North along Vättern', location: 'Gränna → Odeshög' },
     { lat: 58.266384, lng: 14.639779, src: 'photos/2026-06-28-grenna-odeshog-04.jpg', caption: 'Approaching Odeshög', location: 'Gränna → Odeshög' },
     { lat: 58.273516, lng: 14.625893, src: 'photos/2026-06-28-odeshog-camp.jpg', caption: 'View from camp', location: 'Odeshög' },
+    { lat: 58.444531, lng: 15.816039, src: 'photos/2026-06-30-holmedal-tube-repair.jpg', caption: 'Roadside tube repair at Holmedal', location: 'Linköping → Norrköping' },
     // Map photo pins — add as you go (trip order; lightbox sorts via photoTripSortKey in index.html)
     // { lat: 0.0, lng: 0.0, src: 'photos/2026-XX-XX-city.jpg', caption: 'Caption', location: 'City' }
   ]
