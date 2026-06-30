@@ -143,7 +143,7 @@ const tripStatus = {
     {
       date: '2026-06-30',
       location: 'Norrköping',
-      text: 'Linköping → Norrköping. Inner tube blew out at Holmedal — roadside emergency repair in the beating sun, then rolled into town.',
+      text: 'Linköping → Norrköping. Inner tube blew out at Holmedal — roadside emergency repair in the beating sun.',
       photo: 'photos/2026-06-30-holmedal-tube-repair.jpg',
       lat: 58.590912,
       lng: 16.190351
