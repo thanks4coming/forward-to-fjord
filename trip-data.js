@@ -5,14 +5,21 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 1,           // segment id: 1, 3, 4, 5, 6, 7, 8, 9 (no segment 2)
-  currentCity: 'near Nyköping',   // most recent city/town name
-  dayNumber: 17,                // day number of the trip
-  kmRidden: 413,                 // total km cycled (Gothenburg → … → Norrköping → camp near Nyköping)
+  currentCity: 'near Södertälje',   // most recent city/town name
+  dayNumber: 18,                // day number of the trip
+  kmRidden: 477,                 // total km cycled (Gothenburg → … → Nyköping → near Södertälje)
   countries: ['Australia', 'Vietnam', 'United Kingdom', 'Sweden'],               // e.g. ['Sweden','Finland']
-  lat: 58.721324,                   // precise current lat (preferred over city fallback)
-  lng: 16.845934,                   // precise current lng
-  lastUpdated: '2026-07-01',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 59.001097,                   // precise current lat (preferred over city fallback)
+  lng: 17.551137,                   // precise current lng
+  lastUpdated: '2026-07-03',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-07-03T16:01:17.677Z',
+      lat: 59.001097,
+      lng: 17.551137,
+      location: 'near Södertälje',
+      note: 'Camp — Nyköping → here.',
+    },
     {
       at: '2026-07-01T16:35:57.333Z',
       lat: 58.721324,
@@ -147,6 +154,14 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-07-03',
+      location: 'near Södertälje',
+      text: 'Nyköping → near Södertälje. Camp for the night.',
+      photo: 'photos/2026-07-03-camp-01.jpg',
+      lat: 59.001097,
+      lng: 17.551137
+    },
     {
       date: '2026-07-01',
       location: 'near Nyköping',
@@ -298,6 +313,8 @@ const tripStatus = {
     { lat: 58.721324, lng: 16.845934, src: 'photos/2026-07-01-norrkoping-camp-01.jpg', caption: 'Camp for the night', location: 'Norrköping → Nyköping' },
     { lat: 58.721324, lng: 16.845934, src: 'photos/2026-07-01-norrkoping-camp-02.jpg', caption: 'Camp setup', location: 'near Nyköping' },
     { lat: 58.721324, lng: 16.845934, src: 'photos/2026-07-01-norrkoping-camp-03.jpg', caption: 'View from camp', location: 'near Nyköping' },
+    { lat: 59.001097, lng: 17.551137, src: 'photos/2026-07-03-camp-01.jpg', caption: 'Camp for the night', location: 'Nyköping → Södertälje' },
+    { lat: 59.001097, lng: 17.551137, src: 'photos/2026-07-03-camp-02.jpg', caption: 'Camp setup', location: 'near Södertälje' },
     // Map photo pins — add as you go (trip order; lightbox sorts via photoTripSortKey in index.html)
     // { lat: 0.0, lng: 0.0, src: 'photos/2026-XX-XX-city.jpg', caption: 'Caption', location: 'City' }
   ]

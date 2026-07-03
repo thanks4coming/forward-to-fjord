@@ -1199,7 +1199,21 @@ function getTrailBikeRoutes() {
   if (trailBikeRoutes.norrkopingCamp && trailBikeRoutes.norrkopingCamp.length > 1) {
     routes.push(trailBikeRoutes.norrkopingCamp);
   }
+  if (trailBikeRoutes.nykopingCamp && trailBikeRoutes.nykopingCamp.length > 1) {
+    routes.push(trailBikeRoutes.nykopingCamp);
+  }
   return routes;
+}
+
+function getNykopingCampTrailRouteIfBothOnPath(from, to) {
+  const route = trailBikeRoutes.nykopingCamp;
+  if (!route || route.length < 2) return null;
+  const fromNR = nearestOnRoute(route, from.lat, from.lng);
+  const toNR = nearestOnRoute(route, to.lat, to.lng);
+  if (fromNR.dist <= TRAIL_ROUTE_CORRIDOR_DEG && toNR.dist <= TRAIL_ROUTE_CORRIDOR_DEG) {
+    return route;
+  }
+  return null;
 }
 
 function getNorrkopingCampTrailRouteIfBothOnPath(from, to) {
@@ -1247,6 +1261,8 @@ function getJonkopingOdeshogTrailRouteIfBothOnPath(from, to) {
 }
 
 function findBestTrailRoute(from, to) {
+  const forcedNykopingCamp = getNykopingCampTrailRouteIfBothOnPath(from, to);
+  if (forcedNykopingCamp) return forcedNykopingCamp;
   const forcedNorrkopingCamp = getNorrkopingCampTrailRouteIfBothOnPath(from, to);
   if (forcedNorrkopingCamp) return forcedNorrkopingCamp;
   const forcedLinkopingNorrkoping = getLinkopingNorrkopingTrailRouteIfBothOnPath(from, to);
@@ -1603,7 +1619,9 @@ function photoTripSortKey(p) {
     '2026-06-30-holmedal-tube-repair.jpg': 290,
     '2026-07-01-norrkoping-camp-01.jpg': 300,
     '2026-07-01-norrkoping-camp-02.jpg': 301,
-    '2026-07-01-norrkoping-camp-03.jpg': 302
+    '2026-07-01-norrkoping-camp-03.jpg': 302,
+    '2026-07-03-camp-01.jpg': 310,
+    '2026-07-03-camp-02.jpg': 311
   };
   if (known[src] != null) return known[src];
   var dm = src.match(/^(\d{4}-\d{2}-\d{2})/);
@@ -1930,7 +1948,8 @@ function loadTrailBikeRoutes() {
     fetch('jonkoping-odeshog-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
     fetch('odeshog-linkoping-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
     fetch('linkoping-norrkoping-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
-    fetch('norrkoping-camp-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
+    fetch('norrkoping-camp-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
+    fetch('nykoping-camp-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
   ]).then(function(results) {
     if (results[0] && results[0].length > 1) trailBikeRoutes.gothenburgAlingsas = results[0];
     if (results[1] && results[1].length > 1) trailBikeRoutes.alingsasNittaCamp = results[1];
@@ -1938,7 +1957,8 @@ function loadTrailBikeRoutes() {
     if (results[3] && results[3].length > 1) trailBikeRoutes.odeshogLinkoping = results[3];
     if (results[4] && results[4].length > 1) trailBikeRoutes.linkopingNorrkoping = results[4];
     if (results[5] && results[5].length > 1) trailBikeRoutes.norrkopingCamp = results[5];
-    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp || trailBikeRoutes.jonkopingOdeshog || trailBikeRoutes.odeshogLinkoping || trailBikeRoutes.linkopingNorrkoping || trailBikeRoutes.norrkopingCamp) {
+    if (results[6] && results[6].length > 1) trailBikeRoutes.nykopingCamp = results[6];
+    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp || trailBikeRoutes.jonkopingOdeshog || trailBikeRoutes.odeshogLinkoping || trailBikeRoutes.linkopingNorrkoping || trailBikeRoutes.norrkopingCamp || trailBikeRoutes.nykopingCamp) {
       rebuildPhotoLayer();
       overlayActualStage2Route();
     }
