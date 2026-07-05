@@ -7,7 +7,7 @@ const tripStatus = {
   currentSegment: 1,           // segment id: 1, 3, 4, 5, 6, 7, 8, 9 (no segment 2)
   currentCity: 'Södertälje, Södertälje kommun',   // most recent city/town name
   dayNumber: 18,                // day number of the trip
-  kmRidden: 477,                 // total km cycled (Gothenburg → … → Nyköping → near Södertälje)
+  kmRidden: 505,                 // total km cycled (Gothenburg → … → camp near Södertälje → Södertälje)
   countries: ['Australia', 'Vietnam', 'United Kingdom', 'Sweden'],               // e.g. ['Sweden','Finland']
   lat: 59.196429,                   // precise current lat (preferred over city fallback)
   lng: 17.627166,                   // precise current lng
