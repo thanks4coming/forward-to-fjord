@@ -4,15 +4,22 @@
 // ============================================================
 const tripStatus = {
   active: true,               // set true when the trip starts
-  currentSegment: 1,           // segment id: 1, 3, 4, 5, 6, 7, 8, 9 (no segment 2)
-  currentCity: 'Södertälje, Södertälje kommun',   // most recent city/town name
-  dayNumber: 18,                // day number of the trip
-  kmRidden: 505,                 // total km cycled (Gothenburg → … → camp near Södertälje → Södertälje)
+  currentSegment: 3,           // segment id: 1, 3, 4, 5, 6, 7, 8, 9 (no segment 2) — leg 1 complete
+  currentCity: 'Stockholm, Stockholms kommun',   // most recent city/town name
+  dayNumber: 19,                // day number of the trip
+  kmRidden: 544,                 // total km cycled (Gothenburg → … → Södertälje → Stockholm)
   countries: ['Australia', 'Vietnam', 'United Kingdom', 'Sweden'],               // e.g. ['Sweden','Finland']
-  lat: 59.196429,                   // precise current lat (preferred over city fallback)
-  lng: 17.627166,                   // precise current lng
-  lastUpdated: '2026-07-05',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 59.325117,                   // precise current lat (preferred over city fallback)
+  lng: 18.071094,                   // precise current lng
+  lastUpdated: '2026-07-07',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-07-07T14:42:47.898Z',
+      lat: 59.325117,
+      lng: 18.071094,
+      location: 'Stockholm, Stockholms kommun',
+      note: 'Rode in yesterday — end of leg 1 (Gothenburg → Stockholm)',
+    },
     {
       at: '2026-07-05T12:08:00.070Z',
       lat: 59.196429,
@@ -161,6 +168,13 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-07-07',
+      location: 'Stockholm, Stockholms kommun',
+      text: 'Rode in yesterday — end of leg 1 (Gothenburg → Stockholm)',
+      lat: 59.325117,
+      lng: 18.071094
+    },
     {
       date: '2026-07-05',
       location: 'Södertälje, Södertälje kommun',

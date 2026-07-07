@@ -1,8 +1,8 @@
-const CACHE = 'biketrip-v64';
+const CACHE = 'biketrip-v66';
 
 self.addEventListener('install', e => {
   const scope = self.registration.scope;
-  const precache = [scope, scope + 'index.html', scope + 'trip-data.js', scope + 'gothenburg-alingsas-route.json', scope + 'alingsas-nitta-camp-route.json', scope + 'jonkoping-odeshog-route.json', scope + 'odeshog-linkoping-route.json', scope + 'linkoping-norrkoping-route.json', scope + 'norrkoping-camp-route.json', scope + 'nykoping-camp-route.json', scope + 'sodertalje-route.json'];
+  const precache = [scope, scope + 'index.html', scope + 'trip-data.js', scope + 'gothenburg-alingsas-route.json', scope + 'alingsas-nitta-camp-route.json', scope + 'jonkoping-odeshog-route.json', scope + 'odeshog-linkoping-route.json', scope + 'linkoping-norrkoping-route.json', scope + 'norrkoping-camp-route.json', scope + 'nykoping-camp-route.json', scope + 'sodertalje-route.json', scope + 'stockholm-route.json'];
   e.waitUntil(
     caches.open(CACHE).then(c => c.addAll(precache))
   );
