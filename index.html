@@ -1208,7 +1208,21 @@ function getTrailBikeRoutes() {
   if (trailBikeRoutes.stockholm && trailBikeRoutes.stockholm.length > 1) {
     routes.push(trailBikeRoutes.stockholm);
   }
+  if (trailBikeRoutes.archipelagoCamp && trailBikeRoutes.archipelagoCamp.length > 1) {
+    routes.push(trailBikeRoutes.archipelagoCamp);
+  }
   return routes;
+}
+
+function getArchipelagoCampTrailRouteIfBothOnPath(from, to) {
+  const route = trailBikeRoutes.archipelagoCamp;
+  if (!route || route.length < 2) return null;
+  const fromNR = nearestOnRoute(route, from.lat, from.lng);
+  const toNR = nearestOnRoute(route, to.lat, to.lng);
+  if (fromNR.dist <= TRAIL_ROUTE_CORRIDOR_DEG && toNR.dist <= TRAIL_ROUTE_CORRIDOR_DEG) {
+    return route;
+  }
+  return null;
 }
 
 function getStockholmTrailRouteIfBothOnPath(from, to) {
@@ -1289,6 +1303,8 @@ function getJonkopingOdeshogTrailRouteIfBothOnPath(from, to) {
 }
 
 function findBestTrailRoute(from, to) {
+  const forcedArchipelagoCamp = getArchipelagoCampTrailRouteIfBothOnPath(from, to);
+  if (forcedArchipelagoCamp) return forcedArchipelagoCamp;
   const forcedStockholm = getStockholmTrailRouteIfBothOnPath(from, to);
   if (forcedStockholm) return forcedStockholm;
   const forcedSodertalje = getSodertaljeTrailRouteIfBothOnPath(from, to);
@@ -1983,7 +1999,8 @@ function loadTrailBikeRoutes() {
     fetch('norrkoping-camp-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
     fetch('nykoping-camp-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
     fetch('sodertalje-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
-    fetch('stockholm-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
+    fetch('stockholm-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
+    fetch('stockholm-archipelago-camp-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
   ]).then(function(results) {
     if (results[0] && results[0].length > 1) trailBikeRoutes.gothenburgAlingsas = results[0];
     if (results[1] && results[1].length > 1) trailBikeRoutes.alingsasNittaCamp = results[1];
@@ -1994,7 +2011,8 @@ function loadTrailBikeRoutes() {
     if (results[6] && results[6].length > 1) trailBikeRoutes.nykopingCamp = results[6];
     if (results[7] && results[7].length > 1) trailBikeRoutes.sodertalje = results[7];
     if (results[8] && results[8].length > 1) trailBikeRoutes.stockholm = results[8];
-    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp || trailBikeRoutes.jonkopingOdeshog || trailBikeRoutes.odeshogLinkoping || trailBikeRoutes.linkopingNorrkoping || trailBikeRoutes.norrkopingCamp || trailBikeRoutes.nykopingCamp || trailBikeRoutes.sodertalje || trailBikeRoutes.stockholm) {
+    if (results[9] && results[9].length > 1) trailBikeRoutes.archipelagoCamp = results[9];
+    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp || trailBikeRoutes.jonkopingOdeshog || trailBikeRoutes.odeshogLinkoping || trailBikeRoutes.linkopingNorrkoping || trailBikeRoutes.norrkopingCamp || trailBikeRoutes.nykopingCamp || trailBikeRoutes.sodertalje || trailBikeRoutes.stockholm || trailBikeRoutes.archipelagoCamp) {
       rebuildPhotoLayer();
       overlayActualStage2Route();
     }

@@ -5,14 +5,21 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 3,           // segment id: 1, 3, 4, 5, 6, 7, 8, 9 (no segment 2) — leg 1 complete
-  currentCity: 'Stockholm, Stockholms kommun',   // most recent city/town name
-  dayNumber: 19,                // day number of the trip
-  kmRidden: 544,                 // total km cycled (Gothenburg → … → Södertälje → Stockholm)
+  currentCity: 'near Norrtälje, Roslagen',   // most recent city/town name
+  dayNumber: 20,                // day number of the trip
+  kmRidden: 627,                 // total km cycled (Gothenburg → … → Stockholm → archipelago camp)
   countries: ['Australia', 'Vietnam', 'United Kingdom', 'Sweden'],               // e.g. ['Sweden','Finland']
-  lat: 59.325117,                   // precise current lat (preferred over city fallback)
-  lng: 18.071094,                   // precise current lng
-  lastUpdated: '2026-07-07',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 59.791545,                   // precise current lat (preferred over city fallback)
+  lng: 18.763141,                   // precise current lng
+  lastUpdated: '2026-07-08',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-07-08T18:24:43.114Z',
+      lat: 59.791545,
+      lng: 18.763141,
+      location: 'near Norrtälje, Roslagen',
+      note: 'Camp — Stockholm → here. Last night in Sweden. Ferry Grisslehamn → Åland tomorrow.',
+    },
     {
       at: '2026-07-07T14:42:47.898Z',
       lat: 59.325117,
@@ -168,6 +175,14 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-07-08',
+      location: 'near Norrtälje, Roslagen',
+      text: 'Stockholm → here today (~83 km). Camp for the night — last night in Sweden. Ferry from Grisslehamn to Åland tomorrow.',
+      photo: 'photos/2026-07-08-archipelago-camp-01.jpg',
+      lat: 59.791545,
+      lng: 18.763141
+    },
     {
       date: '2026-07-07',
       location: 'Stockholm, Stockholms kommun',
@@ -343,6 +358,9 @@ const tripStatus = {
     { lat: 58.721324, lng: 16.845934, src: 'photos/2026-07-01-norrkoping-camp-03.jpg', caption: 'View from camp', location: 'near Nyköping' },
     { lat: 59.001097, lng: 17.551137, src: 'photos/2026-07-03-camp-01.jpg', caption: 'Camp for the night', location: 'Nyköping → Södertälje' },
     { lat: 59.001097, lng: 17.551137, src: 'photos/2026-07-03-camp-02.jpg', caption: 'Camp setup', location: 'near Södertälje' },
+    { lat: 59.791545, lng: 18.763141, src: 'photos/2026-07-08-archipelago-camp-01.jpg', caption: 'Camp for the night', location: 'Stockholm → Norrtälje' },
+    { lat: 59.791545, lng: 18.763141, src: 'photos/2026-07-08-archipelago-camp-02.jpg', caption: 'Camp setup', location: 'near Norrtälje' },
+    { lat: 59.791545, lng: 18.763141, src: 'photos/2026-07-08-archipelago-camp-03.jpg', caption: 'View from camp', location: 'Roslagen' },
     // Map photo pins — add as you go (trip order; lightbox sorts via photoTripSortKey in index.html)
     // { lat: 0.0, lng: 0.0, src: 'photos/2026-XX-XX-city.jpg', caption: 'Caption', location: 'City' }
   ]
