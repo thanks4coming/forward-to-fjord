@@ -5,14 +5,21 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 3,           // segment id: 1, 3, 4, 5, 6, 7, 8, 9 (no segment 2) — leg 1 complete
-  currentCity: 'near Norrtälje, Roslagen',   // most recent city/town name
-  dayNumber: 20,                // day number of the trip
-  kmRidden: 628,                 // total km cycled (Gothenburg → … → Stockholm → Norrtälje → camp)
-  countries: ['Australia', 'Vietnam', 'United Kingdom', 'Sweden'],               // e.g. ['Sweden','Finland']
-  lat: 59.791545,                   // precise current lat (preferred over city fallback)
-  lng: 18.763141,                   // precise current lng
-  lastUpdated: '2026-07-08',           // e.g. '2026-06-08' — shown in live banner when set
+  currentCity: 'Hummelvik, Eckerö, Åland',   // most recent city/town name
+  dayNumber: 21,                // day number of the trip
+  kmRidden: 675,                 // total km cycled (Gothenburg → … → Grisslehamn → Eckerö → camp)
+  countries: ['Australia', 'Vietnam', 'United Kingdom', 'Sweden', 'Finland'],               // e.g. ['Sweden','Finland']
+  lat: 60.245333,                   // precise current lat (preferred over city fallback)
+  lng: 19.540342,                   // precise current lng
+  lastUpdated: '2026-07-09',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-07-09T17:36:51.562Z',
+      lat: 60.245333,
+      lng: 19.540342,
+      location: 'Hummelvik, Eckerö, Åland',
+      note: 'Camp — Grisslehamn ferry → Eckerö → here. First night in Finland.',
+    },
     {
       at: '2026-07-08T18:24:43.114Z',
       lat: 59.791545,
@@ -176,9 +183,17 @@ const tripStatus = {
   ],
   updates: [
     {
+      date: '2026-07-09',
+      location: 'Hummelvik, Eckerö, Åland',
+      text: 'Rode to Grisslehamn and took the ferry to Eckerö, then rode to camp (~47 km cycling). First night in Finland.\n\nOnly two other couples bikepacking on board. One Swiss couple in their 60s on a revenge tour of Åland and Finland — their bikes were stolen in Stockholm when they tried last year. A lot of good advice exchanged.\n\nÅland\'s funny. Historically Swedish, still wants to be Swedish. Sweden ceded Åland and Finland to Russia in 1809. In 1919 most Ålanders wanted to rejoin Sweden — the League of Nations said no: you\'re Finland, but how about a special autonomous region instead? Not really asking.\n\nPopular Swedish holiday spot; tourism supposedly never recovered from COVID (good for me). Finns could travel to Åland freely during COVID — the only holiday they could get. I\'m sure they got a warm welcome?',
+      photo: 'photos/2026-07-09-eckero-ferry-01.jpg',
+      lat: 60.245333,
+      lng: 19.540342
+    },
+    {
       date: '2026-07-08',
       location: 'near Norrtälje, Roslagen',
-      text: 'Stockholm → here today (~83 km). Camp for the night — last night in Sweden. Ferry from Grisslehamn to Åland tomorrow.',
+      text: 'Stockholm → here today (~84 km via Frihamra and Norrtälje). Camp for the night — last night in Sweden. Ferry from Grisslehamn to Åland tomorrow.',
       photo: 'photos/2026-07-08-archipelago-camp-01.jpg',
       lat: 59.791545,
       lng: 18.763141
@@ -361,6 +376,9 @@ const tripStatus = {
     { lat: 59.791545, lng: 18.763141, src: 'photos/2026-07-08-archipelago-camp-01.jpg', caption: 'Camp for the night', location: 'Stockholm → Norrtälje' },
     { lat: 59.791545, lng: 18.763141, src: 'photos/2026-07-08-archipelago-camp-02.jpg', caption: 'Camp setup', location: 'near Norrtälje' },
     { lat: 59.791545, lng: 18.763141, src: 'photos/2026-07-08-archipelago-camp-03.jpg', caption: 'View from camp', location: 'Roslagen' },
+    { lat: 60.2253, lng: 19.5479, src: 'photos/2026-07-09-eckero-ferry-01.jpg', caption: 'Grisslehamn → Eckerö ferry', location: 'Åland' },
+    { lat: 60.2253, lng: 19.5479, src: 'photos/2026-07-09-eckero-ferry-02.jpg', caption: 'On deck', location: 'Baltic Sea' },
+    { lat: 60.2253, lng: 19.5479, src: 'photos/2026-07-09-eckero-ferry-03.jpg', caption: 'Approaching Eckerö', location: 'Åland' },
     // Map photo pins — add as you go (trip order; lightbox sorts via photoTripSortKey in index.html)
     // { lat: 0.0, lng: 0.0, src: 'photos/2026-XX-XX-city.jpg', caption: 'Caption', location: 'City' }
   ]

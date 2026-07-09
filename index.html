@@ -1211,7 +1211,35 @@ function getTrailBikeRoutes() {
   if (trailBikeRoutes.archipelagoCamp && trailBikeRoutes.archipelagoCamp.length > 1) {
     routes.push(trailBikeRoutes.archipelagoCamp);
   }
+  if (trailBikeRoutes.norrtaljeGrisslehamn && trailBikeRoutes.norrtaljeGrisslehamn.length > 1) {
+    routes.push(trailBikeRoutes.norrtaljeGrisslehamn);
+  }
+  if (trailBikeRoutes.eckeroCamp && trailBikeRoutes.eckeroCamp.length > 1) {
+    routes.push(trailBikeRoutes.eckeroCamp);
+  }
   return routes;
+}
+
+function getEckeroCampTrailRouteIfBothOnPath(from, to) {
+  const route = trailBikeRoutes.eckeroCamp;
+  if (!route || route.length < 2) return null;
+  const fromNR = nearestOnRoute(route, from.lat, from.lng);
+  const toNR = nearestOnRoute(route, to.lat, to.lng);
+  if (fromNR.dist <= TRAIL_ROUTE_CORRIDOR_DEG && toNR.dist <= TRAIL_ROUTE_CORRIDOR_DEG) {
+    return route;
+  }
+  return null;
+}
+
+function getNorrtaljeGrisslehamnTrailRouteIfBothOnPath(from, to) {
+  const route = trailBikeRoutes.norrtaljeGrisslehamn;
+  if (!route || route.length < 2) return null;
+  const fromNR = nearestOnRoute(route, from.lat, from.lng);
+  const toNR = nearestOnRoute(route, to.lat, to.lng);
+  if (fromNR.dist <= TRAIL_ROUTE_CORRIDOR_DEG && toNR.dist <= TRAIL_ROUTE_CORRIDOR_DEG) {
+    return route;
+  }
+  return null;
 }
 
 function getArchipelagoCampTrailRouteIfBothOnPath(from, to) {
@@ -1303,6 +1331,10 @@ function getJonkopingOdeshogTrailRouteIfBothOnPath(from, to) {
 }
 
 function findBestTrailRoute(from, to) {
+  const forcedEckeroCamp = getEckeroCampTrailRouteIfBothOnPath(from, to);
+  if (forcedEckeroCamp) return forcedEckeroCamp;
+  const forcedNorrtaljeGrisslehamn = getNorrtaljeGrisslehamnTrailRouteIfBothOnPath(from, to);
+  if (forcedNorrtaljeGrisslehamn) return forcedNorrtaljeGrisslehamn;
   const forcedArchipelagoCamp = getArchipelagoCampTrailRouteIfBothOnPath(from, to);
   if (forcedArchipelagoCamp) return forcedArchipelagoCamp;
   const forcedStockholm = getStockholmTrailRouteIfBothOnPath(from, to);
@@ -1415,6 +1447,13 @@ function isSwedenCheckin(h) {
   return h.lat >= 55 && h.lng >= 10 && h.lng <= 24;
 }
 
+function isAlandOrFinlandCheckin(h) {
+  return h.lat >= 59.5 && h.lng >= 19 && h.lng <= 32;
+}
+
+const GRISSLEHAMN_LATLNG = [60.1088, 18.8237];
+const ECKERO_FERRY_LATLNG = [60.2253, 19.5479];
+
 const TRAIL_ON_ROUTE_DEG = 0.004;      // ~400 m — on the cycling path
 const TRAIL_ROUTE_CORRIDOR_DEG = 0.15; // ~15 km — still snap to the planned route
 
@@ -1465,7 +1504,8 @@ function shouldUseBikeRoute(from, to, route) {
 }
 
 function buildTrailSegmentPaths(chronological) {
-  const paths = [];
+  const bikePaths = [];
+  const ferryPaths = [];
   const gbgRoute = getGothenburgAlingsasTrailRoute();
   for (let i = 0; i < chronological.length - 1; i++) {
     const from = chronological[i];
@@ -1476,21 +1516,39 @@ function buildTrailSegmentPaths(chronological) {
     const toPt = [to.lat, to.lng];
 
     if (isUkCheckin(from) && isSwedenCheckin(to)) {
-      paths.push([fromPt, GOTHENBURG_LATLNG]);
+      bikePaths.push([fromPt, GOTHENBURG_LATLNG]);
       if (gbgRoute && gbgRoute.length > 1) {
-        paths.push(buildPathAlongRoute(GOTHENBURG_LATLNG, toPt, gbgRoute));
+        bikePaths.push(buildPathAlongRoute(GOTHENBURG_LATLNG, toPt, gbgRoute));
       } else {
-        paths.push([GOTHENBURG_LATLNG, toPt]);
+        bikePaths.push([GOTHENBURG_LATLNG, toPt]);
+      }
+    } else if (isSwedenCheckin(from) && isAlandOrFinlandCheckin(to)) {
+      const toGriss = trailBikeRoutes.norrtaljeGrisslehamn;
+      const toCamp = trailBikeRoutes.eckeroCamp;
+      if (toGriss && toGriss.length > 1) {
+        bikePaths.push(buildPathAlongRoute(fromPt, GRISSLEHAMN_LATLNG, toGriss));
+      } else {
+        bikePaths.push([fromPt, GRISSLEHAMN_LATLNG]);
+      }
+      ferryPaths.push([GRISSLEHAMN_LATLNG, ECKERO_FERRY_LATLNG]);
+      if (toCamp && toCamp.length > 1) {
+        bikePaths.push(buildPathAlongRoute(ECKERO_FERRY_LATLNG, toPt, toCamp));
+      } else {
+        bikePaths.push([ECKERO_FERRY_LATLNG, toPt]);
       }
     } else if (isSwedenCheckin(from) && isSwedenCheckin(to)) {
       const bikeRoute = findBestTrailRoute(from, to);
-      if (bikeRoute) paths.push(buildPathAlongRoute(fromPt, toPt, bikeRoute));
-      else paths.push([fromPt, toPt]);
+      if (bikeRoute) bikePaths.push(buildPathAlongRoute(fromPt, toPt, bikeRoute));
+      else bikePaths.push([fromPt, toPt]);
+    } else if (isAlandOrFinlandCheckin(from) && isAlandOrFinlandCheckin(to)) {
+      const bikeRoute = findBestTrailRoute(from, to);
+      if (bikeRoute) bikePaths.push(buildPathAlongRoute(fromPt, toPt, bikeRoute));
+      else bikePaths.push([fromPt, toPt]);
     } else {
-      paths.push([fromPt, toPt]);
+      bikePaths.push([fromPt, toPt]);
     }
   }
-  return paths;
+  return { bikePaths: bikePaths, ferryPaths: ferryPaths };
 }
 
 function photoLatLng(p) {
@@ -1833,12 +1891,22 @@ function rebuildTrailLayer() {
   if (!history.length) return;
   var chronological = history.slice().reverse();
   if (chronological.length > 1) {
-    buildTrailSegmentPaths(chronological).forEach(function(path) {
+    const trailPaths = buildTrailSegmentPaths(chronological);
+    trailPaths.bikePaths.forEach(function(path) {
       if (path.length > 1) {
         L.polyline(path, {
           color: '#22c55e', weight: 3, opacity: 0.75, dashArray: '6,8', lineCap: 'round',
           pane: 'trailPane'
         }).addTo(trailGroup);
+      }
+    });
+    trailPaths.ferryPaths.forEach(function(path) {
+      if (path.length > 1) {
+        L.polyline(path, {
+          color: '#5eead4', weight: 3, opacity: 0.8, dashArray: '6,10', lineCap: 'round',
+          pane: 'trailPane'
+        }).bindPopup('<b>Grisslehamn \u2192 Ecker\u00f6 ferry</b>')
+          .addTo(trailGroup);
       }
     });
   }
@@ -2000,7 +2068,9 @@ function loadTrailBikeRoutes() {
     fetch('nykoping-camp-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
     fetch('sodertalje-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
     fetch('stockholm-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
-    fetch('stockholm-archipelago-camp-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
+    fetch('stockholm-archipelago-camp-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
+    fetch('norrtalje-grisslehamn-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
+    fetch('eckero-camp-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
   ]).then(function(results) {
     if (results[0] && results[0].length > 1) trailBikeRoutes.gothenburgAlingsas = results[0];
     if (results[1] && results[1].length > 1) trailBikeRoutes.alingsasNittaCamp = results[1];
@@ -2012,7 +2082,9 @@ function loadTrailBikeRoutes() {
     if (results[7] && results[7].length > 1) trailBikeRoutes.sodertalje = results[7];
     if (results[8] && results[8].length > 1) trailBikeRoutes.stockholm = results[8];
     if (results[9] && results[9].length > 1) trailBikeRoutes.archipelagoCamp = results[9];
-    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp || trailBikeRoutes.jonkopingOdeshog || trailBikeRoutes.odeshogLinkoping || trailBikeRoutes.linkopingNorrkoping || trailBikeRoutes.norrkopingCamp || trailBikeRoutes.nykopingCamp || trailBikeRoutes.sodertalje || trailBikeRoutes.stockholm || trailBikeRoutes.archipelagoCamp) {
+    if (results[10] && results[10].length > 1) trailBikeRoutes.norrtaljeGrisslehamn = results[10];
+    if (results[11] && results[11].length > 1) trailBikeRoutes.eckeroCamp = results[11];
+    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp || trailBikeRoutes.jonkopingOdeshog || trailBikeRoutes.odeshogLinkoping || trailBikeRoutes.linkopingNorrkoping || trailBikeRoutes.norrkopingCamp || trailBikeRoutes.nykopingCamp || trailBikeRoutes.sodertalje || trailBikeRoutes.stockholm || trailBikeRoutes.archipelagoCamp || trailBikeRoutes.norrtaljeGrisslehamn || trailBikeRoutes.eckeroCamp) {
       rebuildPhotoLayer();
       overlayActualStage2Route();
     }
