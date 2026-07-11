@@ -5,14 +5,21 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 3,           // segment id: 1, 3, 4, 5, 6, 7, 8, 9 (no segment 2) — leg 1 complete
-  currentCity: 'Hummelvik, Eckerö, Åland',   // most recent city/town name
-  dayNumber: 21,                // day number of the trip
-  kmRidden: 675,                 // total km cycled (Gothenburg → … → Grisslehamn → Eckerö → camp)
+  currentCity: 'TipiTents Glamping, Mariehamn',   // most recent city/town name
+  dayNumber: 22,                // day number of the trip
+  kmRidden: 714,                 // total km cycled (Gothenburg → … → Eckerö → Mariehamn)
   countries: ['Australia', 'Vietnam', 'United Kingdom', 'Sweden', 'Finland'],               // e.g. ['Sweden','Finland']
-  lat: 60.245333,                   // precise current lat (preferred over city fallback)
-  lng: 19.540342,                   // precise current lng
-  lastUpdated: '2026-07-09',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 60.075179,                   // precise current lat (preferred over city fallback)
+  lng: 19.938078,                   // precise current lng
+  lastUpdated: '2026-07-10',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-07-10T18:00:00.000Z',
+      lat: 60.075179,
+      lng: 19.938078,
+      location: 'TipiTents Glamping, Mariehamn',
+      note: 'Eckerö camp → TipiTents glamping Mariehamn.',
+    },
     {
       at: '2026-07-09T17:36:51.562Z',
       lat: 60.245333,
@@ -182,6 +189,13 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-07-10',
+      location: 'TipiTents Glamping, Mariehamn',
+      text: 'Eckerö camp → TipiTents glamping Mariehamn (~39 km).',
+      lat: 60.075179,
+      lng: 19.938078
+    },
     {
       date: '2026-07-09',
       location: 'Hummelvik, Eckerö, Åland',
