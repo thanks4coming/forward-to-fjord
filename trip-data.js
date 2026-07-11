@@ -5,14 +5,21 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 3,           // segment id: 1, 3, 4, 5, 6, 7, 8, 9 (no segment 2) — leg 1 complete
-  currentCity: 'TipiTents Glamping, Mariehamn',   // most recent city/town name
-  dayNumber: 22,                // day number of the trip
-  kmRidden: 714,                 // total km cycled (Gothenburg → … → Eckerö → Mariehamn)
+  currentCity: 'Kökar, Åland',   // most recent city/town name
+  dayNumber: 23,                // day number of the trip
+  kmRidden: 769,                 // total km cycled (Gothenburg → … → Mariehamn → Kökar)
   countries: ['Australia', 'Vietnam', 'United Kingdom', 'Sweden', 'Finland'],               // e.g. ['Sweden','Finland']
-  lat: 60.075179,                   // precise current lat (preferred over city fallback)
-  lng: 19.938078,                   // precise current lng
-  lastUpdated: '2026-07-10',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 59.938053,                   // precise current lat (preferred over city fallback)
+  lng: 20.883515,                   // precise current lng
+  lastUpdated: '2026-07-11',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-07-11T17:06:12.666Z',
+      lat: 59.938053,
+      lng: 20.883515,
+      location: 'Kökar, Åland',
+      note: 'Mariehamn → Långnäs by bike, ferry to Kökar, then rode south on the island (~55 km cycling).',
+    },
     {
       at: '2026-07-10T18:00:00.000Z',
       lat: 60.075179,
@@ -189,6 +196,14 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-07-11',
+      location: 'Kökar, Åland',
+      text: 'Mariehamn → Långnäs by bike, ferry to Kökar, then rode south on the island (~55 km cycling).',
+      photo: 'photos/2026-07-11-kokar-arrival.jpg',
+      lat: 59.938053,
+      lng: 20.883515
+    },
     {
       date: '2026-07-10',
       location: 'TipiTents Glamping, Mariehamn',
@@ -393,6 +408,7 @@ const tripStatus = {
     { lat: 60.2253, lng: 19.5479, src: 'photos/2026-07-09-eckero-ferry-01.jpg', caption: 'Grisslehamn → Eckerö ferry', location: 'Åland' },
     { lat: 60.2253, lng: 19.5479, src: 'photos/2026-07-09-eckero-ferry-02.jpg', caption: 'On deck', location: 'Baltic Sea' },
     { lat: 60.2253, lng: 19.5479, src: 'photos/2026-07-09-eckero-ferry-03.jpg', caption: 'Approaching Eckerö', location: 'Åland' },
+    { lat: 59.938053, lng: 20.883515, src: 'photos/2026-07-11-kokar-arrival.jpg', caption: 'Arrival in Kökar', location: 'Kökar, Åland' },
     // Map photo pins — add as you go (trip order; lightbox sorts via photoTripSortKey in index.html)
     // { lat: 0.0, lng: 0.0, src: 'photos/2026-XX-XX-city.jpg', caption: 'Caption', location: 'City' }
   ]
