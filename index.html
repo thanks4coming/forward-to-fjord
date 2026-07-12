@@ -323,6 +323,16 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
 /** Total planned cycling distance (km) — used for live progress bar; keep in sync with route totals. */
 const TRIP_TOTAL_KM = 5025;
 
+const GRISSLEHAMN_LATLNG = [60.1088, 18.8237];
+const ECKERO_FERRY_LATLNG = [60.2253, 19.5479];
+const GRISSLEHAMN_ECKERO_FERRY_ROUTE = [
+  GRISSLEHAMN_LATLNG,
+  [60.13, 19.00],
+  [60.17, 19.25],
+  [60.20, 19.42],
+  ECKERO_FERRY_LATLNG
+];
+
 function showTravelToast(msg, isErr) {
   var el = document.getElementById('travel-toast');
   if (el) el.remove();
@@ -419,7 +429,7 @@ const segments = [
       { name: "Turku", lat: 60.4518, lng: 22.2666, type: "ferry" }
     ],
     route: [[59.3293,18.0586],[59.4024,18.3554],[59.55,18.55],[59.7533,18.7038],[59.95,18.80],[60.1088,18.8237]],
-    ferryRoute: [[60.1088,18.8237],[60.2253,19.5479]],
+    ferryRoute: GRISSLEHAMN_ECKERO_FERRY_ROUTE,
     bikeRoute2: [[60.2253,19.5479],[60.2290,19.9640],[60.2200,20.0950],[60.15,19.80],[60.0970,19.9348]],
     ferryRoute2: [[60.0970,19.9348],[60.20,20.50],[60.35,21.30],[60.4518,22.2666]]
   },
@@ -1459,16 +1469,17 @@ function isUkCheckin(h) {
   return h.lat >= 49 && h.lat <= 59 && h.lng >= -8 && h.lng <= 2;
 }
 
+function isAlandCheckin(h) {
+  return h.lat >= 59.8 && h.lat <= 60.5 && h.lng >= 19 && h.lng <= 21;
+}
+
 function isSwedenCheckin(h) {
-  return h.lat >= 55 && h.lng >= 10 && h.lng <= 24;
+  return h.lat >= 55 && h.lng >= 10 && h.lng <= 24 && !isAlandCheckin(h);
 }
 
 function isAlandOrFinlandCheckin(h) {
   return h.lat >= 59.5 && h.lng >= 19 && h.lng <= 32;
 }
-
-const GRISSLEHAMN_LATLNG = [60.1088, 18.8237];
-const ECKERO_FERRY_LATLNG = [60.2253, 19.5479];
 
 const TRAIL_ON_ROUTE_DEG = 0.004;      // ~400 m — on the cycling path
 const TRAIL_ROUTE_CORRIDOR_DEG = 0.15; // ~15 km — still snap to the planned route
@@ -1538,6 +1549,10 @@ function buildTrailSegmentPaths(chronological) {
       } else {
         bikePaths.push([GOTHENBURG_LATLNG, toPt]);
       }
+    } else if (isAlandOrFinlandCheckin(from) && isAlandOrFinlandCheckin(to)) {
+      const bikeRoute = findBestTrailRoute(from, to);
+      if (bikeRoute) bikePaths.push(buildPathAlongRoute(fromPt, toPt, bikeRoute));
+      else bikePaths.push([fromPt, toPt]);
     } else if (isSwedenCheckin(from) && isAlandOrFinlandCheckin(to)) {
       const toGriss = trailBikeRoutes.norrtaljeGrisslehamn;
       const toCamp = trailBikeRoutes.eckeroCamp;
@@ -1546,17 +1561,13 @@ function buildTrailSegmentPaths(chronological) {
       } else {
         bikePaths.push([fromPt, GRISSLEHAMN_LATLNG]);
       }
-      ferryPaths.push([GRISSLEHAMN_LATLNG, ECKERO_FERRY_LATLNG]);
+      ferryPaths.push(GRISSLEHAMN_ECKERO_FERRY_ROUTE);
       if (toCamp && toCamp.length > 1) {
         bikePaths.push(buildPathAlongRoute(ECKERO_FERRY_LATLNG, toPt, toCamp));
       } else {
         bikePaths.push([ECKERO_FERRY_LATLNG, toPt]);
       }
     } else if (isSwedenCheckin(from) && isSwedenCheckin(to)) {
-      const bikeRoute = findBestTrailRoute(from, to);
-      if (bikeRoute) bikePaths.push(buildPathAlongRoute(fromPt, toPt, bikeRoute));
-      else bikePaths.push([fromPt, toPt]);
-    } else if (isAlandOrFinlandCheckin(from) && isAlandOrFinlandCheckin(to)) {
       const bikeRoute = findBestTrailRoute(from, to);
       if (bikeRoute) bikePaths.push(buildPathAlongRoute(fromPt, toPt, bikeRoute));
       else bikePaths.push([fromPt, toPt]);
