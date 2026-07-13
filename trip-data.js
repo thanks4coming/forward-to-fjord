@@ -5,14 +5,21 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 3,           // segment id: 1, 3, 4, 5, 6, 7, 8, 9 (no segment 2) — leg 1 complete
-  currentCity: 'Kökar, Åland',   // most recent city/town name
-  dayNumber: 23,                // day number of the trip
-  kmRidden: 769,                 // total km cycled (Gothenburg → … → Mariehamn → Kökar)
+  currentCity: 'Korpinpesä, Korppoo (Korpo), Finland',   // most recent city/town name
+  dayNumber: 24,                // day number of the trip
+  kmRidden: 769,                 // total km cycled (Gothenburg → … → Kökar → Korppoo ferry)
   countries: ['Australia', 'Vietnam', 'United Kingdom', 'Sweden', 'Finland'],               // e.g. ['Sweden','Finland']
-  lat: 59.938053,                   // precise current lat (preferred over city fallback)
-  lng: 20.883515,                   // precise current lng
-  lastUpdated: '2026-07-11',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 60.163696,                   // precise current lat (preferred over city fallback)
+  lng: 21.561055,                   // precise current lng
+  lastUpdated: '2026-07-13',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-07-13T14:17:48.543Z',
+      lat: 60.163696,
+      lng: 21.561055,
+      location: 'Korpinpesä, Korppoo (Korpo), Finland',
+      note: 'Kökar → Galtby ferry → Korppoo. First proper mainland Finland. Archipelago Trail to Turku next.',
+    },
     {
       at: '2026-07-11T17:06:12.666Z',
       lat: 59.938053,
@@ -196,6 +203,13 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-07-13',
+      location: 'Korpinpesä, Korppoo (Korpo), Finland',
+      text: 'Kökar → Galtby ferry → Korppoo. First proper mainland Finland. Archipelago Trail to Turku next.',
+      lat: 60.163696,
+      lng: 21.561055
+    },
     {
       date: '2026-07-11',
       location: 'Kökar, Åland',
