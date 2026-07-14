@@ -4,15 +4,22 @@
 // ============================================================
 const tripStatus = {
   active: true,               // set true when the trip starts
-  currentSegment: 3,           // segment id: 1, 3, 4, 5, 6, 7, 8, 9 (no segment 2) — leg 1 complete
-  currentCity: 'Korpinpesä, Korppoo (Korpo), Finland',   // most recent city/town name
-  dayNumber: 24,                // day number of the trip
-  kmRidden: 769,                 // total km cycled (Gothenburg → … → Kökar → Korppoo ferry)
+  currentSegment: 4,           // segment id: 1, 3, 4, 5, 6, 7, 8, 9 (no segment 2) — reached Turku, leg 3 complete
+  currentCity: 'Turku, Finland',   // most recent city/town name
+  dayNumber: 25,                // day number of the trip
+  kmRidden: 846,                 // total km cycled (Gothenburg → … → Korppoo → Turku, ~77 km today)
   countries: ['Australia', 'Vietnam', 'United Kingdom', 'Sweden', 'Finland'],               // e.g. ['Sweden','Finland']
-  lat: 60.163696,                   // precise current lat (preferred over city fallback)
-  lng: 21.561055,                   // precise current lng
-  lastUpdated: '2026-07-13',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 60.451324,                   // precise current lat (preferred over city fallback)
+  lng: 22.25582,                   // precise current lng
+  lastUpdated: '2026-07-14',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-07-14T16:59:31.791Z',
+      lat: 60.451324,
+      lng: 22.25582,
+      location: 'Turku, Finland',
+      note: 'Korppoo → Nagu → Parainen → Turku. Archipelago Trail via free ferries. Stunning — easily the best leg so far. Stopped at Paratiisi modern art museum in Nagu.',
+    },
     {
       at: '2026-07-13T14:17:48.543Z',
       lat: 60.163696,
@@ -203,6 +210,14 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-07-14',
+      location: 'Turku, Finland',
+      text: 'Korppoo → Nagu → Parainen → Turku. Archipelago Trail via free ferries. Stunning — easily the best leg so far. Stopped at Paratiisi modern art museum in Nagu.',
+      photo: 'photos/2026-07-14-archipelago-trail-01.jpg',
+      lat: 60.451324,
+      lng: 22.25582
+    },
     {
       date: '2026-07-13',
       location: 'Korpinpesä, Korppoo (Korpo), Finland',
@@ -423,6 +438,11 @@ const tripStatus = {
     { lat: 60.2253, lng: 19.5479, src: 'photos/2026-07-09-eckero-ferry-02.jpg', caption: 'On deck', location: 'Baltic Sea' },
     { lat: 60.2253, lng: 19.5479, src: 'photos/2026-07-09-eckero-ferry-03.jpg', caption: 'Approaching Eckerö', location: 'Åland' },
     { lat: 59.938053, lng: 20.883515, src: 'photos/2026-07-11-kokar-arrival.jpg', caption: 'Arrival in Kökar', location: 'Kökar, Åland' },
+    { lat: 60.290, lng: 21.940, src: 'photos/2026-07-14-archipelago-trail-01.jpg', caption: 'Archipelago Trail — Korpo to Turku', location: 'Turku Archipelago' },
+    { lat: 60.290, lng: 21.940, src: 'photos/2026-07-14-archipelago-trail-02.jpg', caption: 'Free ferry crossing', location: 'Turku Archipelago' },
+    { lat: 60.176216, lng: 21.759930, src: 'photos/2026-07-14-paratiisi-01.jpg', caption: 'Paratiisi — Museum of Modern Art', location: 'Nagu, Turku Archipelago' },
+    { lat: 60.176216, lng: 21.759930, src: 'photos/2026-07-14-paratiisi-02.jpg', caption: 'Paratiisi art museum', location: 'Nagu, Turku Archipelago' },
+    { lat: 60.176216, lng: 21.759930, src: 'photos/2026-07-14-paratiisi-03.jpg', caption: 'Paratiisi', location: 'Nagu, Turku Archipelago' },
     // Map photo pins — add as you go (trip order; lightbox sorts via photoTripSortKey in index.html)
     // { lat: 0.0, lng: 0.0, src: 'photos/2026-XX-XX-city.jpg', caption: 'Caption', location: 'City' }
   ]

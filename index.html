@@ -1245,6 +1245,9 @@ function getTrailBikeRoutes() {
   if (trailBikeRoutes.hellsoKokarCamp && trailBikeRoutes.hellsoKokarCamp.length > 1) {
     routes.push(trailBikeRoutes.hellsoKokarCamp);
   }
+  if (trailBikeRoutes.korpoTurku && trailBikeRoutes.korpoTurku.length > 1) {
+    routes.push(trailBikeRoutes.korpoTurku);
+  }
   return routes;
 }
 
@@ -2134,7 +2137,8 @@ function loadTrailBikeRoutes() {
     fetch('eckero-camp-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
     fetch('eckero-mariehamn-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
     fetch('mariehamn-langnas-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
-    fetch('hellso-kokar-camp-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
+    fetch('hellso-kokar-camp-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
+    fetch('korpo-turku-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
   ]).then(function(results) {
     if (results[0] && results[0].length > 1) trailBikeRoutes.gothenburgAlingsas = results[0];
     if (results[1] && results[1].length > 1) trailBikeRoutes.alingsasNittaCamp = results[1];
@@ -2151,7 +2155,8 @@ function loadTrailBikeRoutes() {
     if (results[12] && results[12].length > 1) trailBikeRoutes.eckeroMariehamn = results[12];
     if (results[13] && results[13].length > 1) trailBikeRoutes.mariehamnLangnas = results[13];
     if (results[14] && results[14].length > 1) trailBikeRoutes.hellsoKokarCamp = results[14];
-    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp || trailBikeRoutes.jonkopingOdeshog || trailBikeRoutes.odeshogLinkoping || trailBikeRoutes.linkopingNorrkoping || trailBikeRoutes.norrkopingCamp || trailBikeRoutes.nykopingCamp || trailBikeRoutes.sodertalje || trailBikeRoutes.stockholm || trailBikeRoutes.archipelagoCamp || trailBikeRoutes.norrtaljeGrisslehamn || trailBikeRoutes.eckeroCamp || trailBikeRoutes.eckeroMariehamn || trailBikeRoutes.mariehamnLangnas || trailBikeRoutes.hellsoKokarCamp) {
+    if (results[15] && results[15].length > 1) trailBikeRoutes.korpoTurku = results[15];
+    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp || trailBikeRoutes.jonkopingOdeshog || trailBikeRoutes.odeshogLinkoping || trailBikeRoutes.linkopingNorrkoping || trailBikeRoutes.norrkopingCamp || trailBikeRoutes.nykopingCamp || trailBikeRoutes.sodertalje || trailBikeRoutes.stockholm || trailBikeRoutes.archipelagoCamp || trailBikeRoutes.norrtaljeGrisslehamn || trailBikeRoutes.eckeroCamp || trailBikeRoutes.eckeroMariehamn || trailBikeRoutes.mariehamnLangnas || trailBikeRoutes.hellsoKokarCamp || trailBikeRoutes.korpoTurku) {
       rebuildPhotoLayer();
       overlayActualStage2Route();
     }
