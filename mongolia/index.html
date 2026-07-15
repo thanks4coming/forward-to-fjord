@@ -135,6 +135,43 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 .budget-target strong{color:var(--amber)}
 .budget-note{padding:3px 14px 11px;font-size:10.5px;color:var(--muted2);line-height:1.6}
 
+/* ── Prep checklist ── */
+.prep-section{
+  margin:8px;border-radius:10px;background:var(--bg);
+  border:1px solid var(--surface2);overflow:hidden;flex-shrink:0;
+}
+.prep-hd{
+  padding:11px 14px 3px;
+  font-size:12.5px;font-weight:800;color:var(--amber);
+}
+.prep-sub{
+  padding:0 14px 9px;font-size:10px;color:var(--muted2);
+  border-bottom:1px solid var(--surface2);line-height:1.5;
+}
+.prep-phase{border-bottom:1px solid var(--surface2)}
+.prep-phase:last-child{border-bottom:none}
+.prep-phase-hd{
+  padding:8px 14px 4px;
+  font-size:11px;font-weight:800;color:var(--text);
+  background:rgba(255,255,255,.02);
+}
+.prep-phase-when{
+  font-size:9.5px;font-weight:600;color:var(--amber);
+  text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px;
+}
+.prep-items{padding:2px 0 6px}
+.prep-item{
+  display:flex;align-items:flex-start;gap:8px;
+  padding:4px 14px;font-size:11px;line-height:1.5;color:var(--muted);
+  cursor:pointer;user-select:none;
+}
+.prep-item:hover{color:var(--text)}
+.prep-item input{
+  margin-top:2px;accent-color:var(--amber);flex-shrink:0;cursor:pointer;
+}
+.prep-item.done{color:var(--muted2);text-decoration:line-through;text-decoration-color:var(--surface3)}
+.prep-item.done span{opacity:.75}
+
 /* ── Warning ── */
 .note-box{
   margin:8px;border-radius:8px;
@@ -214,6 +251,60 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
     </div>
 
     <div class="stage-list" id="stage-list"></div>
+
+    <!-- Prep checklist -->
+    <div class="prep-section" id="prep-section">
+      <div class="prep-hd">Prep checklist</div>
+      <div class="prep-sub">Countdown to July 2028 departure · tick items as you go (saved in this browser)</div>
+
+      <div class="prep-phase">
+        <div class="prep-phase-hd"><div class="prep-phase-when">Now · Jul 2026</div>Foundation</div>
+        <div class="prep-items">
+          <label class="prep-item" data-prep-id="now-team"><input type="checkbox"><span>Lock in the 3-person team and July–September 2028 window</span></label>
+          <label class="prep-item" data-prep-id="now-savings"><input type="checkbox"><span>Open trip savings — target AUD $400–500/month per person</span></label>
+          <label class="prep-item" data-prep-id="now-fitness"><input type="checkbox"><span>Build riding fitness — regular long rides, camp with loaded gear</span></label>
+          <label class="prep-item" data-prep-id="now-research"><input type="checkbox"><span>Research horse buying (Narantuul Market) and guide contacts (e.g. Stone Horse Expeditions)</span></label>
+          <label class="prep-item" data-prep-id="now-reports"><input type="checkbox"><span>Read independent Mongolia horse-trip reports and refine this route on the map</span></label>
+          <label class="prep-item" data-prep-id="now-passport"><input type="checkbox"><span>Check passports — valid through at least October 2028</span></label>
+        </div>
+      </div>
+
+      <div class="prep-phase">
+        <div class="prep-phase-hd"><div class="prep-phase-when">12 months out · Jul 2027</div>Skills &amp; gear research</div>
+        <div class="prep-items">
+          <label class="prep-item" data-prep-id="y1-flights"><input type="checkbox"><span>Watch flight sales Australia → Ulaanbaatar (aim to book ~6 months out)</span></label>
+          <label class="prep-item" data-prep-id="y1-wfa"><input type="checkbox"><span>Book wilderness first aid course in Australia</span></label>
+          <label class="prep-item" data-prep-id="y1-gear"><input type="checkbox"><span>Shortlist core gear — saddle pad, hobbles, tent, cold-rated sleeping bag, GPS</span></label>
+          <label class="prep-item" data-prep-id="y1-vax"><input type="checkbox"><span>Travel-health consult — vaccinations and meds for 3 months on the road</span></label>
+          <label class="prep-item" data-prep-id="y1-guide"><input type="checkbox"><span>Contact guides for the first 3 weeks; agree split cost and meet-up in UB</span></label>
+          <label class="prep-item" data-prep-id="y1-nav"><input type="checkbox"><span>Practice offline maps and satellite comms — pick shared Garmin inReach plan</span></label>
+        </div>
+      </div>
+
+      <div class="prep-phase">
+        <div class="prep-phase-hd"><div class="prep-phase-when">6 months out · Jan 2028</div>Buy &amp; train</div>
+        <div class="prep-items">
+          <label class="prep-item" data-prep-id="m6-gear"><input type="checkbox"><span>Buy tent, sleeping bag, riding kit, and shared satellite communicator</span></label>
+          <label class="prep-item" data-prep-id="m6-insurance"><input type="checkbox"><span>Get travel insurance quotes with equestrian / adventure cover</span></label>
+          <label class="prep-item" data-prep-id="m6-riding"><input type="checkbox"><span>Multi-day riding practice — pack weight, long hours in the saddle</span></label>
+          <label class="prep-item" data-prep-id="m6-mongolian"><input type="checkbox"><span>Learn basic Mongolian phrases for greetings, directions, and horse care</span></label>
+          <label class="prep-item" data-prep-id="m6-route"><input type="checkbox"><span>Finalise stage plan and share route + check-in schedule with someone at home</span></label>
+          <label class="prep-item" data-prep-id="m6-flights"><input type="checkbox"><span>Book flights — arrive UB with ~2 weeks before heading west</span></label>
+        </div>
+      </div>
+
+      <div class="prep-phase">
+        <div class="prep-phase-hd"><div class="prep-phase-when">3 months out · Apr 2028</div>Final prep</div>
+        <div class="prep-items">
+          <label class="prep-item" data-prep-id="m3-insurance"><input type="checkbox"><span>Purchase travel insurance — confirm horse riding and remote evacuation cover</span></label>
+          <label class="prep-item" data-prep-id="m3-visa"><input type="checkbox"><span>Confirm visa plan — entry plus extension strategy for ~90 days in Mongolia</span></label>
+          <label class="prep-item" data-prep-id="m3-shakedown"><input type="checkbox"><span>Full gear shakedown — overnight camp, cook, navigate, test InReach check-ins</span></label>
+          <label class="prep-item" data-prep-id="m3-guide"><input type="checkbox"><span>Reconfirm guide, UB accommodation, and horse-market contacts</span></label>
+          <label class="prep-item" data-prep-id="m3-cash"><input type="checkbox"><span>Plan cash / ATM strategy and emergency fund in tugrik and AUD backup</span></label>
+          <label class="prep-item" data-prep-id="m3-horses"><input type="checkbox"><span>Pack for UB — first 2 weeks on ground to buy 6 horses, tack, and extend visa</span></label>
+        </div>
+      </div>
+    </div>
 
     <!-- Budget -->
     <div class="budget-section">
@@ -426,6 +517,23 @@ document.getElementById('sidebar-open-btn').addEventListener('click',()=>{
 document.getElementById('sidebar-close-btn').addEventListener('click',()=>{
   sidebar.classList.remove('open');
   setTimeout(refreshMapSize,350);
+});
+
+// ── Prep checklist (persisted per browser) ──
+const PREP_KEY='mongolia-prep-v1';
+let prepState={};
+try{prepState=JSON.parse(localStorage.getItem(PREP_KEY)||'{}');}catch(e){prepState={};}
+document.querySelectorAll('.prep-item').forEach(item=>{
+  const id=item.dataset.prepId;
+  const cb=item.querySelector('input');
+  if(!id||!cb) return;
+  cb.checked=!!prepState[id];
+  item.classList.toggle('done',cb.checked);
+  item.addEventListener('change',()=>{
+    prepState[id]=cb.checked;
+    item.classList.toggle('done',cb.checked);
+    try{localStorage.setItem(PREP_KEY,JSON.stringify(prepState));}catch(e){}
+  });
 });
 
 setTimeout(()=>activateStage(1),300);
