@@ -104,6 +104,50 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 .wp-name{font-weight:700;color:var(--text)}
 .wp-desc{color:var(--muted);margin-top:1px}
 
+.budget-section{
+  margin:10px;border-radius:10px;
+  background:var(--bg);
+  border:1px solid var(--surface2);
+  overflow:hidden;flex-shrink:0;
+}
+.budget-title{
+  padding:12px 14px 2px;
+  font-size:13px;font-weight:800;color:var(--amber);
+}
+.budget-sub{
+  padding:0 14px 10px;
+  font-size:10.5px;color:var(--muted);
+  border-bottom:1px solid var(--surface2);
+}
+.budget-rows{padding:6px 0}
+.budget-row{
+  display:flex;justify-content:space-between;align-items:baseline;
+  padding:4px 14px;font-size:11px;color:var(--muted);
+  gap:8px;
+}
+.budget-row span:first-child{flex:1}
+.budget-row span:last-child{font-weight:600;color:var(--text);white-space:nowrap;font-size:10.5px}
+.budget-row.highlight{background:rgba(255,255,255,.03)}
+.budget-row.credit span:last-child{color:#10b981}
+.budget-total{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 14px;
+  border-top:1px solid var(--surface2);
+  background:rgba(245,158,11,.08);
+  font-size:12px;font-weight:800;
+}
+.budget-total span:first-child{color:var(--text)}
+.budget-total span:last-child{color:var(--amber);font-size:14px}
+.budget-target{
+  padding:8px 14px 4px;
+  font-size:11px;color:var(--muted);
+}
+.budget-target strong{color:var(--amber)}
+.budget-note{
+  padding:4px 14px 12px;
+  font-size:10.5px;color:var(--muted2);line-height:1.6;
+}
+
 .note-box{
   margin:10px;border-radius:8px;
   background:rgba(245,158,11,.08);
@@ -161,8 +205,37 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 
   <div class="stage-list" id="stage-list"></div>
 
+  <!-- Budget -->
+  <div class="budget-section">
+    <div class="budget-title">Budget — Per Person (AUD)</div>
+    <div class="budget-sub">3-person trip · July–September 2028 · ~90 days total</div>
+    <div class="budget-rows">
+      <div class="budget-row"><span>Flights (return, Australia → UB)</span><span>$2,200–3,200</span></div>
+      <div class="budget-row"><span>Travel insurance (equestrian cover, 3 months)</span><span>$800–1,400</span></div>
+      <div class="budget-row"><span>Visa extension (UB)</span><span>$80</span></div>
+      <div class="budget-row"><span>UB accommodation (2 weeks arrival)</span><span>$400–700</span></div>
+      <div class="budget-row highlight"><span>Horse purchase × 2 (gross)</span><span>$1,600–2,800</span></div>
+      <div class="budget-row credit"><span>Horse resale recovery (~60%)</span><span>−$900–1,500</span></div>
+      <div class="budget-row"><span>Tack, saddle pad, hobbles, lead ropes</span><span>$250–400</span></div>
+      <div class="budget-row"><span>Horse first aid + feed on road</span><span>$300–500</span></div>
+      <div class="budget-row highlight"><span>Guide — first 3 weeks (split 3 ways)</span><span>$500–900</span></div>
+      <div class="budget-row"><span>Food on road (3 months)</span><span>$900–1,500</span></div>
+      <div class="budget-row"><span>Ger gifts + hospitality contributions</span><span>$400–700</span></div>
+      <div class="budget-row"><span>Gear (sleeping bag, tent, riding gear, GPS)</span><span>$800–1,600</span></div>
+      <div class="budget-row highlight"><span>Satellite communicator (shared × 3)</span><span>$400–700</span></div>
+      <div class="budget-row"><span>Vaccinations + travel health</span><span>$400–800</span></div>
+      <div class="budget-row"><span>Wilderness first aid course (pre-trip)</span><span>$300–500</span></div>
+      <div class="budget-row"><span>Miscellaneous — repairs, town stops, emergencies</span><span>$600–1,000</span></div>
+    </div>
+    <div class="budget-total">
+      <span>Total per person</span><span>AUD $9,000–14,000</span>
+    </div>
+    <div class="budget-target">Target: <strong>AUD $11,500</strong> per person as realistic midpoint</div>
+    <div class="budget-note">Being 3 people saves on guide cost (split 3 ways), shared gear (sat comms, cooking kit, horse first aid), and UB logistics. Save AUD $400–500/month from now and the trip is fully funded by departure.</div>
+  </div>
+
   <div class="note-box">
-    ⚠ Satellite communicator (Garmin inReach) is non-negotiable on all remote stages. Never more than 5 days without a check-in.
+    ⚠ Satellite communicator (Garmin inReach) is non-negotiable on all remote stages. Never more than 5 days without a check-in. Leave a detailed route plan with someone at home.
   </div>
 </div>
 
