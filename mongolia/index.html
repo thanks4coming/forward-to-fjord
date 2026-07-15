@@ -145,6 +145,30 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 .budget-target strong{color:var(--amber)}
 .budget-note{padding:3px 14px 11px;font-size:10.5px;color:var(--muted2);line-height:1.6}
 
+/* ── Gear section ── */
+.gear-section{
+  margin:8px;border-radius:10px;background:var(--bg);
+  border:1px solid var(--surface2);overflow:hidden;flex-shrink:0;
+}
+.gear-hd{padding:11px 14px 3px;font-size:12.5px;font-weight:800;color:var(--amber)}
+.gear-sub{padding:0 14px 9px;font-size:10px;color:var(--muted2);border-bottom:1px solid var(--surface2)}
+.gear-rows{padding:4px 0}
+.gear-row{
+  display:flex;align-items:baseline;gap:8px;
+  padding:4px 14px;font-size:11px;color:var(--muted);
+}
+.gear-row.hl{background:rgba(255,255,255,.025)}
+.gear-row.flag{background:rgba(245,158,11,.06);color:var(--text)}
+.gear-cat{
+  font-weight:700;color:var(--text);white-space:nowrap;
+  min-width:60px;font-size:10.5px;flex-shrink:0;
+}
+.gear-row.flag .gear-cat{color:var(--amber)}
+.gear-note{
+  padding:7px 14px 11px;font-size:10.5px;color:var(--muted2);
+  border-top:1px solid var(--surface2);line-height:1.55;font-style:italic;
+}
+
 /* ── Prep checklist ── */
 .prep-section{
   margin:8px;border-radius:10px;background:var(--bg);
@@ -282,8 +306,9 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
         <div class="prep-items">
           <label class="prep-item" data-prep-id="now-team"><input type="checkbox"><span>Lock in the 3-person team and July–September 2028 window</span></label>
           <label class="prep-item" data-prep-id="now-savings"><input type="checkbox"><span>Open trip savings — target AUD $400–500/month per person</span></label>
+          <label class="prep-item" data-prep-id="now-boots"><input type="checkbox"><span>Buy riding boots in Australia now — full leather, heeled, flat inner seam. Need 12+ months to break in properly</span></label>
           <label class="prep-item" data-prep-id="now-fitness"><input type="checkbox"><span>Build riding fitness — regular long rides, camp with loaded gear</span></label>
-          <label class="prep-item" data-prep-id="now-archery"><input type="checkbox"><span>Optional: archery lessons — start with recurve basics, then seek mounted archery (Mongolian form differs from Western; YouTube: Kassai Lajos horseback archery method)</span></label>
+          <label class="prep-item" data-prep-id="now-archery"><input type="checkbox"><span>Optional: archery — buy a thumb ring, start Kassai Lajos horseback archery method (YouTube). Seek mounted archery club in Australia</span></label>
           <label class="prep-item" data-prep-id="now-research"><input type="checkbox"><span>Research horse buying (Narantuul Market) and guide contacts (e.g. Stone Horse Expeditions)</span></label>
           <label class="prep-item" data-prep-id="now-reports"><input type="checkbox"><span>Read independent Mongolia horse-trip reports and refine this route on the map</span></label>
           <label class="prep-item" data-prep-id="now-passport"><input type="checkbox"><span>Check passports — valid through at least October 2028</span></label>
@@ -325,6 +350,28 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
           <label class="prep-item" data-prep-id="m3-horses"><input type="checkbox"><span>Plan UB arrival: July 9 → visa day 1–2 → Naadam Jul 11–13 (buy horses) → collect visa ~Jul 14 → depart west ~Jul 16</span></label>
         </div>
       </div>
+    </div>
+
+    <!-- Clothing & Gear -->
+    <div class="gear-section">
+      <div class="gear-hd">Clothing &amp; Gear</div>
+      <div class="gear-sub">75 days · steppe → mountains → taiga → lake · July–September</div>
+      <div class="gear-rows">
+        <div class="gear-row flag"><span class="gear-cat">Boots</span><span>Full leather riding boots with heel — <strong>buy in Australia</strong>, break in for 12+ months before departure. Most important purchase on this list.</span></div>
+        <div class="gear-row hl"><span class="gear-cat">Base</span><span>Merino long-sleeve shirt ×2 — wear one daily, the other drying. Regulates temp from 35°C steppe to 2°C taiga nights.</span></div>
+        <div class="gear-row"><span class="gear-cat">Riding</span><span>Flat-seam riding breeches or trousers — zero inner seam. Regular jeans will destroy your thighs inside a week.</span></div>
+        <div class="gear-row flag hl"><span class="gear-cat">The deel</span><span>Buy at Naadam in UB — traditional Mongolian riding robe. Wind block, blanket, extra warmth, deep pockets. Optimised for 800 years of this exact activity. Wear it.</span></div>
+        <div class="gear-row"><span class="gear-cat">Rain</span><span>Packable hardshell jacket with hood — Khangai thunderstorms are fast. Must pull from saddlebag in under 30 seconds.</span></div>
+        <div class="gear-row hl"><span class="gear-cat">Warmth</span><span>Synthetic puffy jacket — insulates when wet (taiga is damp). Compress into a stuff sack on the saddle.</span></div>
+        <div class="gear-row"><span class="gear-cat">Head</span><span>Wide-brim hat for steppe sun + wool beanie for taiga nights + Buff/gaiter for dust and cold mornings.</span></div>
+        <div class="gear-row hl"><span class="gear-cat">Hands</span><span>Light leather riding gloves — rein grip and UV. Warmer pair for northern stages and September.</span></div>
+        <div class="gear-row flag"><span class="gear-cat">Bow</span><span>Mongolian recurve + thumb ring — buy bow at Naadam. Practice horseback archery in Australia before departure.</span></div>
+        <div class="gear-row hl"><span class="gear-cat">Blade</span><span>Commission ild sword + working knife at Narantuul Market — day 1 in UB. Allow 5–7 days for custom sword.</span></div>
+        <div class="gear-row"><span class="gear-cat">Comms</span><span>Garmin inReach — shared unit, non-negotiable. Check in every 48hrs. Leave full schedule with someone at home.</span></div>
+        <div class="gear-row hl"><span class="gear-cat">Nav</span><span>GPS with offline Mongolia topo (Maps.me or OsmAnd). Paper map backup for Stages 5–7.</span></div>
+        <div class="gear-row"><span class="gear-cat">Horse kit</span><span>Saddle pad, hobbles, lead rope, hoof pick, basic first aid (wound spray, bandage). Guide advises on tack in UB.</span></div>
+      </div>
+      <div class="gear-note">Do not pack hiking gear. This is not hiking. Wrong movement, wrong silhouette, wrong boot.</div>
     </div>
 
     <!-- Budget -->
