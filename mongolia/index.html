@@ -260,14 +260,14 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
     </div>
 
     <div class="sb-stats">
-      <div class="stat"><div class="stat-v">~1,400</div><div class="stat-l">km</div></div>
-      <div class="stat"><div class="stat-v">~80</div><div class="stat-l">riding days</div></div>
+      <div class="stat"><div class="stat-v">~1,300</div><div class="stat-l">km</div></div>
+      <div class="stat"><div class="stat-v">75</div><div class="stat-l">days on road</div></div>
       <div class="stat"><div class="stat-v">7</div><div class="stat-l">stages</div></div>
       <div class="stat"><div class="stat-v">AUD 11.5k</div><div class="stat-l">per person</div></div>
     </div>
 
     <div class="sb-intro">
-      Steppe, volcanic lakes, ancient empire capitals, remote taiga, and the great glacial lake of Khövsgöl. Click a stage to explore. <strong>Planning map — not yet ridden.</strong>
+      Steppe, volcanic lakes, ancient empire capitals, remote taiga, and the great glacial lake of Khövsgöl. <strong>90 days total: 2 weeks in UB buying horses, 75 days on the road.</strong> Rest days built into every stage. Planning map — not yet ridden.
     </div>
 
     <div class="stage-list" id="stage-list"></div>
@@ -329,7 +329,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
     <!-- Budget -->
     <div class="budget-section">
       <div class="budget-hd">Budget — Per Person (AUD)</div>
-      <div class="budget-sub">3-person trip · ~90 days total incl. 2 weeks in UB</div>
+      <div class="budget-sub">3-person trip · 90 days total: 14 days UB + 75 days riding &amp; rest</div>
       <div class="budget-rows">
         <div class="budget-row hl"><span>Flights — return, Australia → Ulaanbaatar</span><span>$2,200–3,200</span></div>
         <div class="budget-row"><span>Travel insurance (equestrian cover, 3 months)</span><span>$800–1,400</span></div>
@@ -384,72 +384,75 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 const STAGES = [
   {
     id:1, title:'Ulaanbaatar → Khustai National Park',
-    color:'#f59e0b', km:'~100 km', days:'3–4 days',
-    desc:'Leave the chaos of UB behind. Cross the Tuul River, pass the ger suburbs, and ride west into open steppe — the city skyline disappears within an hour. Khustai National Park is home to the <em>takhi</em>, the Przewalski\'s horse — the last truly wild horse species on earth. Extinct in the wild by 1960, reintroduced here in the 1990s. Watch the herds at dusk from the ridge above the valley. First nights under a genuinely dark sky.',
+    color:'#f59e0b', km:'~100 km', days:'5 days (3 riding · 1 rest · 1 buffer)',
+    desc:'Leave the chaos of UB behind. Cross the Tuul River, pass the ger suburbs, and ride west into open steppe — the city skyline disappears within an hour. Khustai National Park is home to the <em>takhi</em>, the Przewalski\'s horse — the last truly wild horse species on earth, extinct in the wild by 1960 and reintroduced here in the 1990s. Spend a full rest day in the park: watch the herds at dusk from the ridge, let your horses eat good grass, and let your body settle into expedition pace. First nights under a genuinely dark sky.',
     tags:['Steppe','Wildlife','Easy terrain','Warm-up stage'],
     waypoints:[
-      {name:'Ulaanbaatar',desc:'Start. 2 weeks to source horses, buy tack, extend visa. Narantuul Market for horses. Stone Horse Expeditions for advice and guide sourcing.',latlng:[47.8864,106.9057]},
-      {name:'Khustai National Park',desc:'Przewalski\'s horse reintroduction site. Camp in the park, watch the takhi at dusk. Entry fee ~USD 5. Good grass for your horses.',latlng:[47.717,105.833]}
+      {name:'Ulaanbaatar',desc:'Start. 2 weeks in UB to source 6 horses, buy tack, extend visa. Narantuul Market for horses. Stone Horse Expeditions for advice and guide sourcing.',latlng:[47.8864,106.9057]},
+      {name:'Khustai National Park',desc:'Przewalski\'s horse reintroduction site. Camp in the park, watch the takhi at dusk. 1 full rest day here — good grass for horses. Entry fee ~USD 5.',latlng:[47.717,105.833]}
     ],
     route:[[47.8864,106.9057],[47.84,106.55],[47.78,106.15],[47.72,105.83]]
   },
   {
-    id:2, title:'Khustai → Kharkhorin (Karakorum)',
-    color:'#ef4444', km:'~280 km', days:'10–12 days',
-    desc:'The longest stage and the most historically charged. Open steppe gives way to the rolling Khangai foothills — rivers to ford, valleys to navigate without signage. Karakorum was the capital of the Mongol Empire under Genghis Khan. At its 13th-century peak, ambassadors from France, Persia, Korea and China crossed these same plains to seek audience with the Great Khan. The city was dismantled stone by stone when the capital moved — Erdene Zuu monastery was built from its ruins. 108 white stupas still ring the outer wall. Resupply and rest 2 nights.',
-    tags:['Longest stage','River crossings','Empire capital','Resupply'],
+    id:2, title:'Khustai → Orkhon Valley → Karakorum',
+    color:'#ef4444', km:'~330 km', days:'17 days (13 riding · 4 rest)',
+    desc:'The longest stage. The route swings south into the Orkhon Valley to reach Orkhon Khurkhree — a 20-metre waterfall in a basalt gorge surrounded by ancient Turkic burial mounds. This is mandatory: some of the best steppe riding on earth, and a rest day with your horses grazing above the gorge. Then north to Karakorum, capital of the Mongol Empire under Genghis Khan. At its 13th-century peak, ambassadors from France, Persia, Korea and China crossed these same plains to seek audience with the Great Khan. The city was dismantled stone by stone; Erdene Zuu monastery was built from its ruins. 108 white stupas still ring the outer wall. Rest 2 nights — farrier, full resupply.',
+    tags:['Orkhon Valley detour','Waterfall','Empire capital','Resupply'],
     waypoints:[
-      {name:'Kharkhorin / Karakorum',desc:'Ancient capital of the Mongol Empire. Erdene Zuu monastery built from its ruins. Full resupply available. Rest 2 nights. Good farrier services.',latlng:[47.195,102.839]}
+      {name:'Orkhon Khurkhree (Waterfall)',desc:'20-metre waterfall in the Orkhon River gorge. Ancient Turkic burial mounds. Spectacular canyon camping. 1 rest day — horses graze the grassland above the gorge.',latlng:[46.82,101.98]},
+      {name:'Kharkhorin / Karakorum',desc:'Ancient capital of the Mongol Empire. Erdene Zuu monastery built from its ruins — 108 white stupas. Full resupply, farrier services. Rest 2 nights.',latlng:[47.195,102.839]}
     ],
-    route:[[47.72,105.83],[47.63,105.1],[47.5,104.3],[47.38,103.55],[47.26,103.1],[47.195,102.839]]
+    route:[[47.72,105.83],[47.5,105.1],[47.25,104.2],[46.9,103.4],[46.82,102.5],[46.82,101.98],[47.0,102.2],[47.195,102.839]]
   },
   {
-    id:3, title:'Kharkhorin → Tsetserleg',
-    color:'#10b981', km:'~120 km', days:'4–5 days',
-    desc:'Into the Khangai Mountains proper. The terrain rises, steppe gives way to high meadow and pine ridges. Tsetserleg is the provincial capital of Arkhangai — a quiet town with a real market for resupply. The Zayain Gegeenii monastery sits on a cliff face above town, one of the few to survive the Soviet purges of the 1930s completely intact. The museum holds extraordinary relics. Rest a day — your horses will thank you.',
-    tags:['Mountains begin','Monastery','Resupply','Rest day'],
+    id:3, title:'Karakorum → Tsenkher Hot Springs → Tsetserleg',
+    color:'#10b981', km:'~200 km', days:'11 days (7 riding · 3 rest · 1 monastery)',
+    desc:'Into the Khangai Mountains. Terrain rises through steppe into high meadow and pine ridges. The mid-point stop at Tsenkher Hot Springs is non-negotiable — natural geothermal pools in a river valley, free camping, and excellent grass for horses. Every serious Mongolia horse traveller stops here. Take a full day: wash clothes, soak, let your body recover. Then south to Tsetserleg, provincial capital of Arkhangai. The Zayain Gegeenii monastery sits on a cliff face above town, one of the few to survive the Soviet purges of the 1930s completely intact — the museum inside holds extraordinary relics. Rest 2 nights: vet check for horses, market resupply.',
+    tags:['★ Tsenkher Hot Springs','Mountains','Monastery','Vet &amp; resupply'],
     waypoints:[
-      {name:'Tsetserleg',desc:'Provincial capital, Arkhangai. Market resupply — food, fuel. Zayain Gegeenii monastery above town. Vet services for horses. Rest 1–2 nights.',latlng:[47.475,101.451]}
+      {name:'Tsenkher Hot Springs',desc:'Natural geothermal pools in a river valley. Free camping, excellent grazing. Every experienced Mongolia horse rider stops here. 1 full rest day minimum — do not skip this.',latlng:[47.83,101.13]},
+      {name:'Tsetserleg',desc:'Provincial capital, Arkhangai. Market resupply — food, fuel. Zayain Gegeenii monastery on the cliff above town. Vet check for horses. Rest 2 nights.',latlng:[47.475,101.451]}
     ],
-    route:[[47.195,102.839],[47.3,102.25],[47.4,101.85],[47.475,101.451]]
+    route:[[47.195,102.839],[47.45,102.3],[47.7,101.8],[47.83,101.13],[47.65,101.35],[47.475,101.451]]
   },
   {
-    id:4, title:'Tsetserleg → Tariat & White Lake',
-    color:'#8b5cf6', km:'~150 km', days:'5–6 days',
-    desc:'The volcanic lake country — the most surreal landscape on the route. Terkhiin Tsagaan Nuur (White Lake) sits in a young volcanic crater system. Black lava fields roll to the water\'s edge. The lake is clear, cold, and full of taimen. Wild swans nest in the shallows. Camp on the lakeshore for 2 nights — one of the great wild campsites of Central Asia. The Khorgo volcano cone rises above it, climbable on foot in 2 hours. Your horses graze in volcanic meadows while you watch the sun drop behind the crater rim.',
-    tags:['Volcanic landscape','Wild camping','Swimming','★ Unmissable'],
+    id:4, title:'Tsetserleg → White Lake (Tariat)',
+    color:'#8b5cf6', km:'~150 km', days:'10 days (6 riding · 3 rest · 1 volcano)',
+    desc:'The volcanic lake country — the most surreal landscape on the route. Terkhiin Tsagaan Nuur (White Lake) sits in a young volcanic crater system; black lava fields roll to the water\'s edge. The lake is clear, cold, and full of taimen. Wild swans nest in the shallows. Plan 2 full nights on the lakeshore — one of the great wild campsites of Central Asia. The Khorgo volcano cone rises above the lake and is climbable on foot in 2 hours; the crater rim view over the lava field and water is extraordinary. Your horses graze in volcanic meadows while you climb.',
+    tags:['Volcanic landscape','Wild camping','Khorgo volcano','★ Unmissable'],
     waypoints:[
-      {name:'Terkhiin Tsagaan Nuur (White Lake)',desc:'Volcanic crater lake. Clear blue water, black lava fields, wild swans. Camp 2 nights. Khorgo volcano climbable on foot. No facilities — self-sufficient.',latlng:[48.15,99.6]}
+      {name:'Terkhiin Tsagaan Nuur (White Lake)',desc:'Volcanic crater lake. Clear blue water, black lava fields, wild swans, taimen fishing. Camp 2 nights. Climb Khorgo volcano on foot (2 hrs). No facilities — self-sufficient.',latlng:[48.15,99.6]}
     ],
     route:[[47.475,101.451],[47.72,100.85],[47.95,100.18],[48.15,99.6]]
   },
   {
-    id:5, title:'Tariat → Mörön',
-    color:'#06b6d4', km:'~220 km', days:'8–9 days',
-    desc:'The long traverse north. Cross the Khangai watershed into the northern river systems. The landscape transitions — more larch and pine, colder nights, different birdlife. You\'re entering the Siberian fringe. Fewer gers, longer stretches between water. Some of the best riding of the trip is here precisely because you\'ll go 2–3 days without seeing another person. The loneliness is the point. Mörön is a proper town — last significant resupply before Khövsgöl. Rest 2 nights.',
-    tags:['Most remote stage','Forest transition','Self-sufficient','Demanding'],
+    id:5, title:'White Lake → Mörön',
+    color:'#06b6d4', km:'~220 km', days:'13 days (9 riding · 2 rest en route · 2 Mörön)',
+    desc:'The great northern traverse — and the most demanding stage. Cross the Khangai watershed into the northern river systems. The landscape shifts: more larch and pine, colder nights, different birdlife. You\'re entering the Siberian fringe. Gers become sparse; there are stretches of 2–3 days without another person. Two mandatory rest days for the horses are built into this stage — push them too hard here and they will be lame by Khövsgöl. Mörön is a proper northern town: last full resupply before the lake, vet services, and 2 nights of sleep before the final push.',
+    tags:['Most remote stage','Forest transition','Horse rest critical','Demanding'],
     waypoints:[
-      {name:'Mörön',desc:'Provincial capital of Khövsgöl aimag. Full resupply, accommodation, vet services. Fly out from here at the end (Hunnu Air → UB, ~AUD 150). Rest 2 nights.',latlng:[49.638,100.163]}
+      {name:'Mörön',desc:'Provincial capital of Khövsgöl aimag. Full resupply, accommodation, vet services. Rest 2 nights. Fly out from here at the end (Hunnu Air → UB, ~AUD 150).',latlng:[49.638,100.163]}
     ],
     route:[[48.15,99.6],[48.52,99.72],[48.88,99.9],[49.22,100.05],[49.638,100.163]]
   },
   {
-    id:6, title:'Mörön → Khövsgöl Lake',
-    color:'#3b82f6', km:'~100 km', days:'3–4 days',
-    desc:'The approach to Mongolia\'s great lake. The track climbs through Siberian taiga — larch and pine, boggy ground, crystal streams. Then Khövsgöl opens up. It holds 2% of the world\'s fresh surface water. The colour in afternoon light is extraordinary — deep blue verging on violet, ringed by mountains that hold snow into July. Khatgal at the southern end is the base. The Dukha (Tsaatan) reindeer people live in the forests to the north — one of the most isolated indigenous cultures in Asia.',
-    tags:['Great lake','Taiga','Reindeer culture','★ World-class'],
+    id:6, title:'Mörön → Khövsgöl (Khatgal)',
+    color:'#3b82f6', km:'~100 km', days:'5 days (4 riding · 1 rest)',
+    desc:'The approach to Mongolia\'s great lake. The track climbs through Siberian taiga — larch and pine, boggy ground, crystal streams. Then Khövsgöl opens up. It holds 2% of the world\'s fresh surface water. The colour in afternoon light is extraordinary — deep blue verging on violet, ringed by mountains that hold snow into July. Arrive at Khatgal at the southern end. Rest a day here before starting the circuit — you will want full energy for what comes next.',
+    tags:['Taiga approach','Great lake','★ World-class','Khatgal base'],
     waypoints:[
-      {name:'Khatgal — Khövsgöl Lake',desc:'2% of the world\'s fresh surface water. Ringed by taiga mountains. Base for the lake circuit. Small guesthouses. Sell horses here or continue around the lake.',latlng:[50.447,100.147]}
+      {name:'Khatgal — Khövsgöl Lake',desc:'2% of the world\'s fresh surface water. Ringed by taiga mountains. Last settlement before the circuit. Small guesthouses and resupply. Rest 1 day before the western shore.',latlng:[50.447,100.147]}
     ],
     route:[[49.638,100.163],[49.9,100.18],[50.18,100.17],[50.447,100.147]]
   },
   {
     id:7, title:'Khövsgöl Lake Circuit',
-    color:'#f97316', km:'~200 km', days:'7–10 days',
-    desc:'The western shore of Khövsgöl is one of the remotest and most spectacular tracks in Mongolia — used by almost no tourists, just herders and the occasional horse traveller. Wildflowers in July fill the high meadows above the water. Cold rivers run down from the mountains. In the far north, Dukha (Tsaatan) camps are accessible — nomadic reindeer herders whose way of life is closer to Siberian indigenous culture than anything on the Mongolian steppe. Return south along the eastern shore. Sell horses in Khatgal. Fly Mörön → UB.',
-    tags:['Remote western shore','Reindeer herders','Wildflowers','Final stage'],
+    color:'#f97316', km:'~220 km', days:'14 days (9 riding · 2 Dukha · 2 lakeshore · 1 rest)',
+    desc:'The western shore of Khövsgöl is one of the remotest and most spectacular horse tracks in Central Asia — almost no tourists, just herders and the occasional expedition rider. Wildflowers in August fill the high meadows above the water. Cold rivers run down from the mountains. In the far north, Dukha (Tsaatan) camps are accessible — nomadic reindeer herders whose way of life is closer to Siberian indigenous culture than anything on the Mongolian steppe. Allow 2 full days at the northern end to find a Dukha camp; this is not guaranteed but is one of the greatest encounters possible in this part of the world. Return south along the quieter eastern shore. Sell horses in Khatgal, then overland to Mörön for the flight back to UB.',
+    tags:['Remote western shore','★ Dukha reindeer herders','Wildflowers','Final stage'],
     waypoints:[
-      {name:'Northern Khövsgöl',desc:'Remote northern end of the lake. Dukha reindeer herder camps. Almost no tourists. Snow-capped peaks. One of the most isolated places in Central Asia.',latlng:[51.18,100.52]}
+      {name:'Northern Khövsgöl',desc:'Remote northern end of the lake. Dukha reindeer herder camps in the forest — allow 2 days here. Almost no tourists. Snow-capped peaks reflected in glacial water.',latlng:[51.18,100.52]},
+      {name:'Khatgal (return &amp; horse sale)',desc:'Sell horses here — local buyers are familiar with horse travellers arriving from the circuit. Then overland or short charter to Mörön; Hunnu Air back to UB.',latlng:[50.447,100.147]}
     ],
     route:[[50.447,100.147],[50.7,100.07],[50.95,100.22],[51.18,100.52],[51.05,100.88],[50.72,100.72],[50.47,100.5],[50.447,100.147]]
   }
