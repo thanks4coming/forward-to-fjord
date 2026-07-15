@@ -3,18 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Mongolia by Horse — 2028</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --amber:#f59e0b;--amber-dim:#b45309;--red:#ef4444;--green:#10b981;
-  --purple:#8b5cf6;--cyan:#06b6d4;--blue:#3b82f6;--orange:#f97316;
-  --bg:#0f172a;--surface:#1e293b;--surface2:#334155;--surface3:#475569;
+  --amber:#f59e0b;--bg:#0f172a;--surface:#1e293b;
+  --surface2:#334155;--surface3:#475569;
   --text:#e2e8f0;--muted:#94a3b8;--muted2:#64748b;
 }
 html,body{height:100%;overflow:hidden}
-body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:row}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text)}
+
+#app{display:flex;height:100vh;position:relative}
 
 /* ── Sidebar ── */
 #sidebar{
@@ -29,386 +32,349 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 #sidebar::-webkit-scrollbar-track{background:transparent}
 #sidebar::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:2px}
 
-.sb-header{
-  padding:18px 20px 14px;
+/* ── Sidebar header ── */
+#sb-header{
+  padding:16px 16px 12px;
   background:linear-gradient(180deg,#0a1628 0%,var(--bg) 100%);
   border-bottom:1px solid var(--surface2);
-  flex-shrink:0;
+  flex-shrink:0;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
 }
-.sb-header h1{font-size:17px;font-weight:800;color:var(--amber);letter-spacing:-.4px;line-height:1.2}
-.sb-header .sub{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.5}
+#sb-header h1{font-size:16px;font-weight:800;color:var(--amber);letter-spacing:-.3px;line-height:1.25}
+#sb-header .sub{font-size:10.5px;color:var(--muted);margin-top:4px;line-height:1.5}
+#sidebar-close-btn{
+  background:rgba(51,65,85,.7);border:1px solid rgba(148,163,184,.15);
+  border-radius:6px;padding:5px 10px;color:var(--muted);
+  font-size:12px;cursor:pointer;display:none;flex-shrink:0;line-height:1.4;
+}
+#sidebar-close-btn:hover{background:var(--surface2);color:#fff}
 
+/* ── Stats bar ── */
 .sb-stats{
-  padding:14px 20px;
-  background:var(--bg);
+  padding:11px 16px;background:var(--bg);
   border-bottom:1px solid var(--surface2);
-  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
-  flex-shrink:0;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:6px;flex-shrink:0;
 }
 .stat{text-align:center}
-.stat-v{font-size:16px;font-weight:800;color:var(--amber)}
-.stat-l{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:1px}
+.stat-v{font-size:15px;font-weight:800;color:var(--amber);line-height:1.2}
+.stat-l{font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
 
+/* ── Intro ── */
 .sb-intro{
-  padding:12px 16px;
+  padding:11px 14px;
   background:rgba(245,158,11,.07);
-  border-bottom:1px solid rgba(245,158,11,.2);
-  font-size:11.5px;color:var(--muted);line-height:1.6;
-  flex-shrink:0;
+  border-bottom:1px solid rgba(245,158,11,.15);
+  font-size:11px;color:var(--muted);line-height:1.6;flex-shrink:0;
 }
 .sb-intro strong{color:var(--amber)}
 
-.stage-list{padding:10px;flex:1}
+/* ── Stage cards ── */
+.stage-list{padding:8px;flex:1}
 
 .stage-card{
   background:var(--bg);border-radius:10px;
-  margin-bottom:8px;overflow:hidden;
-  border:1px solid var(--surface2);
-  cursor:pointer;transition:border-color .15s,box-shadow .15s;
+  margin-bottom:7px;overflow:hidden;
+  border:1px solid var(--surface2);cursor:pointer;
+  transition:border-color .15s,box-shadow .15s;
 }
 .stage-card:hover{border-color:var(--surface3)}
-.stage-card.active{border-color:var(--amber);box-shadow:0 0 0 1px rgba(245,158,11,.2)}
+.stage-card.active{border-color:var(--amber);box-shadow:0 0 0 1px rgba(245,158,11,.15)}
 
-.stage-hd{
-  padding:11px 13px;display:flex;
-  align-items:flex-start;gap:10px;
-}
+.stage-hd{padding:10px 12px;display:flex;align-items:flex-start;gap:9px}
 .stage-num{
   width:22px;height:22px;border-radius:50%;
-  font-size:10px;font-weight:800;
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;flex-shrink:0;margin-top:1px;
+  font-size:10px;font-weight:800;color:#fff;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;
 }
 .stage-info{flex:1;min-width:0}
 .stage-title{font-size:12.5px;font-weight:700;line-height:1.3}
-.stage-meta{font-size:10.5px;color:var(--muted);margin-top:2px}
+.stage-meta{font-size:10px;color:var(--muted);margin-top:2px}
 
-.stage-body{
-  padding:0 13px 13px 45px;
-  font-size:11.5px;line-height:1.65;color:var(--muted);
-  display:none;
-}
+.stage-body{padding:0 12px 12px 43px;font-size:11.5px;line-height:1.65;color:var(--muted);display:none}
 .stage-card.active .stage-body{display:block}
 
-.stage-tags{display:flex;gap:5px;margin-top:10px;flex-wrap:wrap}
-.tag{
-  background:var(--surface2);border-radius:4px;
-  padding:2px 7px;font-size:10px;color:var(--text);
-}
+.stage-tags{display:flex;gap:5px;margin-top:9px;flex-wrap:wrap}
+.tag{background:var(--surface2);border-radius:4px;padding:2px 7px;font-size:10px;color:var(--text)}
 .tag.star{background:rgba(245,158,11,.15);color:var(--amber)}
 
-.waypoint-list{margin-top:10px;border-top:1px solid var(--surface2);padding-top:10px}
+.wp-list{margin-top:10px;border-top:1px solid var(--surface2);padding-top:9px}
 .wp-item{display:flex;gap:8px;margin-bottom:7px;align-items:flex-start}
-.wp-dot{width:7px;height:7px;border-radius:50%;background:var(--amber);flex-shrink:0;margin-top:4px}
+.wp-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
 .wp-text{font-size:11px;line-height:1.5}
 .wp-name{font-weight:700;color:var(--text)}
 .wp-desc{color:var(--muted);margin-top:1px}
 
+/* ── Budget ── */
 .budget-section{
-  margin:10px;border-radius:10px;
-  background:var(--bg);
-  border:1px solid var(--surface2);
-  overflow:hidden;flex-shrink:0;
+  margin:8px;border-radius:10px;background:var(--bg);
+  border:1px solid var(--surface2);overflow:hidden;flex-shrink:0;
 }
-.budget-title{
-  padding:12px 14px 2px;
-  font-size:13px;font-weight:800;color:var(--amber);
+.budget-hd{
+  padding:11px 14px 3px;
+  font-size:12.5px;font-weight:800;color:var(--amber);
 }
 .budget-sub{
-  padding:0 14px 10px;
-  font-size:10.5px;color:var(--muted);
+  padding:0 14px 9px;font-size:10px;color:var(--muted2);
   border-bottom:1px solid var(--surface2);
 }
-.budget-rows{padding:6px 0}
+.budget-rows{padding:4px 0}
 .budget-row{
   display:flex;justify-content:space-between;align-items:baseline;
-  padding:4px 14px;font-size:11px;color:var(--muted);
-  gap:8px;
+  padding:3.5px 14px;font-size:11px;color:var(--muted);gap:8px;
 }
 .budget-row span:first-child{flex:1}
 .budget-row span:last-child{font-weight:600;color:var(--text);white-space:nowrap;font-size:10.5px}
-.budget-row.highlight{background:rgba(255,255,255,.03)}
-.budget-row.credit span:last-child{color:#10b981}
+.budget-row.hl{background:rgba(255,255,255,.025)}
+.budget-row.cr span:last-child{color:#10b981}
 .budget-total{
   display:flex;justify-content:space-between;align-items:center;
-  padding:10px 14px;
-  border-top:1px solid var(--surface2);
-  background:rgba(245,158,11,.08);
-  font-size:12px;font-weight:800;
+  padding:9px 14px;border-top:1px solid var(--surface2);
+  background:rgba(245,158,11,.08);font-size:12px;font-weight:800;
 }
-.budget-total span:first-child{color:var(--text)}
 .budget-total span:last-child{color:var(--amber);font-size:14px}
-.budget-target{
-  padding:8px 14px 4px;
-  font-size:11px;color:var(--muted);
-}
+.budget-target{padding:7px 14px 3px;font-size:11px;color:var(--muted)}
 .budget-target strong{color:var(--amber)}
-.budget-note{
-  padding:4px 14px 12px;
-  font-size:10.5px;color:var(--muted2);line-height:1.6;
-}
+.budget-note{padding:3px 14px 11px;font-size:10.5px;color:var(--muted2);line-height:1.6}
 
+/* ── Warning ── */
 .note-box{
-  margin:10px;border-radius:8px;
-  background:rgba(245,158,11,.08);
-  border:1px solid rgba(245,158,11,.25);
-  padding:10px 13px;font-size:11px;
-  color:var(--amber);line-height:1.55;
-  flex-shrink:0;
+  margin:8px;border-radius:8px;
+  background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.22);
+  padding:10px 13px;font-size:11px;color:var(--amber);line-height:1.55;flex-shrink:0;
 }
 
 /* ── Map ── */
 #map{flex:1;height:100vh}
 
-/* Leaflet overrides */
-.leaflet-popup-content-wrapper{
-  background:#1e293b;color:#e2e8f0;
-  border:1px solid #334155;border-radius:10px;
-  box-shadow:0 8px 32px rgba(0,0,0,.6);
-  padding:0;
+/* ── Mobile open button ── */
+#sidebar-open-btn{
+  display:none;position:fixed;
+  bottom:calc(20px + env(safe-area-inset-bottom,0px));
+  left:50%;transform:translateX(-50%);
+  z-index:999;
+  background:linear-gradient(135deg,#b45309,#f59e0b);
+  color:#fff;border:none;border-radius:28px;
+  padding:12px 24px;font-size:14px;font-weight:700;
+  box-shadow:0 4px 20px rgba(0,0,0,.5);cursor:pointer;
+  white-space:nowrap;-webkit-tap-highlight-color:transparent;
+  align-items:center;gap:6px;letter-spacing:-.1px;
 }
-.leaflet-popup-content{margin:14px 16px;font-family:'Segoe UI',system-ui,sans-serif}
+#sidebar-open-btn:active{transform:translateX(-50%) scale(.95)}
+
+/* ── Leaflet overrides ── */
+.leaflet-bar a{background:#1e293b!important;color:#f1f5f9!important;border-color:#475569!important}
+.leaflet-bar a:hover{background:#334155!important}
+.leaflet-popup-content-wrapper{background:#1e293b;color:#e2e8f0;border-radius:10px;border:1px solid #334155;box-shadow:0 8px 32px rgba(0,0,0,.6)}
+.leaflet-popup-content{margin:13px 15px;font-family:'Segoe UI',system-ui,sans-serif}
 .leaflet-popup-tip{background:#1e293b}
-.leaflet-popup-close-button{color:#94a3b8 !important}
-.leaflet-popup-close-button:hover{color:#e2e8f0 !important}
+.leaflet-popup-close-button{color:#94a3b8!important}
+.leaflet-popup-close-button:hover{color:#e2e8f0!important}
+.leaflet-control-attribution{font-size:9px!important;background:rgba(15,23,42,.6)!important;color:#64748b!important}
 .popup-name{font-weight:800;font-size:13px;color:#f59e0b;margin-bottom:5px}
 .popup-desc{font-size:11.5px;color:#94a3b8;line-height:1.55;max-width:220px}
 
-/* Mobile */
-@media(max-width:680px){
-  body{flex-direction:column}
-  #sidebar{width:100%;height:42vh;min-width:unset;border-right:none;border-bottom:1px solid var(--surface2)}
-  #map{height:58vh}
-  .sb-stats{grid-template-columns:repeat(4,1fr)}
-  .stage-body{padding-left:13px}
+/* ── Mobile breakpoint — same pattern as F2F ── */
+@media(max-width:900px){
+  #app{position:relative}
+  #sidebar{
+    position:fixed;top:0;left:0;width:100%;height:100%;
+    z-index:1000;transform:translateX(-100%);
+    transition:transform .3s cubic-bezier(.4,0,.2,1);
+    min-width:0;padding-bottom:env(safe-area-inset-bottom,0);
+  }
+  #sidebar.open{transform:translateX(0)}
+  #map{width:100%;height:100vh;height:100dvh}
+  #sidebar-open-btn{display:flex}
+  #sidebar-close-btn{display:block}
+  .stage-body{padding-left:12px}
 }
 </style>
 </head>
 <body>
+<div id="app">
 
-<div id="sidebar">
-  <div class="sb-header">
-    <h1>Mongolia by Horse — Northern Circuit</h1>
-    <div class="sub">July → September 2028 &nbsp;·&nbsp; 3 riders &nbsp;·&nbsp; 6 horses &nbsp;·&nbsp; Planning route</div>
-  </div>
-
-  <div class="sb-stats">
-    <div class="stat"><div class="stat-v">~1,400</div><div class="stat-l">km</div></div>
-    <div class="stat"><div class="stat-v">~80</div><div class="stat-l">riding days</div></div>
-    <div class="stat"><div class="stat-v">7</div><div class="stat-l">stages</div></div>
-    <div class="stat"><div class="stat-v">AUD 11.5k</div><div class="stat-l">per person</div></div>
-  </div>
-
-  <div class="sb-intro">
-    The northern circuit is the most complete Mongolia horse route — open steppe, ancient empire capitals, volcanic lakes, remote taiga, and the great glacial lake of Khövsgöl. Click a stage to explore. <strong>This is a planning map — not yet ridden.</strong>
-  </div>
-
-  <div class="stage-list" id="stage-list"></div>
-
-  <!-- Budget -->
-  <div class="budget-section">
-    <div class="budget-title">Budget — Per Person (AUD)</div>
-    <div class="budget-sub">3-person trip · July–September 2028 · ~90 days total</div>
-    <div class="budget-rows">
-      <div class="budget-row"><span>Flights (return, Australia → UB)</span><span>$2,200–3,200</span></div>
-      <div class="budget-row"><span>Travel insurance (equestrian cover, 3 months)</span><span>$800–1,400</span></div>
-      <div class="budget-row"><span>Visa extension (UB)</span><span>$80</span></div>
-      <div class="budget-row"><span>UB accommodation (2 weeks arrival)</span><span>$400–700</span></div>
-      <div class="budget-row highlight"><span>Horse purchase × 2 (gross)</span><span>$1,600–2,800</span></div>
-      <div class="budget-row credit"><span>Horse resale recovery (~60%)</span><span>−$900–1,500</span></div>
-      <div class="budget-row"><span>Tack, saddle pad, hobbles, lead ropes</span><span>$250–400</span></div>
-      <div class="budget-row"><span>Horse first aid + feed on road</span><span>$300–500</span></div>
-      <div class="budget-row highlight"><span>Guide — first 3 weeks (split 3 ways)</span><span>$500–900</span></div>
-      <div class="budget-row"><span>Food on road (3 months)</span><span>$900–1,500</span></div>
-      <div class="budget-row"><span>Ger gifts + hospitality contributions</span><span>$400–700</span></div>
-      <div class="budget-row"><span>Gear (sleeping bag, tent, riding gear, GPS)</span><span>$800–1,600</span></div>
-      <div class="budget-row highlight"><span>Satellite communicator (shared × 3)</span><span>$400–700</span></div>
-      <div class="budget-row"><span>Vaccinations + travel health</span><span>$400–800</span></div>
-      <div class="budget-row"><span>Wilderness first aid course (pre-trip)</span><span>$300–500</span></div>
-      <div class="budget-row"><span>Miscellaneous — repairs, town stops, emergencies</span><span>$600–1,000</span></div>
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <div id="sb-header">
+      <div>
+        <h1>Mongolia by Horse</h1>
+        <div class="sub">Northern Circuit · July–September 2028 · 3 riders · 6 horses</div>
+      </div>
+      <button id="sidebar-close-btn" type="button">&#x2715; Close</button>
     </div>
-    <div class="budget-total">
-      <span>Total per person</span><span>AUD $9,000–14,000</span>
+
+    <div class="sb-stats">
+      <div class="stat"><div class="stat-v">~1,400</div><div class="stat-l">km</div></div>
+      <div class="stat"><div class="stat-v">~80</div><div class="stat-l">riding days</div></div>
+      <div class="stat"><div class="stat-v">7</div><div class="stat-l">stages</div></div>
+      <div class="stat"><div class="stat-v">AUD 11.5k</div><div class="stat-l">per person</div></div>
     </div>
-    <div class="budget-target">Target: <strong>AUD $11,500</strong> per person as realistic midpoint</div>
-    <div class="budget-note">Being 3 people saves on guide cost (split 3 ways), shared gear (sat comms, cooking kit, horse first aid), and UB logistics. Save AUD $400–500/month from now and the trip is fully funded by departure.</div>
-  </div>
 
-  <div class="note-box">
-    ⚠ Satellite communicator (Garmin inReach) is non-negotiable on all remote stages. Never more than 5 days without a check-in. Leave a detailed route plan with someone at home.
-  </div>
-</div>
+    <div class="sb-intro">
+      Steppe, volcanic lakes, ancient empire capitals, remote taiga, and the great glacial lake of Khövsgöl. Click a stage to explore. <strong>Planning map — not yet ridden.</strong>
+    </div>
 
-<div id="map"></div>
+    <div class="stage-list" id="stage-list"></div>
+
+    <!-- Budget -->
+    <div class="budget-section">
+      <div class="budget-hd">Budget — Per Person (AUD)</div>
+      <div class="budget-sub">3-person trip · ~90 days total incl. 2 weeks in UB</div>
+      <div class="budget-rows">
+        <div class="budget-row hl"><span>Flights — return, Australia → Ulaanbaatar</span><span>$2,200–3,200</span></div>
+        <div class="budget-row"><span>Travel insurance (equestrian cover, 3 months)</span><span>$800–1,400</span></div>
+        <div class="budget-row hl"><span>Visa extension in UB</span><span>$80</span></div>
+        <div class="budget-row"><span>UB accommodation (2 weeks on arrival)</span><span>$400–700</span></div>
+        <div class="budget-row hl"><span>Horse purchase × 2 (gross)</span><span>$1,600–2,800</span></div>
+        <div class="budget-row cr"><span>Horse resale recovery (~60% on exit)</span><span>−$900–1,500</span></div>
+        <div class="budget-row hl"><span>Tack, saddle pad, hobbles, lead ropes</span><span>$250–400</span></div>
+        <div class="budget-row"><span>Horse first aid + feed on road</span><span>$300–500</span></div>
+        <div class="budget-row hl"><span>Guide — first 3 weeks, split 3 ways</span><span>$500–900</span></div>
+        <div class="budget-row"><span>Food on road (3 months)</span><span>$900–1,500</span></div>
+        <div class="budget-row hl"><span>Ger gifts + hospitality contributions</span><span>$400–700</span></div>
+        <div class="budget-row"><span>Gear (tent, sleeping bag, riding kit, GPS)</span><span>$800–1,600</span></div>
+        <div class="budget-row hl"><span>Satellite communicator — shared × 3</span><span>$400–700</span></div>
+        <div class="budget-row"><span>Vaccinations + travel health</span><span>$400–800</span></div>
+        <div class="budget-row hl"><span>Wilderness first aid course (pre-trip, AUS)</span><span>$300–500</span></div>
+        <div class="budget-row"><span>Emergencies, repairs, town stops</span><span>$600–1,000</span></div>
+      </div>
+      <div class="budget-total"><span>Total per person</span><span>$9,000–14,000</span></div>
+      <div class="budget-target">Target: <strong>AUD $11,500 per person</strong> as realistic midpoint</div>
+      <div class="budget-note">3 people saves on guide (split 3 ways), sat comms, horse kit, and UB logistics. Save AUD $400–500/month from now and it's fully funded by departure.</div>
+    </div>
+
+    <div class="note-box">
+      ⚠ Satellite communicator (Garmin inReach) is non-negotiable on all remote stages. Never more than 5 days without a check-in. Leave a detailed route plan with someone at home before departing UB.
+    </div>
+
+  </div><!-- /sidebar -->
+
+  <!-- Map -->
+  <div id="map"></div>
+
+  <!-- Mobile open button -->
+  <button id="sidebar-open-btn" type="button">&#9776;&nbsp; Route Plan</button>
+
+</div><!-- /app -->
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 const STAGES = [
   {
-    id: 1,
-    title: 'Ulaanbaatar → Khustai National Park',
-    color: '#f59e0b',
-    km: '~100 km',
-    days: '3–4 days',
-    desc: 'Leave the chaos of UB behind. Cross the Tuul River, pass the ger suburbs that ring the city, and ride west into open steppe. The city skyline disappears within an hour. Khustai National Park is home to the <em>takhi</em> — the Przewalski\'s horse, the last truly wild horse species on earth. Extinct in the wild by 1960, reintroduced here in the 1990s. Watch the herds at dusk from the ridge above the valley. First nights under a genuinely dark sky.',
-    tags: ['Steppe', 'Wildlife', 'Easy terrain', 'Warm up'],
-    star: null,
-    waypoints: [
-      { name: 'Ulaanbaatar', desc: 'Start. 2 weeks to source horses, buy tack, extend visa. Narantuul Market for horses. Stone Horse Expeditions for advice and guide sourcing.', latlng: [47.8864, 106.9057] },
-      { name: 'Khustai National Park', desc: 'Przewalski\'s horse reintroduction site. Camp in the park, watch the takhi at dusk. Entry fee ~USD 5. Good grass for your horses.', latlng: [47.717, 105.833] }
+    id:1, title:'Ulaanbaatar → Khustai National Park',
+    color:'#f59e0b', km:'~100 km', days:'3–4 days',
+    desc:'Leave the chaos of UB behind. Cross the Tuul River, pass the ger suburbs, and ride west into open steppe — the city skyline disappears within an hour. Khustai National Park is home to the <em>takhi</em>, the Przewalski\'s horse — the last truly wild horse species on earth. Extinct in the wild by 1960, reintroduced here in the 1990s. Watch the herds at dusk from the ridge above the valley. First nights under a genuinely dark sky.',
+    tags:['Steppe','Wildlife','Easy terrain','Warm-up stage'],
+    waypoints:[
+      {name:'Ulaanbaatar',desc:'Start. 2 weeks to source horses, buy tack, extend visa. Narantuul Market for horses. Stone Horse Expeditions for advice and guide sourcing.',latlng:[47.8864,106.9057]},
+      {name:'Khustai National Park',desc:'Przewalski\'s horse reintroduction site. Camp in the park, watch the takhi at dusk. Entry fee ~USD 5. Good grass for your horses.',latlng:[47.717,105.833]}
     ],
-    route: [[47.8864,106.9057],[47.84,106.55],[47.78,106.15],[47.72,105.83]]
+    route:[[47.8864,106.9057],[47.84,106.55],[47.78,106.15],[47.72,105.83]]
   },
   {
-    id: 2,
-    title: 'Khustai → Kharkhorin (Karakorum)',
-    color: '#ef4444',
-    km: '~280 km',
-    days: '10–12 days',
-    desc: 'The longest stage. Vast open steppe gives way to the rolling Khangai foothills — rivers to ford, valleys to navigate without signage. Karakorum was the capital of the Mongol Empire under Genghis Khan. At its 13th-century peak, ambassadors from France, Persia, Korea and China crossed these same plains to seek audience with the Great Khan. The city was dismantled stone by stone when the capital moved. Erdene Zuu monastery was built from the ruins — 108 white stupas still ring its outer wall. Resupply and rest 2 nights.',
-    tags: ['Longest stage', 'River crossings', 'Empire capital', 'Resupply'],
-    star: 'Historic',
-    waypoints: [
-      { name: 'Kharkhorin / Karakorum', desc: 'Ancient capital of the Mongol Empire. Erdene Zuu monastery built from its ruins — one of the oldest in Mongolia. Full resupply available. Good farrier services.', latlng: [47.195, 102.839] }
+    id:2, title:'Khustai → Kharkhorin (Karakorum)',
+    color:'#ef4444', km:'~280 km', days:'10–12 days',
+    desc:'The longest stage and the most historically charged. Open steppe gives way to the rolling Khangai foothills — rivers to ford, valleys to navigate without signage. Karakorum was the capital of the Mongol Empire under Genghis Khan. At its 13th-century peak, ambassadors from France, Persia, Korea and China crossed these same plains to seek audience with the Great Khan. The city was dismantled stone by stone when the capital moved — Erdene Zuu monastery was built from its ruins. 108 white stupas still ring the outer wall. Resupply and rest 2 nights.',
+    tags:['Longest stage','River crossings','Empire capital','Resupply'],
+    waypoints:[
+      {name:'Kharkhorin / Karakorum',desc:'Ancient capital of the Mongol Empire. Erdene Zuu monastery built from its ruins. Full resupply available. Rest 2 nights. Good farrier services.',latlng:[47.195,102.839]}
     ],
-    route: [[47.72,105.83],[47.63,105.1],[47.5,104.3],[47.38,103.55],[47.26,103.1],[47.195,102.839]]
+    route:[[47.72,105.83],[47.63,105.1],[47.5,104.3],[47.38,103.55],[47.26,103.1],[47.195,102.839]]
   },
   {
-    id: 3,
-    title: 'Kharkhorin → Tsetserleg',
-    color: '#10b981',
-    km: '~120 km',
-    days: '4–5 days',
-    desc: 'Into the Khangai Mountains proper. The terrain rises, steppe gives way to high meadow and pine-clad ridges. The air changes. Tsetserleg is the provincial capital of Arkhangai — a quiet town with a real market for resupply. The Zayain Gegeenii monastery sits on a cliff face above the town, one of the few to survive the Soviet purges of the 1930s completely intact. The museum inside holds extraordinary relics. Rest a day here — your horses will thank you.',
-    tags: ['Mountains begin', 'Monastery', 'Resupply', 'Rest day'],
-    star: null,
-    waypoints: [
-      { name: 'Tsetserleg', desc: 'Provincial capital, Arkhangai. Market for resupply — food, fuel. Zayain Gegeenii monastery above town. Good vet services for horses. Rest 1–2 nights.', latlng: [47.475, 101.451] }
+    id:3, title:'Kharkhorin → Tsetserleg',
+    color:'#10b981', km:'~120 km', days:'4–5 days',
+    desc:'Into the Khangai Mountains proper. The terrain rises, steppe gives way to high meadow and pine ridges. Tsetserleg is the provincial capital of Arkhangai — a quiet town with a real market for resupply. The Zayain Gegeenii monastery sits on a cliff face above town, one of the few to survive the Soviet purges of the 1930s completely intact. The museum holds extraordinary relics. Rest a day — your horses will thank you.',
+    tags:['Mountains begin','Monastery','Resupply','Rest day'],
+    waypoints:[
+      {name:'Tsetserleg',desc:'Provincial capital, Arkhangai. Market resupply — food, fuel. Zayain Gegeenii monastery above town. Vet services for horses. Rest 1–2 nights.',latlng:[47.475,101.451]}
     ],
-    route: [[47.195,102.839],[47.3,102.25],[47.4,101.85],[47.475,101.451]]
+    route:[[47.195,102.839],[47.3,102.25],[47.4,101.85],[47.475,101.451]]
   },
   {
-    id: 4,
-    title: 'Tsetserleg → Tariat & White Lake',
-    color: '#8b5cf6',
-    km: '~150 km',
-    days: '5–6 days',
-    desc: 'The volcanic lake country — the most surreal landscape on the route. Terkhiin Tsagaan Nuur (White Lake) sits in a young volcanic crater system. Black lava fields roll to the water\'s edge. The lake is clear, cold, and full of taimen. Wild swans nest in the shallows. Camp on the lakeshore for 2 nights — this is one of the great wild campsites of Central Asia. The Khorgo volcano cone rises above the lake, climbable on foot in 2 hours. Your horses graze in volcanic meadows while you watch the sun drop behind the crater rim.',
-    tags: ['Volcanic landscape', 'Wild camping', 'Swimming', '★ Unmissable'],
-    star: 'Unmissable',
-    waypoints: [
-      { name: 'Terkhiin Tsagaan Nuur (White Lake)', desc: 'Volcanic crater lake. Clear blue water, black lava fields, wild swans. Camp 2 nights. Khorgo volcano climbable on foot. One of the great wild campsites of Mongolia. No facilities — self-sufficient.', latlng: [48.15, 99.6] }
+    id:4, title:'Tsetserleg → Tariat & White Lake',
+    color:'#8b5cf6', km:'~150 km', days:'5–6 days',
+    desc:'The volcanic lake country — the most surreal landscape on the route. Terkhiin Tsagaan Nuur (White Lake) sits in a young volcanic crater system. Black lava fields roll to the water\'s edge. The lake is clear, cold, and full of taimen. Wild swans nest in the shallows. Camp on the lakeshore for 2 nights — one of the great wild campsites of Central Asia. The Khorgo volcano cone rises above it, climbable on foot in 2 hours. Your horses graze in volcanic meadows while you watch the sun drop behind the crater rim.',
+    tags:['Volcanic landscape','Wild camping','Swimming','★ Unmissable'],
+    waypoints:[
+      {name:'Terkhiin Tsagaan Nuur (White Lake)',desc:'Volcanic crater lake. Clear blue water, black lava fields, wild swans. Camp 2 nights. Khorgo volcano climbable on foot. No facilities — self-sufficient.',latlng:[48.15,99.6]}
     ],
-    route: [[47.475,101.451],[47.72,100.85],[47.95,100.18],[48.15,99.6]]
+    route:[[47.475,101.451],[47.72,100.85],[47.95,100.18],[48.15,99.6]]
   },
   {
-    id: 5,
-    title: 'Tariat → Mörön',
-    color: '#06b6d4',
-    km: '~220 km',
-    days: '8–9 days',
-    desc: 'The long traverse north. Cross the watershed from the Khangai drainage into the northern river systems. The landscape transitions — more larch and pine, colder nights, different birdlife. You\'re leaving the steppe behind and entering the Siberian fringe. Fewer gers, longer stretches between water. Some of the best riding of the trip is here precisely because you\'ll go 2–3 days without seeing another person. The loneliness is the point. Mörön is a proper town — last significant resupply before Khövsgöl. Rest 2 nights.',
-    tags: ['Most remote stage', 'Forest transition', 'Self-sufficient', 'Demanding'],
-    star: 'Remote',
-    waypoints: [
-      { name: 'Mörön', desc: 'Provincial capital of Khövsgöl aimag. Full resupply, accommodation, vet services. Fly out from here at the end (Hunnu Air → UB, ~AUD 150). Rest 2 nights before the lake.', latlng: [49.638, 100.163] }
+    id:5, title:'Tariat → Mörön',
+    color:'#06b6d4', km:'~220 km', days:'8–9 days',
+    desc:'The long traverse north. Cross the Khangai watershed into the northern river systems. The landscape transitions — more larch and pine, colder nights, different birdlife. You\'re entering the Siberian fringe. Fewer gers, longer stretches between water. Some of the best riding of the trip is here precisely because you\'ll go 2–3 days without seeing another person. The loneliness is the point. Mörön is a proper town — last significant resupply before Khövsgöl. Rest 2 nights.',
+    tags:['Most remote stage','Forest transition','Self-sufficient','Demanding'],
+    waypoints:[
+      {name:'Mörön',desc:'Provincial capital of Khövsgöl aimag. Full resupply, accommodation, vet services. Fly out from here at the end (Hunnu Air → UB, ~AUD 150). Rest 2 nights.',latlng:[49.638,100.163]}
     ],
-    route: [[48.15,99.6],[48.52,99.72],[48.88,99.9],[49.22,100.05],[49.638,100.163]]
+    route:[[48.15,99.6],[48.52,99.72],[48.88,99.9],[49.22,100.05],[49.638,100.163]]
   },
   {
-    id: 6,
-    title: 'Mörön → Khövsgöl Lake',
-    color: '#3b82f6',
-    km: '~100 km',
-    days: '3–4 days',
-    desc: 'The approach to Mongolia\'s great lake. The track climbs through dense Siberian taiga — larch and pine, boggy ground, crystal streams. Then Khövsgöl opens up. It holds 2% of the world\'s fresh surface water. The colour in afternoon light is extraordinary — deep blue verging on violet, ringed by mountains that hold snow into July. Khatgal at the southern end is the base. The Dukha reindeer people live in the forests to the north — one of the most isolated indigenous cultures in Asia.',
-    tags: ['Great lake', 'Taiga', 'Reindeer culture', '★ World-class'],
-    star: 'World-class',
-    waypoints: [
-      { name: 'Khatgal — Khövsgöl Lake', desc: 'Southern access point to the lake. 2% of the world\'s fresh surface water. Ringed by taiga mountains. Base for the lake circuit. Can sell horses here or continue. Small guesthouses available.', latlng: [50.447, 100.147] }
+    id:6, title:'Mörön → Khövsgöl Lake',
+    color:'#3b82f6', km:'~100 km', days:'3–4 days',
+    desc:'The approach to Mongolia\'s great lake. The track climbs through Siberian taiga — larch and pine, boggy ground, crystal streams. Then Khövsgöl opens up. It holds 2% of the world\'s fresh surface water. The colour in afternoon light is extraordinary — deep blue verging on violet, ringed by mountains that hold snow into July. Khatgal at the southern end is the base. The Dukha (Tsaatan) reindeer people live in the forests to the north — one of the most isolated indigenous cultures in Asia.',
+    tags:['Great lake','Taiga','Reindeer culture','★ World-class'],
+    waypoints:[
+      {name:'Khatgal — Khövsgöl Lake',desc:'2% of the world\'s fresh surface water. Ringed by taiga mountains. Base for the lake circuit. Small guesthouses. Sell horses here or continue around the lake.',latlng:[50.447,100.147]}
     ],
-    route: [[49.638,100.163],[49.9,100.18],[50.18,100.17],[50.447,100.147]]
+    route:[[49.638,100.163],[49.9,100.18],[50.18,100.17],[50.447,100.147]]
   },
   {
-    id: 7,
-    title: 'Khövsgöl Lake Circuit',
-    color: '#f97316',
-    km: '~200 km',
-    days: '7–10 days',
-    desc: 'The western shore of Khövsgöl is one of the most remote and spectacular riding tracks in Mongolia — used by almost no tourists, just herders and the occasional horse traveller. Wildflowers in July fill the high meadows above the water. Cold rivers run down from the mountains directly into the lake. In the far north, the Dukha (Tsaatan) camps are accessible — nomadic reindeer herders whose way of life is closer to Siberian indigenous culture than anything on the Mongolian steppe. Return south along the eastern shore. Sell horses in Khatgal. Fly Mörön → UB.',
-    tags: ['Remote western shore', 'Reindeer herders', 'Wildflowers', 'Final stage'],
-    star: null,
-    waypoints: [
-      { name: 'Northern Khövsgöl', desc: 'The remote northern end of the lake. Dukha reindeer herder camps accessible from here. Almost no tourists. Snow-capped peaks. One of the most isolated places in Central Asia.', latlng: [51.18, 100.52] }
+    id:7, title:'Khövsgöl Lake Circuit',
+    color:'#f97316', km:'~200 km', days:'7–10 days',
+    desc:'The western shore of Khövsgöl is one of the remotest and most spectacular tracks in Mongolia — used by almost no tourists, just herders and the occasional horse traveller. Wildflowers in July fill the high meadows above the water. Cold rivers run down from the mountains. In the far north, Dukha (Tsaatan) camps are accessible — nomadic reindeer herders whose way of life is closer to Siberian indigenous culture than anything on the Mongolian steppe. Return south along the eastern shore. Sell horses in Khatgal. Fly Mörön → UB.',
+    tags:['Remote western shore','Reindeer herders','Wildflowers','Final stage'],
+    waypoints:[
+      {name:'Northern Khövsgöl',desc:'Remote northern end of the lake. Dukha reindeer herder camps. Almost no tourists. Snow-capped peaks. One of the most isolated places in Central Asia.',latlng:[51.18,100.52]}
     ],
-    route: [[50.447,100.147],[50.7,100.07],[50.95,100.22],[51.18,100.52],[51.05,100.88],[50.72,100.72],[50.47,100.5],[50.447,100.147]]
+    route:[[50.447,100.147],[50.7,100.07],[50.95,100.22],[51.18,100.52],[51.05,100.88],[50.72,100.72],[50.47,100.5],[50.447,100.147]]
   }
 ];
 
-// ── Map setup ──
-const map = L.map('map', {
-  center: [49.2, 103.4],
-  zoom: 6,
-  zoomControl: false
-});
-L.control.zoom({ position: 'topright' }).addTo(map);
-
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_matter/{z}/{x}/{y}{r}.png', {
-  attribution: '© <a href="https://openstreetmap.org">OpenStreetMap</a> contributors © <a href="https://carto.com">CARTO</a>',
-  maxZoom: 18
+// ── Map ──
+const map = L.map('map',{center:[49.2,103.4],zoom:6,zoomControl:false});
+L.control.zoom({position:'topright'}).addTo(map);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_matter/{z}/{x}/{y}{r}.png',{
+  attribution:'© <a href="https://openstreetmap.org">OpenStreetMap</a> contributors © <a href="https://carto.com">CARTO</a>',
+  maxZoom:18
 }).addTo(map);
 
-// ── Draw stages ──
-const stageLayers = {};
-let activeSt = null;
+// ── Draw routes + markers ──
+const stageLayers={};
+let activeSt=null;
 
-STAGES.forEach(st => {
-  const pl = L.polyline(st.route, {
-    color: st.color, weight: 4, opacity: 0.85,
-    dashArray: null, lineCap: 'round', lineJoin: 'round'
-  }).addTo(map);
+STAGES.forEach(st=>{
+  const pl=L.polyline(st.route,{color:st.color,weight:4,opacity:.85,lineCap:'round',lineJoin:'round'}).addTo(map);
+  pl.on('click',()=>activateStage(st.id));
+  stageLayers[st.id]=pl;
 
-  pl.on('click', () => activateStage(st.id));
-  stageLayers[st.id] = pl;
-
-  st.waypoints.forEach((wp, wi) => {
-    const isStart = st.id === 1 && wi === 0;
-    const m = L.circleMarker(wp.latlng, {
-      radius: isStart ? 9 : 7,
-      fillColor: st.color,
-      color: isStart ? '#f59e0b' : '#1e293b',
-      weight: isStart ? 3 : 2,
-      fillOpacity: 1,
-      pane: 'markerPane'
+  st.waypoints.forEach((wp,wi)=>{
+    const isUB=st.id===1&&wi===0;
+    const m=L.circleMarker(wp.latlng,{
+      radius:isUB?9:7,
+      fillColor:st.color,
+      color:isUB?'#f59e0b':'#1e293b',
+      weight:isUB?3:2,fillOpacity:1
     }).addTo(map);
-
-    m.bindPopup(`<div class="popup-name">${isStart ? '🏙 ' : ''}${wp.name}</div><div class="popup-desc">${wp.desc}</div>`);
-    m.on('click', e => { L.DomEvent.stopPropagation(e); activateStage(st.id); });
+    m.bindPopup(`<div class="popup-name">${isUB?'🏙 ':''}${wp.name}</div><div class="popup-desc">${wp.desc}</div>`);
+    m.on('click',e=>{L.DomEvent.stopPropagation(e);activateStage(st.id);});
   });
 });
 
 // ── Sidebar cards ──
-const listEl = document.getElementById('stage-list');
-STAGES.forEach(st => {
-  const card = document.createElement('div');
-  card.className = 'stage-card';
-  card.id = `sc-${st.id}`;
-
-  const tagHtml = st.tags.map(t =>
-    `<span class="tag${t.startsWith('★') ? ' star' : ''}">${t}</span>`
-  ).join('');
-
-  const wpHtml = st.waypoints.map(wp => `
+const listEl=document.getElementById('stage-list');
+STAGES.forEach(st=>{
+  const card=document.createElement('div');
+  card.className='stage-card';
+  card.id=`sc-${st.id}`;
+  const tagHtml=st.tags.map(t=>`<span class="tag${t.startsWith('★')?' star':''}">${t}</span>`).join('');
+  const wpHtml=st.waypoints.map(wp=>`
     <div class="wp-item">
       <div class="wp-dot" style="background:${st.color}"></div>
-      <div class="wp-text">
-        <div class="wp-name">${wp.name}</div>
-        <div class="wp-desc">${wp.desc}</div>
-      </div>
-    </div>
-  `).join('');
-
-  card.innerHTML = `
+      <div class="wp-text"><div class="wp-name">${wp.name}</div><div class="wp-desc">${wp.desc}</div></div>
+    </div>`).join('');
+  card.innerHTML=`
     <div class="stage-hd">
       <div class="stage-num" style="background:${st.color}">${st.id}</div>
       <div class="stage-info">
@@ -419,56 +385,38 @@ STAGES.forEach(st => {
     <div class="stage-body">
       <p>${st.desc}</p>
       <div class="stage-tags">${tagHtml}</div>
-      <div class="waypoint-list">${wpHtml}</div>
-    </div>
-  `;
-
-  card.addEventListener('click', () => activateStage(st.id));
+      <div class="wp-list">${wpHtml}</div>
+    </div>`;
+  card.addEventListener('click',()=>activateStage(st.id));
   listEl.appendChild(card);
 });
 
-function activateStage(id) {
-  // Reset previous
-  if (activeSt !== null) {
-    const prev = STAGES.find(s => s.id === activeSt);
-    if (prev && stageLayers[prev.id]) {
-      stageLayers[prev.id].setStyle({ weight: 4, opacity: 0.85 });
-    }
-    const prevCard = document.getElementById(`sc-${activeSt}`);
-    if (prevCard) prevCard.classList.remove('active');
+function activateStage(id){
+  if(activeSt!==null){
+    const prev=STAGES.find(s=>s.id===activeSt);
+    if(prev&&stageLayers[prev.id]) stageLayers[prev.id].setStyle({weight:4,opacity:.85});
+    const pc=document.getElementById(`sc-${activeSt}`);
+    if(pc) pc.classList.remove('active');
   }
-
-  // Toggle off if same
-  if (activeSt === id) {
-    activeSt = null;
-    return;
-  }
-
-  activeSt = id;
-  const st = STAGES.find(s => s.id === id);
-  if (!st) return;
-
-  // Highlight line
-  if (stageLayers[id]) {
-    stageLayers[id].setStyle({ weight: 6, opacity: 1 });
-    stageLayers[id].bringToFront();
-  }
-
-  // Activate card
-  const card = document.getElementById(`sc-${id}`);
-  if (card) {
-    card.classList.add('active');
-    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-
-  // Fly to bounds
-  const bounds = L.latLngBounds(st.route);
-  st.waypoints.forEach(wp => bounds.extend(wp.latlng));
-  map.fitBounds(bounds, { padding: [60, 60], maxZoom: 9 });
+  if(activeSt===id){activeSt=null;return;}
+  activeSt=id;
+  const st=STAGES.find(s=>s.id===id);
+  if(!st) return;
+  stageLayers[id].setStyle({weight:6,opacity:1});
+  stageLayers[id].bringToFront();
+  const card=document.getElementById(`sc-${id}`);
+  if(card){card.classList.add('active');card.scrollIntoView({behavior:'smooth',block:'nearest'});}
+  const bounds=L.latLngBounds(st.route);
+  st.waypoints.forEach(wp=>bounds.extend(wp.latlng));
+  map.fitBounds(bounds,{padding:[60,60],maxZoom:9});
 }
 
-// Open first stage on load
-setTimeout(() => activateStage(1), 300);
+// ── Mobile sidebar toggle ──
+const sidebar=document.getElementById('sidebar');
+document.getElementById('sidebar-open-btn').addEventListener('click',()=>sidebar.classList.add('open'));
+document.getElementById('sidebar-close-btn').addEventListener('click',()=>sidebar.classList.remove('open'));
+
+setTimeout(()=>activateStage(1),300);
 </script>
 </body>
 </html>
