@@ -6,7 +6,16 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Mongolia by Horse — 2028</title>
-<link rel="stylesheet" href="../vendor/leaflet.css">
+<script>
+(function(){
+  var p=location.pathname.replace(/\/$/,'');
+  var root=p.replace(/\/mongolia(?:\/index\.html)?$/,'')+'/';
+  var l=document.createElement('link');
+  l.rel='stylesheet';l.href=root+'vendor/leaflet.css';
+  document.head.appendChild(l);
+  window.__MONGOLIA_ROOT=root;
+})();
+</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -17,7 +26,7 @@
 html,body{height:100%;overflow:hidden}
 body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text)}
 
-#app{display:flex;height:100vh;position:relative}
+#app{display:flex;height:100vh;height:100dvh;position:relative}
 
 /* ── Sidebar ── */
 #sidebar{
@@ -347,7 +356,19 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 
 </div><!-- /app -->
 
-<script src="../vendor/leaflet.js"></script>
+<script>
+(function(){
+  var p=location.pathname.replace(/\/$/,'');
+  var root=p.replace(/\/mongolia(?:\/index\.html)?$/,'')+'/';
+  var s=document.createElement('script');
+  s.src=root+'vendor/leaflet.js';
+  s.onload=function(){if(document.readyState==='complete')initMap();else window.addEventListener('load',initMap);};
+  s.onerror=function(){
+    document.getElementById('map').innerHTML='<p style="padding:16px;color:#94a3b8;font-size:13px">Map library failed to load. Try a hard refresh.</p>';
+  };
+  document.head.appendChild(s);
+})();
+</script>
 <script>
 const STAGES = [
   {
@@ -423,41 +444,53 @@ const STAGES = [
   }
 ];
 
-// ── Map ──
-const map = L.map('map',{center:[49.2,103.4],zoom:6,zoomControl:false});
-L.control.zoom({position:'topright'}).addTo(map);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
-  attribution:'© <a href="https://openstreetmap.org">OpenStreetMap</a> contributors © <a href="https://carto.com">CARTO</a>',
-  maxZoom:18
-}).addTo(map);
-
-function refreshMapSize(){
-  map.invalidateSize({animate:false});
-}
-window.addEventListener('resize',refreshMapSize);
-requestAnimationFrame(refreshMapSize);
-
-// ── Draw routes + markers ──
+// ── Map (init after layout so Leaflet gets real container dimensions) ──
+let map;
 const stageLayers={};
 let activeSt=null;
 
-STAGES.forEach(st=>{
-  const pl=L.polyline(st.route,{color:st.color,weight:4,opacity:.85,lineCap:'round',lineJoin:'round'}).addTo(map);
-  pl.on('click',()=>activateStage(st.id));
-  stageLayers[st.id]=pl;
+function refreshMapSize(){
+  if(map) map.invalidateSize({animate:false});
+}
 
-  st.waypoints.forEach((wp,wi)=>{
-    const isUB=st.id===1&&wi===0;
-    const m=L.circleMarker(wp.latlng,{
-      radius:isUB?9:7,
-      fillColor:st.color,
-      color:isUB?'#f59e0b':'#1e293b',
-      weight:isUB?3:2,fillOpacity:1
-    }).addTo(map);
-    m.bindPopup(`<div class="popup-name">${isUB?'🏙 ':''}${wp.name}</div><div class="popup-desc">${wp.desc}</div>`);
-    m.on('click',e=>{L.DomEvent.stopPropagation(e);activateStage(st.id);});
+function initMap(){
+  if(typeof L==='undefined'){
+    document.getElementById('map').innerHTML='<p style="padding:16px;color:#94a3b8;font-size:13px">Map library failed to load. Try a hard refresh.</p>';
+    return;
+  }
+  map=L.map('map',{center:[49.2,103.4],zoom:6,zoomControl:false});
+  L.control.zoom({position:'topright'}).addTo(map);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',{
+    attribution:'Tiles © Esri · Data © OpenStreetMap',
+    maxZoom:16
+  }).addTo(map);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}',{
+    maxZoom:16,pane:'overlayPane',opacity:0.9
+  }).addTo(map);
+
+  STAGES.forEach(st=>{
+    const pl=L.polyline(st.route,{color:st.color,weight:4,opacity:.85,lineCap:'round',lineJoin:'round'}).addTo(map);
+    pl.on('click',()=>activateStage(st.id));
+    stageLayers[st.id]=pl;
+
+    st.waypoints.forEach((wp,wi)=>{
+      const isUB=st.id===1&&wi===0;
+      const m=L.circleMarker(wp.latlng,{
+        radius:isUB?9:7,
+        fillColor:st.color,
+        color:isUB?'#f59e0b':'#1e293b',
+        weight:isUB?3:2,fillOpacity:1
+      }).addTo(map);
+      m.bindPopup(`<div class="popup-name">${isUB?'🏙 ':''}${wp.name}</div><div class="popup-desc">${wp.desc}</div>`);
+      m.on('click',e=>{L.DomEvent.stopPropagation(e);activateStage(st.id);});
+    });
   });
-});
+
+  refreshMapSize();
+  setTimeout(()=>{refreshMapSize();activateStage(1);},150);
+}
+
+window.addEventListener('resize',refreshMapSize);
 
 // ── Sidebar cards ──
 const listEl=document.getElementById('stage-list');
@@ -489,6 +522,7 @@ STAGES.forEach(st=>{
 });
 
 function activateStage(id){
+  if(!map) return;
   if(activeSt!==null){
     const prev=STAGES.find(s=>s.id===activeSt);
     if(prev&&stageLayers[prev.id]) stageLayers[prev.id].setStyle({weight:4,opacity:.85});
@@ -536,7 +570,7 @@ document.querySelectorAll('.prep-item').forEach(item=>{
   });
 });
 
-setTimeout(()=>activateStage(1),300);
+// activateStage(1) runs from initMap after load
 </script>
 </body>
 </html>
