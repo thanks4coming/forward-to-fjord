@@ -5,14 +5,20 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 4,           // segment id: 4 — Turku → Helsinki (now in Salo)
-  currentCity: 'Salo, Finland',   // most recent city/town name
+  currentCity: 'Raatihuoneenkatu 3a, Salo, Finland',   // most recent city/town name
   dayNumber: 26,                // day number of the trip
   kmRidden: 921,                 // total km cycled (… → Turku → Salo, ~75 km today)
   countries: ['Australia', 'Vietnam', 'United Kingdom', 'Sweden', 'Finland'],               // e.g. ['Sweden','Finland']
-  lat: 60.294699,                   // precise current lat (preferred over city fallback)
-  lng: 23.269646,                   // precise current lng
+  lat: 60.38384,                   // precise current lat (preferred over city fallback)
+  lng: 23.12806,                   // precise current lng
   lastUpdated: '2026-07-16',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-07-16T17:39:10.787Z',
+      lat: 60.38384,
+      lng: 23.12806,
+      location: 'Raatihuoneenkatu 3a, Salo, Finland',
+    },
     {
       at: '2026-07-16T15:21:18.305Z',
       lat: 60.294699,
