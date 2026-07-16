@@ -4,15 +4,22 @@
 // ============================================================
 const tripStatus = {
   active: true,               // set true when the trip starts
-  currentSegment: 4,           // segment id: 1, 3, 4, 5, 6, 7, 8, 9 (no segment 2) — reached Turku, leg 3 complete
-  currentCity: 'Turku, Finland',   // most recent city/town name
-  dayNumber: 25,                // day number of the trip
-  kmRidden: 846,                 // total km cycled (Gothenburg → … → Korppoo → Turku, ~77 km today)
+  currentSegment: 4,           // segment id: 4 — Turku → Helsinki (now in Salo)
+  currentCity: 'Salo, Finland',   // most recent city/town name
+  dayNumber: 26,                // day number of the trip
+  kmRidden: 921,                 // total km cycled (… → Turku → Salo, ~75 km today)
   countries: ['Australia', 'Vietnam', 'United Kingdom', 'Sweden', 'Finland'],               // e.g. ['Sweden','Finland']
-  lat: 60.451324,                   // precise current lat (preferred over city fallback)
-  lng: 22.25582,                   // precise current lng
-  lastUpdated: '2026-07-14',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 60.294699,                   // precise current lat (preferred over city fallback)
+  lng: 23.269646,                   // precise current lng
+  lastUpdated: '2026-07-16',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-07-16T15:21:18.305Z',
+      lat: 60.294699,
+      lng: 23.269646,
+      location: 'Salo, Finland',
+      note: 'Turku → Salo today (~75 km). EuroVelo 10 — rolling farmland and pine forest. Motor was screaming; fixed roadside with degreaser, chainring clean, and rear wheel realignment.',
+    },
     {
       at: '2026-07-14T16:59:31.791Z',
       lat: 60.451324,
@@ -210,6 +217,14 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-07-16',
+      location: 'Salo, Finland',
+      text: 'Turku → Salo today (~75 km). EuroVelo 10 — rolling farmland and pine forest. Motor was screaming; fixed roadside with degreaser, chainring clean, and rear wheel realignment.',
+      photo: 'photos/2026-07-16-turku-salo-01.jpg',
+      lat: 60.294699,
+      lng: 23.269646
+    },
     {
       date: '2026-07-14',
       location: 'Turku, Finland',
@@ -446,6 +461,7 @@ const tripStatus = {
     { lat: 60.195586, lng: 21.888761, src: 'photos/2026-07-14-archipelago-trail-02.jpg', caption: 'Free ferry crossing', location: 'Turku Archipelago' },
     { lat: 60.176216, lng: 21.759930, src: 'photos/2026-07-14-paratiisi-01.jpg', caption: 'Paratiisi — Museum of Modern Art', location: 'Nagu, Turku Archipelago' },
     { lat: 60.176216, lng: 21.759930, src: 'photos/2026-07-14-paratiisi-02.jpg', caption: 'Paratiisi art museum', location: 'Nagu, Turku Archipelago' },
+    { lat: 60.3605, lng: 22.7820, src: 'photos/2026-07-16-turku-salo-01.jpg', caption: 'Turku → Salo — EuroVelo 10', location: 'Halikko, Finland' },
     { lat: 60.176216, lng: 21.759930, src: 'photos/2026-07-14-paratiisi-03.jpg', caption: 'Paratiisi', location: 'Nagu, Turku Archipelago' },
     // Map photo pins — add as you go (trip order; lightbox sorts via photoTripSortKey in index.html)
     // { lat: 0.0, lng: 0.0, src: 'photos/2026-XX-XX-city.jpg', caption: 'Caption', location: 'City' }
