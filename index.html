@@ -1248,6 +1248,9 @@ function getTrailBikeRoutes() {
   if (trailBikeRoutes.korpoTurku && trailBikeRoutes.korpoTurku.length > 1) {
     routes.push(trailBikeRoutes.korpoTurku);
   }
+  if (trailBikeRoutes.turkuSalo && trailBikeRoutes.turkuSalo.length > 1) {
+    routes.push(trailBikeRoutes.turkuSalo);
+  }
   return routes;
 }
 
@@ -1372,7 +1375,20 @@ function getJonkopingOdeshogTrailRouteIfBothOnPath(from, to) {
   return null;
 }
 
+function getTurkuSaloTrailRouteIfBothOnPath(from, to) {
+  const route = trailBikeRoutes.turkuSalo;
+  if (!route || route.length < 2) return null;
+  const fromNR = nearestOnRoute(route, from.lat, from.lng);
+  const toNR = nearestOnRoute(route, to.lat, to.lng);
+  if (fromNR.dist <= TRAIL_ROUTE_CORRIDOR_DEG && toNR.dist <= TRAIL_ROUTE_CORRIDOR_DEG) {
+    return route;
+  }
+  return null;
+}
+
 function findBestTrailRoute(from, to) {
+  const forcedTurkuSalo = getTurkuSaloTrailRouteIfBothOnPath(from, to);
+  if (forcedTurkuSalo) return forcedTurkuSalo;
   const forcedEckeroMariehamn = getEckeroMariehamnTrailRouteIfBothOnPath(from, to);
   if (forcedEckeroMariehamn) return forcedEckeroMariehamn;
   const forcedEckeroCamp = getEckeroCampTrailRouteIfBothOnPath(from, to);
@@ -2138,7 +2154,8 @@ function loadTrailBikeRoutes() {
     fetch('eckero-mariehamn-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
     fetch('mariehamn-langnas-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
     fetch('hellso-kokar-camp-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
-    fetch('korpo-turku-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
+    fetch('korpo-turku-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
+    fetch('turku-salo-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
   ]).then(function(results) {
     if (results[0] && results[0].length > 1) trailBikeRoutes.gothenburgAlingsas = results[0];
     if (results[1] && results[1].length > 1) trailBikeRoutes.alingsasNittaCamp = results[1];
@@ -2156,7 +2173,8 @@ function loadTrailBikeRoutes() {
     if (results[13] && results[13].length > 1) trailBikeRoutes.mariehamnLangnas = results[13];
     if (results[14] && results[14].length > 1) trailBikeRoutes.hellsoKokarCamp = results[14];
     if (results[15] && results[15].length > 1) trailBikeRoutes.korpoTurku = results[15];
-    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp || trailBikeRoutes.jonkopingOdeshog || trailBikeRoutes.odeshogLinkoping || trailBikeRoutes.linkopingNorrkoping || trailBikeRoutes.norrkopingCamp || trailBikeRoutes.nykopingCamp || trailBikeRoutes.sodertalje || trailBikeRoutes.stockholm || trailBikeRoutes.archipelagoCamp || trailBikeRoutes.norrtaljeGrisslehamn || trailBikeRoutes.eckeroCamp || trailBikeRoutes.eckeroMariehamn || trailBikeRoutes.mariehamnLangnas || trailBikeRoutes.hellsoKokarCamp || trailBikeRoutes.korpoTurku) {
+    if (results[16] && results[16].length > 1) trailBikeRoutes.turkuSalo = results[16];
+    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp || trailBikeRoutes.jonkopingOdeshog || trailBikeRoutes.odeshogLinkoping || trailBikeRoutes.linkopingNorrkoping || trailBikeRoutes.norrkopingCamp || trailBikeRoutes.nykopingCamp || trailBikeRoutes.sodertalje || trailBikeRoutes.stockholm || trailBikeRoutes.archipelagoCamp || trailBikeRoutes.norrtaljeGrisslehamn || trailBikeRoutes.eckeroCamp || trailBikeRoutes.eckeroMariehamn || trailBikeRoutes.mariehamnLangnas || trailBikeRoutes.hellsoKokarCamp || trailBikeRoutes.korpoTurku || trailBikeRoutes.turkuSalo) {
       rebuildPhotoLayer();
       overlayActualStage2Route();
     }

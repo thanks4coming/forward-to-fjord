@@ -18,12 +18,6 @@ const tripStatus = {
       lat: 60.38384,
       lng: 23.12806,
       location: 'Raatihuoneenkatu 3a, Salo, Finland',
-    },
-    {
-      at: '2026-07-16T15:21:18.305Z',
-      lat: 60.294699,
-      lng: 23.269646,
-      location: 'Salo, Finland',
       note: 'Turku → Salo today (~75 km). EuroVelo 10 — rolling farmland and pine forest. Motor was screaming; fixed roadside with degreaser, chainring clean, and rear wheel realignment.',
     },
     {
