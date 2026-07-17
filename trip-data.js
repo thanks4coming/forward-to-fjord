@@ -4,15 +4,22 @@
 // ============================================================
 const tripStatus = {
   active: true,               // set true when the trip starts
-  currentSegment: 4,           // segment id: 4 — Turku → Helsinki (now in Salo)
-  currentCity: 'Raatihuoneenkatu 3a, Salo, Finland',   // most recent city/town name
-  dayNumber: 26,                // day number of the trip
-  kmRidden: 921,                 // total km cycled (… → Turku → Salo, ~75 km today)
+  currentSegment: 4,           // segment id: 4 — Turku → Helsinki (now in Lohja)
+  currentCity: 'Lohja, Finland',   // most recent city/town name
+  dayNumber: 27,                // day number of the trip
+  kmRidden: 987,                 // total km cycled (… → Salo → Lohja, ~66 km today)
   countries: ['Australia', 'Vietnam', 'United Kingdom', 'Sweden', 'Finland'],               // e.g. ['Sweden','Finland']
-  lat: 60.38384,                   // precise current lat (preferred over city fallback)
-  lng: 23.12806,                   // precise current lng
-  lastUpdated: '2026-07-16',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 60.251204,                   // precise current lat (preferred over city fallback)
+  lng: 24.067695,                   // precise current lng
+  lastUpdated: '2026-07-17',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-07-17T16:57:37.212Z',
+      lat: 60.251204,
+      lng: 24.067695,
+      location: 'Lohja, Finland',
+      note: 'Salo → Lohja today (~66 km). EuroVelo 10 toward Helsinki.',
+    },
     {
       at: '2026-07-16T17:39:10.787Z',
       lat: 60.38384,
@@ -217,6 +224,14 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-07-17',
+      location: 'Lohja, Finland',
+      text: 'Salo → Lohja today (~66 km). EuroVelo 10 toward Helsinki.',
+      photo: 'photos/2026-07-17-salo-lohja-01.jpg',
+      lat: 60.251204,
+      lng: 24.067695
+    },
     {
       date: '2026-07-16',
       location: 'Salo, Finland',
@@ -462,6 +477,7 @@ const tripStatus = {
     { lat: 60.176216, lng: 21.759930, src: 'photos/2026-07-14-paratiisi-01.jpg', caption: 'Paratiisi — Museum of Modern Art', location: 'Nagu, Turku Archipelago' },
     { lat: 60.176216, lng: 21.759930, src: 'photos/2026-07-14-paratiisi-02.jpg', caption: 'Paratiisi art museum', location: 'Nagu, Turku Archipelago' },
     { lat: 60.3605, lng: 22.7820, src: 'photos/2026-07-16-turku-salo-01.jpg', caption: 'Turku → Salo — EuroVelo 10', location: 'Halikko, Finland' },
+    { lat: 60.251204, lng: 24.067695, src: 'photos/2026-07-17-salo-lohja-01.jpg', caption: 'Grain fields on the way to Lohja', location: 'Salo → Lohja' },
     { lat: 60.176216, lng: 21.759930, src: 'photos/2026-07-14-paratiisi-03.jpg', caption: 'Paratiisi', location: 'Nagu, Turku Archipelago' },
     // Map photo pins — add as you go (trip order; lightbox sorts via photoTripSortKey in index.html)
     // { lat: 0.0, lng: 0.0, src: 'photos/2026-XX-XX-city.jpg', caption: 'Caption', location: 'City' }
