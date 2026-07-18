@@ -7,8 +7,8 @@ const tripStatus = {
   currentSegment: 4,           // segment id: 4 — Turku → Helsinki
   currentCity: 'Kuntospot, Helsinki, Finland',   // most recent city/town name
   dayNumber: 28,                // day number of the trip
-  kmRidden: 1045,               // total km cycled (… → Lohja → Helsinki, ~58 km today)
-  countries: ['Australia', 'Vietnam', 'United Kingdom', 'Sweden', 'Finland'],               // e.g. ['Sweden','Finland']
+  kmRidden: 1053,               // total km cycled (… → Lohja → Helsinki, ~66 km today)
+  countries: ['United Kingdom', 'Sweden', 'Finland'],               // e.g. ['Sweden','Finland']
   lat: 60.193799,                   // precise current lat (preferred over city fallback)
   lng: 24.95598,                   // precise current lng
   lastUpdated: '2026-07-18',           // e.g. '2026-06-08' — shown in live banner when set
@@ -18,7 +18,7 @@ const tripStatus = {
       lat: 60.193799,
       lng: 24.95598,
       location: 'Kuntospot, Sturenkatu 27, Helsinki',
-      note: 'Lohja → Helsinki today. Made it.',
+      note: 'Lohja → Helsinki today (~66 km). EuroVelo 10 into the city.',
     },
     {
       at: '2026-07-17T16:57:37.212Z',
@@ -234,7 +234,7 @@ const tripStatus = {
     {
       date: '2026-07-18',
       location: 'Kuntospot, Helsinki, Finland',
-      text: 'Lohja → Helsinki today (~58 km). Made it.',
+      text: 'Lohja → Helsinki today (~66 km). EuroVelo 10 into the city.',
       lat: 60.193799,
       lng: 24.95598
     },
