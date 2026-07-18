@@ -1519,6 +1519,16 @@ function isUkCheckin(h) {
   return h.lat >= 49 && h.lat <= 59 && h.lng >= -8 && h.lng <= 2;
 }
 
+function isPreTripCheckin(h) {
+  // Perth Airport and southen hemisphere (Australia)
+  if (h.lat < 0) return true;
+  // Vietnam / SE Asia layover
+  if (h.lat >= 0 && h.lat <= 25 && h.lng >= 95 && h.lng <= 115) return true;
+  // UK pre-departure (before the bike trip started in Gothenburg)
+  if (isUkCheckin(h)) return true;
+  return false;
+}
+
 function isAlandCheckin(h) {
   return h.lat >= 59.7 && h.lat <= 60.5 && h.lng >= 19.3 && h.lng <= 21.5;
 }
@@ -1596,8 +1606,10 @@ function buildTrailSegmentPaths(chronological) {
     const fromPt = [from.lat, from.lng];
     const toPt = [to.lat, to.lng];
 
-    if (isUkCheckin(from) && isSwedenCheckin(to)) {
-      bikePaths.push([fromPt, GOTHENBURG_LATLNG]);
+    if (isPreTripCheckin(from) && isPreTripCheckin(to)) {
+      continue; // Perth → Vietnam → London: no line
+    } else if (isUkCheckin(from) && isSwedenCheckin(to)) {
+      // London → Gothenburg flight: skip the flight line, just start the bike route from Gothenburg
       if (gbgRoute && gbgRoute.length > 1) {
         bikePaths.push(buildPathAlongRoute(GOTHENBURG_LATLNG, toPt, gbgRoute));
       } else {
@@ -1640,6 +1652,8 @@ function buildTrailSegmentPaths(chronological) {
       const bikeRoute = findBestTrailRoute(from, to);
       if (bikeRoute) bikePaths.push(buildPathAlongRoute(fromPt, toPt, bikeRoute));
       else bikePaths.push([fromPt, toPt]);
+    } else if (isPreTripCheckin(from) || isPreTripCheckin(to)) {
+      continue; // suppress any line touching a pre-trip pin
     } else {
       bikePaths.push([fromPt, toPt]);
     }
