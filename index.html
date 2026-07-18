@@ -1254,6 +1254,9 @@ function getTrailBikeRoutes() {
   if (trailBikeRoutes.saloLohja && trailBikeRoutes.saloLohja.length > 1) {
     routes.push(trailBikeRoutes.saloLohja);
   }
+  if (trailBikeRoutes.lohjaHelsinki && trailBikeRoutes.lohjaHelsinki.length > 1) {
+    routes.push(trailBikeRoutes.lohjaHelsinki);
+  }
   return routes;
 }
 
@@ -1400,11 +1403,24 @@ function getSaloLohjaTrailRouteIfBothOnPath(from, to) {
   return null;
 }
 
+function getLohjaHelsinkiTrailRouteIfBothOnPath(from, to) {
+  const route = trailBikeRoutes.lohjaHelsinki;
+  if (!route || route.length < 2) return null;
+  const fromNR = nearestOnRoute(route, from.lat, from.lng);
+  const toNR = nearestOnRoute(route, to.lat, to.lng);
+  if (fromNR.dist <= TRAIL_ROUTE_CORRIDOR_DEG && toNR.dist <= TRAIL_ROUTE_CORRIDOR_DEG) {
+    return route;
+  }
+  return null;
+}
+
 function findBestTrailRoute(from, to) {
   const forcedTurkuSalo = getTurkuSaloTrailRouteIfBothOnPath(from, to);
   if (forcedTurkuSalo) return forcedTurkuSalo;
   const forcedSaloLohja = getSaloLohjaTrailRouteIfBothOnPath(from, to);
   if (forcedSaloLohja) return forcedSaloLohja;
+  const forcedLohjaHelsinki = getLohjaHelsinkiTrailRouteIfBothOnPath(from, to);
+  if (forcedLohjaHelsinki) return forcedLohjaHelsinki;
   const forcedEckeroMariehamn = getEckeroMariehamnTrailRouteIfBothOnPath(from, to);
   if (forcedEckeroMariehamn) return forcedEckeroMariehamn;
   const forcedEckeroCamp = getEckeroCampTrailRouteIfBothOnPath(from, to);
@@ -2221,7 +2237,8 @@ function loadTrailBikeRoutes() {
     fetch('hellso-kokar-camp-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
     fetch('korpo-turku-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
     fetch('turku-salo-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
-    fetch('salo-lohja-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
+    fetch('salo-lohja-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
+    fetch('lohja-helsinki-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
   ]).then(function(results) {
     if (results[0] && results[0].length > 1) trailBikeRoutes.gothenburgAlingsas = results[0];
     if (results[1] && results[1].length > 1) trailBikeRoutes.alingsasNittaCamp = results[1];
@@ -2241,7 +2258,8 @@ function loadTrailBikeRoutes() {
     if (results[15] && results[15].length > 1) trailBikeRoutes.korpoTurku = results[15];
     if (results[16] && results[16].length > 1) trailBikeRoutes.turkuSalo = results[16];
     if (results[17] && results[17].length > 1) trailBikeRoutes.saloLohja = results[17];
-    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp || trailBikeRoutes.jonkopingOdeshog || trailBikeRoutes.odeshogLinkoping || trailBikeRoutes.linkopingNorrkoping || trailBikeRoutes.norrkopingCamp || trailBikeRoutes.nykopingCamp || trailBikeRoutes.sodertalje || trailBikeRoutes.stockholm || trailBikeRoutes.archipelagoCamp || trailBikeRoutes.norrtaljeGrisslehamn || trailBikeRoutes.eckeroCamp || trailBikeRoutes.eckeroMariehamn || trailBikeRoutes.mariehamnLangnas || trailBikeRoutes.hellsoKokarCamp || trailBikeRoutes.korpoTurku || trailBikeRoutes.turkuSalo || trailBikeRoutes.saloLohja) {
+    if (results[18] && results[18].length > 1) trailBikeRoutes.lohjaHelsinki = results[18];
+    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp || trailBikeRoutes.jonkopingOdeshog || trailBikeRoutes.odeshogLinkoping || trailBikeRoutes.linkopingNorrkoping || trailBikeRoutes.norrkopingCamp || trailBikeRoutes.nykopingCamp || trailBikeRoutes.sodertalje || trailBikeRoutes.stockholm || trailBikeRoutes.archipelagoCamp || trailBikeRoutes.norrtaljeGrisslehamn || trailBikeRoutes.eckeroCamp || trailBikeRoutes.eckeroMariehamn || trailBikeRoutes.mariehamnLangnas || trailBikeRoutes.hellsoKokarCamp || trailBikeRoutes.korpoTurku || trailBikeRoutes.turkuSalo || trailBikeRoutes.saloLohja || trailBikeRoutes.lohjaHelsinki) {
       rebuildPhotoLayer();
       overlayActualStage2Route();
     }

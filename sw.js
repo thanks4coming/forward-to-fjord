@@ -1,8 +1,8 @@
-const CACHE = 'biketrip-v85';
+const CACHE = 'biketrip-v86';
 
 self.addEventListener('install', e => {
   const scope = self.registration.scope;
-  const precache = [scope, scope + 'index.html', scope + 'trip-data.js', scope + 'gothenburg-alingsas-route.json', scope + 'alingsas-nitta-camp-route.json', scope + 'jonkoping-odeshog-route.json', scope + 'odeshog-linkoping-route.json', scope + 'linkoping-norrkoping-route.json', scope + 'norrkoping-camp-route.json', scope + 'nykoping-camp-route.json', scope + 'sodertalje-route.json', scope + 'stockholm-route.json', scope + 'stockholm-archipelago-camp-route.json', scope + 'norrtalje-grisslehamn-route.json', scope + 'eckero-camp-route.json', scope + 'eckero-mariehamn-route.json', scope + 'mariehamn-langnas-route.json', scope + 'hellso-kokar-camp-route.json', scope + 'korpo-turku-route.json', scope + 'turku-salo-route.json', scope + 'salo-lohja-route.json'];
+  const precache = [scope, scope + 'index.html', scope + 'trip-data.js', scope + 'gothenburg-alingsas-route.json', scope + 'alingsas-nitta-camp-route.json', scope + 'jonkoping-odeshog-route.json', scope + 'odeshog-linkoping-route.json', scope + 'linkoping-norrkoping-route.json', scope + 'norrkoping-camp-route.json', scope + 'nykoping-camp-route.json', scope + 'sodertalje-route.json', scope + 'stockholm-route.json', scope + 'stockholm-archipelago-camp-route.json', scope + 'norrtalje-grisslehamn-route.json', scope + 'eckero-camp-route.json', scope + 'eckero-mariehamn-route.json', scope + 'mariehamn-langnas-route.json', scope + 'hellso-kokar-camp-route.json', scope + 'korpo-turku-route.json', scope + 'turku-salo-route.json', scope + 'salo-lohja-route.json', scope + 'lohja-helsinki-route.json', scope + 'photos/2026-07-17-salo-lohja-01.jpg'];
   e.waitUntil(
     caches.open(CACHE).then(c => c.addAll(precache))
   );

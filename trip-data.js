@@ -4,15 +4,22 @@
 // ============================================================
 const tripStatus = {
   active: true,               // set true when the trip starts
-  currentSegment: 4,           // segment id: 4 — Turku → Helsinki (now in Lohja)
-  currentCity: 'Lohja, Finland',   // most recent city/town name
-  dayNumber: 27,                // day number of the trip
-  kmRidden: 987,                 // total km cycled (… → Salo → Lohja, ~66 km today)
+  currentSegment: 4,           // segment id: 4 — Turku → Helsinki
+  currentCity: 'Kuntospot, Helsinki, Finland',   // most recent city/town name
+  dayNumber: 28,                // day number of the trip
+  kmRidden: 1045,               // total km cycled (… → Lohja → Helsinki, ~58 km today)
   countries: ['Australia', 'Vietnam', 'United Kingdom', 'Sweden', 'Finland'],               // e.g. ['Sweden','Finland']
-  lat: 60.251204,                   // precise current lat (preferred over city fallback)
-  lng: 24.067695,                   // precise current lng
-  lastUpdated: '2026-07-17',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 60.193799,                   // precise current lat (preferred over city fallback)
+  lng: 24.95598,                   // precise current lng
+  lastUpdated: '2026-07-18',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-07-18T13:08:52.371Z',
+      lat: 60.193799,
+      lng: 24.95598,
+      location: 'Kuntospot, Sturenkatu 27, Helsinki',
+      note: 'Lohja → Helsinki today. Made it.',
+    },
     {
       at: '2026-07-17T16:57:37.212Z',
       lat: 60.251204,
@@ -224,6 +231,13 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-07-18',
+      location: 'Kuntospot, Helsinki, Finland',
+      text: 'Lohja → Helsinki today (~58 km). Made it.',
+      lat: 60.193799,
+      lng: 24.95598
+    },
     {
       date: '2026-07-17',
       location: 'Lohja, Finland',
