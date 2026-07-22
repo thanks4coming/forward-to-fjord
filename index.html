@@ -1414,7 +1414,20 @@ function getLohjaHelsinkiTrailRouteIfBothOnPath(from, to) {
   return null;
 }
 
+function getTallinnEstoniaTrailRouteIfBothOnPath(from, to) {
+  const route = trailBikeRoutes.tallinnEstonia;
+  if (!route || route.length < 2) return null;
+  const fromNR = nearestOnRoute(route, from.lat, from.lng);
+  const toNR = nearestOnRoute(route, to.lat, to.lng);
+  if (fromNR.dist <= TRAIL_ROUTE_CORRIDOR_DEG && toNR.dist <= TRAIL_ROUTE_CORRIDOR_DEG) {
+    return route;
+  }
+  return null;
+}
+
 function findBestTrailRoute(from, to) {
+  const forcedTallinnEstonia = getTallinnEstoniaTrailRouteIfBothOnPath(from, to);
+  if (forcedTallinnEstonia) return forcedTallinnEstonia;
   const forcedTurkuSalo = getTurkuSaloTrailRouteIfBothOnPath(from, to);
   if (forcedTurkuSalo) return forcedTurkuSalo;
   const forcedSaloLohja = getSaloLohjaTrailRouteIfBothOnPath(from, to);
@@ -1561,6 +1574,10 @@ function isAlandOrFinlandCheckin(h) {
   return h.lat >= 59.5 && h.lng >= 19 && h.lng <= 32;
 }
 
+function isEstoniaCheckin(h) {
+  return h.lat >= 57.5 && h.lat < 59.8 && h.lng >= 21.5 && h.lng <= 28.5;
+}
+
 const TRAIL_ON_ROUTE_DEG = 0.004;      // ~400 m — on the cycling path
 const TRAIL_ROUTE_CORRIDOR_DEG = 0.15; // ~15 km — still snap to the planned route
 
@@ -1665,6 +1682,14 @@ function buildTrailSegmentPaths(chronological) {
         bikePaths.push([ECKERO_FERRY_LATLNG, toPt]);
       }
     } else if (isSwedenCheckin(from) && isSwedenCheckin(to)) {
+      const bikeRoute = findBestTrailRoute(from, to);
+      if (bikeRoute) bikePaths.push(buildPathAlongRoute(fromPt, toPt, bikeRoute));
+      else bikePaths.push([fromPt, toPt]);
+    } else if (isAlandOrFinlandCheckin(from) && isEstoniaCheckin(to)) {
+      // Helsinki → Tallinn ferry — draw as ferry line, no cycling segment
+      ferryPaths.push([fromPt, toPt]);
+    } else if (isEstoniaCheckin(from) && isEstoniaCheckin(to)) {
+      // Estonia cycling — use pre-cached route or OSRM fallback
       const bikeRoute = findBestTrailRoute(from, to);
       if (bikeRoute) bikePaths.push(buildPathAlongRoute(fromPt, toPt, bikeRoute));
       else bikePaths.push([fromPt, toPt]);
@@ -2238,7 +2263,8 @@ function loadTrailBikeRoutes() {
     fetch('korpo-turku-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
     fetch('turku-salo-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
     fetch('salo-lohja-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
-    fetch('lohja-helsinki-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
+    fetch('lohja-helsinki-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
+    fetch('tallinn-estonia-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
   ]).then(function(results) {
     if (results[0] && results[0].length > 1) trailBikeRoutes.gothenburgAlingsas = results[0];
     if (results[1] && results[1].length > 1) trailBikeRoutes.alingsasNittaCamp = results[1];
@@ -2259,7 +2285,8 @@ function loadTrailBikeRoutes() {
     if (results[16] && results[16].length > 1) trailBikeRoutes.turkuSalo = results[16];
     if (results[17] && results[17].length > 1) trailBikeRoutes.saloLohja = results[17];
     if (results[18] && results[18].length > 1) trailBikeRoutes.lohjaHelsinki = results[18];
-    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp || trailBikeRoutes.jonkopingOdeshog || trailBikeRoutes.odeshogLinkoping || trailBikeRoutes.linkopingNorrkoping || trailBikeRoutes.norrkopingCamp || trailBikeRoutes.nykopingCamp || trailBikeRoutes.sodertalje || trailBikeRoutes.stockholm || trailBikeRoutes.archipelagoCamp || trailBikeRoutes.norrtaljeGrisslehamn || trailBikeRoutes.eckeroCamp || trailBikeRoutes.eckeroMariehamn || trailBikeRoutes.mariehamnLangnas || trailBikeRoutes.hellsoKokarCamp || trailBikeRoutes.korpoTurku || trailBikeRoutes.turkuSalo || trailBikeRoutes.saloLohja || trailBikeRoutes.lohjaHelsinki) {
+    if (results[19] && results[19].length > 1) trailBikeRoutes.tallinnEstonia = results[19];
+    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp || trailBikeRoutes.jonkopingOdeshog || trailBikeRoutes.odeshogLinkoping || trailBikeRoutes.linkopingNorrkoping || trailBikeRoutes.norrkopingCamp || trailBikeRoutes.nykopingCamp || trailBikeRoutes.sodertalje || trailBikeRoutes.stockholm || trailBikeRoutes.archipelagoCamp || trailBikeRoutes.norrtaljeGrisslehamn || trailBikeRoutes.eckeroCamp || trailBikeRoutes.eckeroMariehamn || trailBikeRoutes.mariehamnLangnas || trailBikeRoutes.hellsoKokarCamp || trailBikeRoutes.korpoTurku || trailBikeRoutes.turkuSalo || trailBikeRoutes.saloLohja || trailBikeRoutes.lohjaHelsinki || trailBikeRoutes.tallinnEstonia) {
       rebuildPhotoLayer();
       overlayActualStage2Route();
     }

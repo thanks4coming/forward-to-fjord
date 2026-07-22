@@ -4,15 +4,29 @@
 // ============================================================
 const tripStatus = {
   active: true,               // set true when the trip starts
-  currentSegment: 4,           // segment id: 4 — Turku → Helsinki
-  currentCity: 'Kuntospot, Helsinki, Finland',   // most recent city/town name
-  dayNumber: 28,                // day number of the trip
-  kmRidden: 1053,               // total km cycled (… → Lohja → Helsinki, ~66 km today)
-  countries: ['United Kingdom', 'Sweden', 'Finland'],               // e.g. ['Sweden','Finland']
-  lat: 60.193799,                   // precise current lat (preferred over city fallback)
-  lng: 24.95598,                   // precise current lng
-  lastUpdated: '2026-07-18',           // e.g. '2026-06-08' — shown in live banner when set
+  currentSegment: 5,           // segment id: 5 — Estonia → Baltics
+  currentCity: 'near Haapsalu, Lääne County, Estonia',   // most recent city/town name
+  dayNumber: 32,                // day number of the trip
+  kmRidden: 1123,               // total km cycled (… → Helsinki → ferry → Tallinn → Estonia, ~70 km today)
+  countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia'],
+  lat: 58.988686,                   // precise current lat (preferred over city fallback)
+  lng: 24.019891,                   // precise current lng
+  lastUpdated: '2026-07-22',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-07-22T15:49:01.599Z',
+      lat: 58.988686,
+      lng: 24.019891,
+      location: 'near Haapsalu, Lääne County, Estonia',
+      note: 'Tallinn → here today (~70 km). Long straight stretch through western Estonia on the final leg.',
+    },
+    {
+      at: '2026-07-20T12:00:00.000Z',
+      lat: 59.436962,
+      lng: 24.745369,
+      location: 'Tallinn, Estonia',
+      note: 'Ferry from Helsinki to Tallinn. Two nights in the old city.',
+    },
     {
       at: '2026-07-18T13:08:52.371Z',
       lat: 60.193799,
@@ -231,6 +245,21 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-07-22',
+      location: '58.988686, 24.019891',
+      text: 'Tallinn to here today — long straight stretch on the final leg',
+      lat: 58.988686,
+      lng: 24.019891
+    },
+    {
+      date: '2026-07-22',
+      location: 'near Haapsalu, Lääne County, Estonia',
+      text: 'Tallinn → western Estonia today (~70 km). First ride in Estonia — long, straight, flat roads through birch forest and farmland. Ferried Helsinki → Tallinn two days ago, spent two nights in the old city.',
+      photo: 'photos/2026-07-22-tallinn-estonia-01.jpg',
+      lat: 58.988686,
+      lng: 24.019891
+    },
     {
       date: '2026-07-18',
       location: 'Kuntospot, Helsinki, Finland',
@@ -491,6 +520,7 @@ const tripStatus = {
     { lat: 60.176216, lng: 21.759930, src: 'photos/2026-07-14-paratiisi-01.jpg', caption: 'Paratiisi — Museum of Modern Art', location: 'Nagu, Turku Archipelago' },
     { lat: 60.176216, lng: 21.759930, src: 'photos/2026-07-14-paratiisi-02.jpg', caption: 'Paratiisi art museum', location: 'Nagu, Turku Archipelago' },
     { lat: 60.3605, lng: 22.7820, src: 'photos/2026-07-16-turku-salo-01.jpg', caption: 'Turku → Salo — EuroVelo 10', location: 'Halikko, Finland' },
+    { lat: 58.988686, lng: 24.019891, src: 'photos/2026-07-22-tallinn-estonia-01.jpg', caption: 'The long straight — western Estonia', location: 'Tallinn → Haapsalu' },
     { lat: 60.251204, lng: 24.067695, src: 'photos/2026-07-17-salo-lohja-01.jpg', caption: 'Grain fields on the way to Lohja', location: 'Salo → Lohja' },
     { lat: 60.176216, lng: 21.759930, src: 'photos/2026-07-14-paratiisi-03.jpg', caption: 'Paratiisi', location: 'Nagu, Turku Archipelago' },
     // Map photo pins — add as you go (trip order; lightbox sorts via photoTripSortKey in index.html)
