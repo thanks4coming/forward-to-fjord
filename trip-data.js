@@ -18,7 +18,7 @@ const tripStatus = {
       lat: 58.988686,
       lng: 24.019891,
       location: 'near Haapsalu, Lääne County, Estonia',
-      note: 'Tallinn → here today (~70 km). Long straight stretch through western Estonia on the final leg.',
+      note: 'Tallinn → here today.',
     },
     {
       at: '2026-07-20T12:00:00.000Z',
@@ -247,15 +247,8 @@ const tripStatus = {
   updates: [
     {
       date: '2026-07-22',
-      location: '58.988686, 24.019891',
-      text: 'Tallinn to here today — long straight stretch on the final leg',
-      lat: 58.988686,
-      lng: 24.019891
-    },
-    {
-      date: '2026-07-22',
       location: 'near Haapsalu, Lääne County, Estonia',
-      text: 'Tallinn → western Estonia today (~70 km). First ride in Estonia — long, straight, flat roads through birch forest and farmland. Ferried Helsinki → Tallinn two days ago, spent two nights in the old city.',
+      text: 'Tallinn → here.',
       photo: 'photos/2026-07-22-tallinn-estonia-01.jpg',
       lat: 58.988686,
       lng: 24.019891
