@@ -5,14 +5,21 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 5,           // segment id: 5 — Estonia → Baltics
-  currentCity: 'Haapsalu, Estonia',
-  dayNumber: 33,
-  kmRidden: 1153,
+  currentCity: 'Pärnu, Estonia',
+  dayNumber: 34,
+  kmRidden: 1253,
   countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia'],
-  lat: 58.939902,                   // precise current lat (preferred over city fallback)
-  lng: 23.54148,                   // precise current lng
-  lastUpdated: '2026-07-23',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 58.387066,                   // precise current lat (preferred over city fallback)
+  lng: 24.502606,                   // precise current lng
+  lastUpdated: '2026-07-24',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-07-24T15:57:02.846Z',
+      lat: 58.387066,
+      lng: 24.502606,
+      location: 'Pärnu, Estonia',
+      note: 'Haapsalu → Pärnu today (~100 km).',
+    },
     {
       at: '2026-07-23T16:21:22.486Z',
       lat: 58.939902,
@@ -252,6 +259,14 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-07-24',
+      location: 'Pärnu, Estonia',
+      text: 'Haapsalu → Pärnu (~100 km).',
+      photo: 'photos/2026-07-24-kasari-bridge-01.jpg',
+      lat: 58.387066,
+      lng: 24.502606
+    },
     {
       date: '2026-07-23',
       location: 'Haapsalu, Estonia',
@@ -528,6 +543,7 @@ const tripStatus = {
     { lat: 60.176216, lng: 21.759930, src: 'photos/2026-07-14-paratiisi-01.jpg', caption: 'Paratiisi — Museum of Modern Art', location: 'Nagu, Turku Archipelago' },
     { lat: 60.176216, lng: 21.759930, src: 'photos/2026-07-14-paratiisi-02.jpg', caption: 'Paratiisi art museum', location: 'Nagu, Turku Archipelago' },
     { lat: 60.3605, lng: 22.7820, src: 'photos/2026-07-16-turku-salo-01.jpg', caption: 'Turku → Salo — EuroVelo 10', location: 'Halikko, Finland' },
+    { lat: 58.7319, lng: 23.9922, src: 'photos/2026-07-24-kasari-bridge-01.jpg', caption: 'Kasari River bridge, 1904 — longest reinforced concrete bridge in Europe at the time', location: 'Kasari River, Estonia' },
     { lat: 58.939902, lng: 23.54148, src: 'photos/2026-07-23-haapsalu-coast-01.jpg', caption: 'Haapsalu coast', location: 'Haapsalu, Estonia' },
     { lat: 58.988686, lng: 24.019891, src: 'photos/2026-07-22-tallinn-estonia-01.jpg', caption: 'The long straight — western Estonia', location: 'Tallinn → Haapsalu' },
     { lat: 60.251204, lng: 24.067695, src: 'photos/2026-07-17-salo-lohja-01.jpg', caption: 'Grain fields on the way to Lohja', location: 'Salo → Lohja' },
