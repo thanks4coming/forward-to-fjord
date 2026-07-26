@@ -5,14 +5,21 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 5,           // segment id: 5 — Estonia → Baltics
-  currentCity: 'Pärnu, Estonia',
-  dayNumber: 34,
-  kmRidden: 1253,
-  countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia'],
-  lat: 58.387066,                   // precise current lat (preferred over city fallback)
-  lng: 24.502606,                   // precise current lng
-  lastUpdated: '2026-07-24',           // e.g. '2026-06-08' — shown in live banner when set
+  currentCity: 'Ainaži, Latvia',
+  dayNumber: 35,
+  kmRidden: 1318,
+  countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia', 'Latvia'],
+  lat: 57.863657,                   // precise current lat (preferred over city fallback)
+  lng: 24.358646,                   // precise current lng
+  lastUpdated: '2026-07-26',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-07-26T16:05:16.763Z',
+      lat: 57.863657,
+      lng: 24.358646,
+      location: 'Ainaži, Latvia',
+      note: 'Pärnu → Ainaži (~65 km). Into Latvia — country four.',
+    },
     {
       at: '2026-07-24T15:57:02.846Z',
       lat: 58.387066,
@@ -259,6 +266,14 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-07-26',
+      location: 'Ainaži, Latvia',
+      text: 'Pärnu → Ainaži (~65 km). Into Latvia — country four.',
+      photo: 'photos/2026-07-26-latvia-border-01.jpg',
+      lat: 57.863657,
+      lng: 24.358646
+    },
     {
       date: '2026-07-24',
       location: 'Pärnu, Estonia',
