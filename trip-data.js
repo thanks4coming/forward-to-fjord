@@ -269,7 +269,7 @@ const tripStatus = {
     {
       date: '2026-07-26',
       location: 'Ainaži, Latvia',
-      text: 'Pärnu → Ainaži (~65 km). Into Latvia — country four.',
+      text: 'Pärnu → Ainaži (~65 km). Into Latvia — country four. Riding into the nature preserve I passed an outdoor activity place lending fat-tyre off-road e-bikes and thought nothing of it. Then came the most technically challenging kilometres of the trip — deep sand, roots, proper off-road. My bike has zero suspension, designed for sweet Swedish cities. Its centre of gravity is comically high. There is no explanation for how I made it through.',
       photo: 'photos/2026-07-26-latvia-border-01.jpg',
       lat: 57.863657,
       lng: 24.358646
