@@ -584,7 +584,7 @@ const tripStatus = {
     { lat: 57.980, lng: 24.465, src: 'photos/2026-07-26-ainazi-forest-01.jpg', caption: 'Luitemaa Nature Reserve — pine forest track', location: 'Luitemaa, Estonia' },
     { lat: 57.975, lng: 24.462, src: 'photos/2026-07-26-ainazi-forest-02.jpg', caption: 'Cathedral pines, Luitemaa Nature Reserve', location: 'Luitemaa, Estonia' },
     { lat: 57.970, lng: 24.459, src: 'photos/2026-07-26-ainazi-forest-03.jpg', caption: 'Loaded up through the dunes — Luitemaa', location: 'Luitemaa, Estonia' },
-    { lat: 57.606581, lng: 24.523419, src: 'photos/2026-07-27-vilku-muiza-01.jpg', caption: 'Serpent Sauna, Vilku Muiža — the reward at the end of the worst gravel day yet', location: 'Vilku Muiža, Latvia' },
+    { lat: 57.606581, lng: 24.523419, src: 'photos/2026-07-27-vilku-muiza-01.jpg', caption: 'An impressive backyard, Vilku Muiža', location: 'Vilku Muiža, Latvia' },
     { lat: 57.622798, lng: 24.516245, src: 'photos/2026-07-27-malamutes-01.jpg', caption: 'Sanita\'s Malamute pack — the mid-mud salvation', location: 'Liepupes pagasts, Latvia' },
     { lat: 57.622798, lng: 24.516245, src: 'photos/2026-07-27-malamutes-02.jpg', caption: 'Malamute puppy — Sanita\'s farm', location: 'Liepupes pagasts, Latvia' },
     { lat: 57.873921, lng: 24.360658, src: 'photos/2026-07-26-latvia-border-01.jpg', caption: 'Crossing into Latvia — country four', location: 'Ikla / Ainaži border' },
