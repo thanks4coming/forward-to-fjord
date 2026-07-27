@@ -1,4 +1,4 @@
-const CACHE = 'biketrip-v106';
+const CACHE = 'biketrip-v107';
 
 self.addEventListener('install', e => {
   const scope = self.registration.scope;
