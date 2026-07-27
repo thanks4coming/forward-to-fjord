@@ -2018,7 +2018,9 @@ function lbRender() {
 function lbGo(dir) {
   var vid = document.getElementById('lb-video');
   vid.pause();
-  lbIndex = ((lbIndex + dir) + lbPhotos.length) % lbPhotos.length;
+  var next = lbIndex + dir;
+  if (next < 0 || next >= lbPhotos.length) return;
+  lbIndex = next;
   lbRender();
 }
 
