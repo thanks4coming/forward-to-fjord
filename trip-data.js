@@ -569,7 +569,7 @@ const tripStatus = {
     { lat: 57.980, lng: 24.465, src: 'photos/2026-07-26-ainazi-forest-01.jpg', caption: 'Luitemaa Nature Reserve — pine forest track', location: 'Luitemaa, Estonia' },
     { lat: 57.975, lng: 24.462, src: 'photos/2026-07-26-ainazi-forest-02.jpg', caption: 'Cathedral pines, Luitemaa Nature Reserve', location: 'Luitemaa, Estonia' },
     { lat: 57.970, lng: 24.459, src: 'photos/2026-07-26-ainazi-forest-03.jpg', caption: 'Loaded up through the dunes — Luitemaa', location: 'Luitemaa, Estonia' },
-    { lat: 57.9062, lng: 24.3476, src: 'photos/2026-07-26-latvia-border-01.jpg', caption: 'Crossing into Latvia — country four', location: 'Ikla / Ainaži border' },
+    { lat: 57.873921, lng: 24.360658, src: 'photos/2026-07-26-latvia-border-01.jpg', caption: 'Crossing into Latvia — country four', location: 'Ikla / Ainaži border' },
     // Map photo pins — add as you go (trip order; lightbox sorts via photoTripSortKey in index.html)
     // { lat: 0.0, lng: 0.0, src: 'photos/2026-XX-XX-city.jpg', caption: 'Caption', location: 'City' }
   ]
