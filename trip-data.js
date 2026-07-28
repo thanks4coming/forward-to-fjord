@@ -7,7 +7,7 @@ const tripStatus = {
   currentSegment: 5,           // segment id: 5 — Estonia → Baltics
   currentCity: 'Rīga, Latvia',
   dayNumber: 37,
-  kmRidden: 1448,
+  kmRidden: 1468,
   countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia', 'Latvia'],
   lat: 56.948255,                   // precise current lat (preferred over city fallback)
   lng: 24.119815,                   // precise current lng
@@ -283,7 +283,7 @@ const tripStatus = {
     {
       date: '2026-07-28',
       location: 'Rīga, Latvia',
-      text: 'Vilku Muiža → Rīga (~60 km). Coastal route.',
+      text: 'Vilku Muiža → Rīga (~80 km). Coastal route.',
       lat: 56.948255,
       lng: 24.119815
     },
