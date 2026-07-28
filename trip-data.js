@@ -5,14 +5,21 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 5,           // segment id: 5 — Estonia → Baltics
-  currentCity: 'Serpent Sauna, Vilku Muiža, Latvia',
-  dayNumber: 36,
-  kmRidden: 1388,
+  currentCity: 'Rīga, Latvia',
+  dayNumber: 37,
+  kmRidden: 1528,
   countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia', 'Latvia'],
-  lat: 57.502122,                   // precise current lat (preferred over city fallback)
-  lng: 24.447882,                   // precise current lng
-  lastUpdated: '2026-07-27',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 56.948255,                   // precise current lat (preferred over city fallback)
+  lng: 24.119815,                   // precise current lng
+  lastUpdated: '2026-07-28',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-07-28T14:53:35.314Z',
+      lat: 56.948255,
+      lng: 24.119815,
+      location: 'Rīga, Latvia',
+      note: 'Vilku Muiža → Rīga (~140 km). Coastal route.',
+    },
     {
       at: '2026-07-27T13:09:46.367Z',
       lat: 57.502122,
@@ -273,6 +280,13 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-07-28',
+      location: 'Rīga, Latvia',
+      text: 'Rīga.',
+      lat: 56.948255,
+      lng: 24.119815
+    },
     {
       date: '2026-07-27',
       location: 'Serpent Sauna, Vilku Muiža, Latvia',
