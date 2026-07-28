@@ -283,13 +283,13 @@ const tripStatus = {
     {
       date: '2026-07-28',
       location: 'Rīga, Latvia',
-      text: 'Rīga.',
+      text: 'Vilku Muiža → Rīga (~140 km). Coastal route.',
       lat: 56.948255,
       lng: 24.119815
     },
     {
       date: '2026-07-27',
-      location: 'Serpent Sauna, Vilku Muiža, Latvia',
+      location: 'Vilku Muiža, Liepupes pagasts, Latvia',
       text: 'This was the hardest day so far. Almost no sealed road, kms of thick mud, the worst corrugated gravel had me in the foulest mood. "Best Route" says google maps. Perish you demon your company is literally the Antichrist die die die die die. The saving grace after a km of mud and flies was meeting Sanita, an acclaimed malamute breeder. Seeing a swarm of these little fuckers run toward you takes your mind off everything for a moment.',
       photo: 'photos/2026-07-27-malamutes-02.jpg',
       lat: 57.502122,
