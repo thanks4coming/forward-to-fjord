@@ -5,14 +5,21 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 5,           // segment id: 5 — Estonia → Baltics
-  currentCity: 'Jūrmala, Latvia',
-  dayNumber: 38,
-  kmRidden: 1498,
+  currentCity: 'Talsi, Talsu novads',
+  dayNumber: 39,
+  kmRidden: 1583,
   countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia', 'Latvia'],
-  lat: 56.9622,                   // precise current lat (preferred over city fallback)
-  lng: 23.7644,                   // precise current lng
-  lastUpdated: '2026-07-29',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 57.245193,                   // precise current lat (preferred over city fallback)
+  lng: 22.5903,                   // precise current lng
+  lastUpdated: '2026-07-30',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-07-30T14:19:36.677Z',
+      lat: 57.245193,
+      lng: 22.5903,
+      location: 'Talsi, Latvia',
+      note: 'Jūrmala → Talsi (~85 km). P128 almost the entire way.',
+    },
     {
       at: '2026-07-29T12:49:35.197Z',
       lat: 56.9622,
@@ -287,6 +294,14 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-07-30',
+      location: 'Talsi, Latvia',
+      text: 'Jūrmala → Talsi (~85 km). P128 almost the entire way, tiny stretch on the P129.',
+      photo: 'photos/2026-07-30-talsi-01.jpg',
+      lat: 57.245193,
+      lng: 22.5903
+    },
     {
       date: '2026-07-29',
       location: 'Jūrmala, Latvia',
@@ -616,6 +631,10 @@ const tripStatus = {
     { lat: 57.622798, lng: 24.516245, src: 'photos/2026-07-27-malamutes-01.jpg', caption: 'Sanita\'s Malamute pack — the mid-mud salvation', location: 'Liepupes pagasts, Latvia' },
     { lat: 57.622798, lng: 24.516245, src: 'photos/2026-07-27-malamutes-02.jpg', caption: 'Malamute puppy — Sanita\'s farm', location: 'Liepupes pagasts, Latvia' },
     { lat: 57.873921, lng: 24.360658, src: 'photos/2026-07-26-latvia-border-01.jpg', caption: 'Crossing into Latvia — country four', location: 'Ikla / Ainaži border' },
+    { lat: 56.960, lng: 23.613, src: 'photos/2026-07-30-talsi-01.jpg', caption: 'Path to the beach, P128', location: 'Jūrmala → Talsi, Latvia' },
+    { lat: 56.960, lng: 23.613, src: 'photos/2026-07-30-talsi-02.jpg', caption: 'Path to the beach, P128', location: 'Jūrmala → Talsi, Latvia' },
+    { lat: 57.036, lng: 22.934, src: 'photos/2026-07-30-talsi-03.jpg', caption: 'Fancy hotel on the P128, ~40 km from Talsi', location: 'P128, Latvia' },
+    { lat: 57.036, lng: 22.934, src: 'photos/2026-07-30-talsi-04.jpg', caption: 'Fancy hotel on the P128, ~40 km from Talsi', location: 'P128, Latvia' },
     // Map photo pins — add as you go (trip order; lightbox sorts via photoTripSortKey in index.html)
     // { lat: 0.0, lng: 0.0, src: 'photos/2026-XX-XX-city.jpg', caption: 'Caption', location: 'City' }
   ]

@@ -1260,6 +1260,9 @@ function getTrailBikeRoutes() {
   if (trailBikeRoutes.ainaziVilkumuiza && trailBikeRoutes.ainaziVilkumuiza.length > 1) {
     routes.push(trailBikeRoutes.ainaziVilkumuiza);
   }
+  if (trailBikeRoutes.jurmalaTalsi && trailBikeRoutes.jurmalaTalsi.length > 1) {
+    routes.push(trailBikeRoutes.jurmalaTalsi);
+  }
   return routes;
 }
 
@@ -1461,7 +1464,20 @@ function getAinaziVilkumuizaTrailRouteIfBothOnPath(from, to) {
   return null;
 }
 
+function getJurmalaTalsiTrailRouteIfBothOnPath(from, to) {
+  const route = trailBikeRoutes.jurmalaTalsi;
+  if (!route || route.length < 2) return null;
+  const fromNR = nearestOnRoute(route, from.lat, from.lng);
+  const toNR = nearestOnRoute(route, to.lat, to.lng);
+  if (fromNR.dist <= TRAIL_ROUTE_CORRIDOR_DEG && toNR.dist <= TRAIL_ROUTE_CORRIDOR_DEG) {
+    return route;
+  }
+  return null;
+}
+
 function findBestTrailRoute(from, to) {
+  const forcedJurmalaTalsi = getJurmalaTalsiTrailRouteIfBothOnPath(from, to);
+  if (forcedJurmalaTalsi) return forcedJurmalaTalsi;
   const forcedAinaziVilkumuiza = getAinaziVilkumuizaTrailRouteIfBothOnPath(from, to);
   if (forcedAinaziVilkumuiza) return forcedAinaziVilkumuiza;
   const forcedHaapsaluParnu = getHaapsaluParnuTrailRouteIfBothOnPath(from, to);
@@ -2315,7 +2331,8 @@ function loadTrailBikeRoutes() {
     fetch('tallinn-estonia-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
     fetch('estonia-haapsalu-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
     fetch('haapsalu-parnu-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
-    fetch('ainazi-vilkumuiza-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
+    fetch('ainazi-vilkumuiza-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
+    fetch('jurmala-talsi-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
   ]).then(function(results) {
     if (results[0] && results[0].length > 1) trailBikeRoutes.gothenburgAlingsas = results[0];
     if (results[1] && results[1].length > 1) trailBikeRoutes.alingsasNittaCamp = results[1];
@@ -2340,7 +2357,8 @@ function loadTrailBikeRoutes() {
     if (results[20] && results[20].length > 1) trailBikeRoutes.estoniaHaapsalu = results[20];
     if (results[21] && results[21].length > 1) trailBikeRoutes.haapsaluParnu = results[21];
     if (results[22] && results[22].length > 1) trailBikeRoutes.ainaziVilkumuiza = results[22];
-    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp || trailBikeRoutes.jonkopingOdeshog || trailBikeRoutes.odeshogLinkoping || trailBikeRoutes.linkopingNorrkoping || trailBikeRoutes.norrkopingCamp || trailBikeRoutes.nykopingCamp || trailBikeRoutes.sodertalje || trailBikeRoutes.stockholm || trailBikeRoutes.archipelagoCamp || trailBikeRoutes.norrtaljeGrisslehamn || trailBikeRoutes.eckeroCamp || trailBikeRoutes.eckeroMariehamn || trailBikeRoutes.mariehamnLangnas || trailBikeRoutes.hellsoKokarCamp || trailBikeRoutes.korpoTurku || trailBikeRoutes.turkuSalo || trailBikeRoutes.saloLohja || trailBikeRoutes.lohjaHelsinki || trailBikeRoutes.tallinnEstonia || trailBikeRoutes.estoniaHaapsalu || trailBikeRoutes.haapsaluParnu || trailBikeRoutes.ainaziVilkumuiza) {
+    if (results[23] && results[23].length > 1) trailBikeRoutes.jurmalaTalsi = results[23];
+    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp || trailBikeRoutes.jonkopingOdeshog || trailBikeRoutes.odeshogLinkoping || trailBikeRoutes.linkopingNorrkoping || trailBikeRoutes.norrkopingCamp || trailBikeRoutes.nykopingCamp || trailBikeRoutes.sodertalje || trailBikeRoutes.stockholm || trailBikeRoutes.archipelagoCamp || trailBikeRoutes.norrtaljeGrisslehamn || trailBikeRoutes.eckeroCamp || trailBikeRoutes.eckeroMariehamn || trailBikeRoutes.mariehamnLangnas || trailBikeRoutes.hellsoKokarCamp || trailBikeRoutes.korpoTurku || trailBikeRoutes.turkuSalo || trailBikeRoutes.saloLohja || trailBikeRoutes.lohjaHelsinki || trailBikeRoutes.tallinnEstonia || trailBikeRoutes.estoniaHaapsalu || trailBikeRoutes.haapsaluParnu || trailBikeRoutes.ainaziVilkumuiza || trailBikeRoutes.jurmalaTalsi) {
       rebuildPhotoLayer();
       overlayActualStage2Route();
     }
