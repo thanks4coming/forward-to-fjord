@@ -633,8 +633,8 @@ const tripStatus = {
     { lat: 57.873921, lng: 24.360658, src: 'photos/2026-07-26-latvia-border-01.jpg', caption: 'Crossing into Latvia — country four', location: 'Ikla / Ainaži border' },
     { lat: 56.960, lng: 23.613, src: 'photos/2026-07-30-talsi-01.jpg', caption: 'Path to the beach, P128', location: 'Jūrmala → Talsi, Latvia' },
     { lat: 56.960, lng: 23.613, src: 'photos/2026-07-30-talsi-02.jpg', caption: 'Path to the beach, P128', location: 'Jūrmala → Talsi, Latvia' },
-    { lat: 57.036, lng: 22.934, src: 'photos/2026-07-30-talsi-03.jpg', caption: 'Fancy hotel on the P128, ~40 km from Talsi', location: 'P128, Latvia' },
-    { lat: 57.036, lng: 22.934, src: 'photos/2026-07-30-talsi-04.jpg', caption: 'Fancy hotel on the P128, ~40 km from Talsi', location: 'P128, Latvia' },
+    { lat: 57.22694, lng: 22.76111, src: 'photos/2026-07-30-talsi-03.jpg', caption: 'Nurmuiža Castle — 16th century manor, now a hotel', location: 'Nurmuiža, Laucienes pagasts, Latvia' },
+    { lat: 57.22694, lng: 22.76111, src: 'photos/2026-07-30-talsi-04.jpg', caption: 'Nurmuiža Castle, P128', location: 'Nurmuiža, Laucienes pagasts, Latvia' },
     // Map photo pins — add as you go (trip order; lightbox sorts via photoTripSortKey in index.html)
     // { lat: 0.0, lng: 0.0, src: 'photos/2026-XX-XX-city.jpg', caption: 'Caption', location: 'City' }
   ]
