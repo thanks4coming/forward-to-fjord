@@ -5,14 +5,21 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 5,           // segment id: 5 — Estonia → Baltics
-  currentCity: 'Talsi, Talsu novads',
-  dayNumber: 39,
-  kmRidden: 1583,
+  currentCity: 'Kuldīga, Latvia',
+  dayNumber: 40,
+  kmRidden: 1648,
   countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia', 'Latvia'],
-  lat: 57.245193,                   // precise current lat (preferred over city fallback)
-  lng: 22.5903,                   // precise current lng
-  lastUpdated: '2026-07-30',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 56.968576,                   // precise current lat (preferred over city fallback)
+  lng: 21.960778,                   // precise current lng
+  lastUpdated: '2026-08-01',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-07-31T17:30:00.000Z',
+      lat: 56.968576,
+      lng: 21.960778,
+      location: 'Kuldīga, Latvia',
+      note: 'Talsi → Kuldīga (~65 km). P120 the whole way. Google Maps sent me down a dead end — two hours lost, inner tube destroyed. Rest day tomorrow.',
+    },
     {
       at: '2026-07-30T14:19:36.677Z',
       lat: 57.245193,
@@ -294,6 +301,14 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-07-31',
+      location: 'Kuldīga, Latvia',
+      text: 'Talsi → Kuldīga (~65 km). P120 the whole way. Google Maps auto-rerouted mid-ride and sent me down a dead end — two hours gone and a destroyed inner tube to show for it. Made it in the end. Kuldīga is genuinely beautiful. The Ventas Rumba is the widest waterfall in Europe, which sounds insane until you see it — wide and shallow, like the whole river just forgot to fall.',
+      photo: 'photos/2026-07-31-kuldiga-03.jpg',
+      lat: 56.968576,
+      lng: 21.960778
+    },
     {
       date: '2026-07-30',
       location: 'Talsi, Latvia',
@@ -635,6 +650,13 @@ const tripStatus = {
     { lat: 56.960, lng: 23.613, src: 'photos/2026-07-30-talsi-02.jpg', caption: 'Path to the beach, P128', location: 'Jūrmala → Talsi, Latvia' },
     { lat: 57.22694, lng: 22.76111, src: 'photos/2026-07-30-talsi-03.jpg', caption: 'Nurmuiža Castle — 16th century manor, now a hotel', location: 'Nurmuiža, Laucienes pagasts, Latvia' },
     { lat: 57.22694, lng: 22.76111, src: 'photos/2026-07-30-talsi-04.jpg', caption: 'Nurmuiža Castle, P128', location: 'Nurmuiža, Laucienes pagasts, Latvia' },
+    { lat: 57.095, lng: 22.303, src: 'photos/2026-07-31-p120-lost-03.jpg', caption: 'Off-route — Google Maps dead end, P120', location: 'P120, Latvia' },
+    { lat: 57.095, lng: 22.303, src: 'photos/2026-07-31-p120-lost-04.jpg', caption: 'Off-route — P120', location: 'P120, Latvia' },
+    { lat: 57.060, lng: 22.170, src: 'photos/2026-07-31-p120-lost-01.jpg', caption: 'Off-route — P120', location: 'P120, Latvia' },
+    { lat: 57.060, lng: 22.170, src: 'photos/2026-07-31-p120-lost-02.jpg', caption: 'Off-route — P120', location: 'P120, Latvia' },
+    { lat: 56.9734, lng: 21.9569, src: 'photos/2026-07-31-kuldiga-03.jpg', caption: 'Ventas Rumba — widest waterfall in Europe', location: 'Kuldīga, Latvia' },
+    { lat: 56.9680, lng: 21.9608, src: 'photos/2026-07-31-kuldiga-01.jpg', caption: 'Kuldīga old town', location: 'Kuldīga, Latvia' },
+    { lat: 56.9680, lng: 21.9608, src: 'photos/2026-07-31-kuldiga-02.jpg', caption: 'Kuldīga old town', location: 'Kuldīga, Latvia' },
     // Map photo pins — add as you go (trip order; lightbox sorts via photoTripSortKey in index.html)
     // { lat: 0.0, lng: 0.0, src: 'photos/2026-XX-XX-city.jpg', caption: 'Caption', location: 'City' }
   ]
