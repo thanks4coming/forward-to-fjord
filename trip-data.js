@@ -654,9 +654,9 @@ const tripStatus = {
     { lat: 57.095, lng: 22.303, src: 'photos/2026-07-31-p120-lost-04.jpg', caption: 'Off-route — P120', location: 'P120, Latvia' },
     { lat: 57.060, lng: 22.170, src: 'photos/2026-07-31-p120-lost-01.jpg', caption: 'Off-route — P120', location: 'P120, Latvia' },
     { lat: 57.060, lng: 22.170, src: 'photos/2026-07-31-p120-lost-02.jpg', caption: 'Off-route — P120', location: 'P120, Latvia' },
-    { lat: 56.9734, lng: 21.9569, src: 'photos/2026-07-31-kuldiga-03.jpg', caption: 'Ventas Rumba — widest waterfall in Europe', location: 'Kuldīga, Latvia' },
-    { lat: 56.9680, lng: 21.9608, src: 'photos/2026-07-31-kuldiga-01.jpg', caption: 'Kuldīga old town', location: 'Kuldīga, Latvia' },
-    { lat: 56.9680, lng: 21.9608, src: 'photos/2026-07-31-kuldiga-02.jpg', caption: 'Kuldīga old town', location: 'Kuldīga, Latvia' },
+    { lat: 56.9680, lng: 21.9608, src: 'photos/2026-07-31-kuldiga-03.jpg', caption: 'Kuldīga old town', location: 'Kuldīga, Latvia' },
+    { lat: 56.9734, lng: 21.9569, src: 'photos/2026-07-31-kuldiga-01.jpg', caption: 'Ventas Rumba — widest waterfall in Europe', location: 'Kuldīga, Latvia' },
+    { lat: 56.9734, lng: 21.9569, src: 'photos/2026-07-31-kuldiga-02.jpg', caption: 'Ventas Rumba', location: 'Kuldīga, Latvia' },
     // Map photo pins — add as you go (trip order; lightbox sorts via photoTripSortKey in index.html)
     // { lat: 0.0, lng: 0.0, src: 'photos/2026-XX-XX-city.jpg', caption: 'Caption', location: 'City' }
   ]
