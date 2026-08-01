@@ -304,7 +304,7 @@ const tripStatus = {
     {
       date: '2026-07-31',
       location: 'Kuldīga, Latvia',
-      text: 'Talsi → Kuldīga (~65 km). P120 the whole way. Google Maps auto-rerouted mid-ride and sent me down a dead end — two hours gone and a destroyed inner tube to show for it. Made it in the end. Kuldīga is genuinely beautiful. The Ventas Rumba is the widest waterfall in Europe, which sounds insane until you see it — wide and shallow, like the whole river just forgot to fall.',
+      text: 'Talsi → Kuldīga (~65 km). P120 the whole way. Google Maps auto-rerouted mid-ride and sent me down a dead end — two hours gone and a destroyed inner tube to show for it. Made it in the end. Kuldīga is genuinely beautiful.',
       photo: 'photos/2026-07-31-kuldiga-03.jpg',
       lat: 56.968576,
       lng: 21.960778
