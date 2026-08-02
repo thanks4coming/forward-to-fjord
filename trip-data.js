@@ -5,14 +5,21 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 5,           // segment id: 5 — Estonia → Baltics
-  currentCity: 'Kuldīga, Latvia',
-  dayNumber: 40,
-  kmRidden: 1648,
+  currentCity: 'Jūrkalne, Latvia',
+  dayNumber: 41,
+  kmRidden: 1688,
   countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia', 'Latvia'],
-  lat: 56.968576,                   // precise current lat (preferred over city fallback)
-  lng: 21.960778,                   // precise current lng
-  lastUpdated: '2026-08-01',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 57.006111,                   // precise current lat (preferred over city fallback)
+  lng: 21.386945,                   // precise current lng
+  lastUpdated: '2026-08-02',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-08-02T14:23:08.580Z',
+      lat: 57.006111,
+      lng: 21.386945,
+      location: 'Jūrkalne, Latvia',
+      note: 'Kuldīga → Jūrkalne (~40 km). P112 to the coast. Camping Zaķi.',
+    },
     {
       at: '2026-07-31T17:30:00.000Z',
       lat: 56.968576,
@@ -301,6 +308,13 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-08-02',
+      location: 'Jūrkalne, Latvia',
+      text: 'Kuldīga → Jūrkalne (~40 km). P112 to the coast.',
+      lat: 57.006111,
+      lng: 21.386945
+    },
     {
       date: '2026-07-31',
       location: 'Kuldīga, Latvia',
