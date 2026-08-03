@@ -5,14 +5,21 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 5,           // segment id: 5 — Estonia → Baltics
-  currentCity: 'Jūrkalne, Latvia',
-  dayNumber: 41,
-  kmRidden: 1688,
+  currentCity: 'Liepāja, Latvia',
+  dayNumber: 42,
+  kmRidden: 1757,
   countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia', 'Latvia'],
-  lat: 57.006111,                   // precise current lat (preferred over city fallback)
-  lng: 21.386945,                   // precise current lng
-  lastUpdated: '2026-08-02',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 56.504844,                   // precise current lat (preferred over city fallback)
+  lng: 21.00709,                   // precise current lng
+  lastUpdated: '2026-08-03',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-08-03T13:05:19.001Z',
+      lat: 56.504844,
+      lng: 21.00709,
+      location: 'Liepāja, Latvia',
+      note: 'Jūrkalne → Liepāja (~69 km). P111.',
+    },
     {
       at: '2026-08-02T14:23:08.580Z',
       lat: 57.006111,
@@ -308,6 +315,13 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-08-03',
+      location: 'Liepāja, Latvia',
+      text: 'Jūrkalne → Liepāja (~69 km). P111.',
+      lat: 56.504844,
+      lng: 21.00709
+    },
     {
       date: '2026-08-02',
       location: 'Jūrkalne, Latvia',
