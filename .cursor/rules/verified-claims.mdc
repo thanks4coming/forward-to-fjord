@@ -13,3 +13,30 @@ Never state facts, figures, directions, distances, wind directions, timings, pri
 This applies to every response without exception. No pattern-matching to plausible-sounding answers. If you don't know and haven't checked, say so before stating anything.
 
 When citing research findings, always include the specific quantified result — not just the conclusion. State the magnitude, the duration, the sample, and the conditions. Never summarise a finding as a conclusion without the numbers behind it.
+
+## Calorie calculation methodology
+
+When calculating calories burned cycling, always use the Martin et al. (1998) physics model, not MET tables. Required inputs — ask for any that are missing before calculating:
+
+- Distance (km)
+- Moving speed (km/h) or elapsed time + break time
+- Assist level split (% of ride on each mode) and timing
+- Wind speed and direction at departure (check yr.no if not provided)
+- Any significant elevation — flat, rolling, or hilly
+
+Fixed parameters for this user (do not re-ask):
+- System mass: 113 kg (75 kg rider + 22 kg EcoRide Ambassador AXS + 16 kg gear)
+- Motor: Shimano STEPS E6100 — ECO = 100% support, NORMAL = 140%, HIGH = 200%
+- Gross mechanical efficiency: 23% (Coyle, Journal of Applied Physiology, 1992)
+- CdA: 0.55 m² (upright loaded touring bike with panniers)
+- Crr: 0.005 (paved road)
+- Air density: 1.225 kg/m³
+
+Formula:
+P_aero = 0.5 × 1.225 × 0.55 × (v_ground + v_headwind_component)² × v_ground
+P_rolling = 113 × 9.81 × 0.005 × v_ground
+P_total = P_aero + P_rolling
+P_human = P_total ÷ (1 + support_ratio) [weighted average across assist phases]
+Metabolic power = P_human ÷ 0.23
+Ride kcal = Metabolic power (W) × moving time (h) × 3.6 ÷ 4.184
+Total daily = Ride kcal + (non-riding hours × 79.2 kcal/hr)
