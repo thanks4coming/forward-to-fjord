@@ -1,0 +1,15 @@
+---
+description: Diary entry rules for Forward to Fjord check-ins
+alwaysApply: true
+---
+
+# Diary entries — exact words only
+
+When the user provides narrative text for a check-in diary entry, reproduce it verbatim. No paraphrasing, no summarising, no added context, no prefixes, no embellishment.
+
+If the user provides no narrative text, write only the bare factual route note in this format:
+> From → To (~X km). [One factual sentence if something notable happened, e.g. road name or condition.]
+
+Never add opinions, colour, or invented detail to diary entries.
+
+If the user corrects a diary entry, replace it exactly as instructed and commit without asking for confirmation.

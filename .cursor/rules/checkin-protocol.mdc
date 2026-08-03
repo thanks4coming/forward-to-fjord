@@ -1,0 +1,18 @@
+---
+description: Location check-in protocol for Forward to Fjord
+alwaysApply: true
+---
+
+# Location check-in protocol
+
+When the user says they rode somewhere or asks to update their location:
+
+1. Run `node scripts/apply-location-stash.js --place "..."` immediately
+2. Calculate distance from previous location via OSRM bicycle routing
+3. Update `dayNumber` (increment by 1) and `kmRidden` (add today's distance) in `trip-data.js`
+4. Add a `locationHistory` entry and an `updates` entry
+5. Download any photos provided, extract EXIF timestamps, assign captions and pin coordinates
+6. Generate route JSON, wire into `index.html` and `sw.js`
+7. Commit and push everything
+
+Never skip steps. Never ask the user for information that can be derived from OSRM or EXIF data.

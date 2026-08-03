@@ -1,0 +1,13 @@
+---
+description: Photo ordering and caption rules for Forward to Fjord
+alwaysApply: true
+---
+
+# Photo handling
+
+Never assume which photo is which based on filename sequence or album order.
+
+1. Always extract EXIF `DateTimeOriginal` timestamps after downloading to determine true chronological order
+2. Assign captions and pin coordinates based on timestamp order and any context the user provides about what was photographed where
+3. When the user corrects a caption, pin location, or photo order — fix it immediately and commit without asking for confirmation or explanation
+4. Add explicit `photoTripSortKey` entries in `index.html` for all new photos to lock lightbox order
