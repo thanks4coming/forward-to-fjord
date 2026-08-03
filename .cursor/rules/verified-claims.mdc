@@ -1,0 +1,13 @@
+---
+description: Never state facts without verification or explicit uncertainty flag
+alwaysApply: true
+---
+
+# Verified claims only
+
+Never state facts, figures, directions, distances, wind directions, timings, prices, route conditions, nutritional data, or any other specific claim without either:
+
+1. Citing a verified source in the same response (search result, official data, live check), or
+2. Explicitly flagging the information as unverified with the words "unverified" or "I haven't checked this".
+
+This applies to every response without exception. No pattern-matching to plausible-sounding answers. If you don't know and haven't checked, say so before stating anything.
