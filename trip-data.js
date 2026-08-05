@@ -5,14 +5,21 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 5,           // segment id: 5 — Estonia → Baltics
-  currentCity: 'Liepāja, Latvia',
-  dayNumber: 42,
-  kmRidden: 1757,
+  currentCity: 'Nīca, Latvia',
+  dayNumber: 43,
+  kmRidden: 1778,
   countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia', 'Latvia'],
-  lat: 56.504844,                   // precise current lat (preferred over city fallback)
-  lng: 21.00709,                   // precise current lng
-  lastUpdated: '2026-08-03',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 56.345787,                   // precise current lat (preferred over city fallback)
+  lng: 21.065709,                   // precise current lng
+  lastUpdated: '2026-08-05',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-08-05T18:44:15.969Z',
+      lat: 56.345787,
+      lng: 21.065709,
+      location: 'Nīca, Latvia',
+      note: 'Liepāja → Nīca (~21 km). Short day — stacked the bike.',
+    },
     {
       at: '2026-08-03T13:05:19.001Z',
       lat: 56.504844,
@@ -315,6 +322,13 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-08-05',
+      location: 'Nīca, Latvia',
+      text: 'Liepāja → Nīca (~21 km). Short day — stacked the bike.',
+      lat: 56.345787,
+      lng: 21.065709
+    },
     {
       date: '2026-08-03',
       location: 'Liepāja, Latvia',
