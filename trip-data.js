@@ -5,14 +5,21 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 5,           // segment id: 5 — Estonia → Baltics
-  currentCity: 'Nīca, Latvia',
-  dayNumber: 43,
-  kmRidden: 1778,
-  countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia', 'Latvia'],
-  lat: 56.345787,                   // precise current lat (preferred over city fallback)
-  lng: 21.065709,                   // precise current lng
-  lastUpdated: '2026-08-05',           // e.g. '2026-06-08' — shown in live banner when set
+  currentCity: 'Palanga, Lithuania',
+  dayNumber: 44,
+  kmRidden: 1828,
+  countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia', 'Latvia', 'Lithuania'],
+  lat: 55.922982,                   // precise current lat (preferred over city fallback)
+  lng: 21.068266,                   // precise current lng
+  lastUpdated: '2026-08-06',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-08-06T14:35:41.104Z',
+      lat: 55.922982,
+      lng: 21.068266,
+      location: 'Palanga, Lithuania',
+      note: 'Nīca → Palanga (~50 km). Into Lithuania — country five. 50% A11, 50% coastal cycle path.',
+    },
     {
       at: '2026-08-05T18:44:15.969Z',
       lat: 56.345787,
@@ -322,6 +329,14 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-08-06',
+      location: 'Palanga, Lithuania',
+      text: 'GEM alert ⚠️  Palanga is a certified GEM',
+      photo: 'photos/2026-08-06-palanga-02.jpg',
+      lat: 55.922982,
+      lng: 21.068266
+    },
     {
       date: '2026-08-05',
       location: 'Nīca, Latvia',
@@ -699,6 +714,10 @@ const tripStatus = {
     { lat: 56.9680, lng: 21.9608, src: 'photos/2026-07-31-kuldiga-03.jpg', caption: 'Kuldīga old town', location: 'Kuldīga, Latvia' },
     { lat: 56.9734, lng: 21.9569, src: 'photos/2026-07-31-kuldiga-01.jpg', caption: 'Ventas Rumba — widest waterfall in Europe', location: 'Kuldīga, Latvia' },
     { lat: 56.9734, lng: 21.9569, src: 'photos/2026-07-31-kuldiga-02.jpg', caption: 'Ventas Rumba', location: 'Kuldīga, Latvia' },
+    { lat: 55.927, lng: 21.048, src: 'photos/2026-08-06-palanga-02.jpg', caption: 'Palanga beach', location: 'Palanga, Lithuania' },
+    { lat: 55.927, lng: 21.048, src: 'photos/2026-08-06-palanga-04.jpg', caption: 'Palanga beach', location: 'Palanga, Lithuania' },
+    { lat: 55.921, lng: 21.068, src: 'photos/2026-08-06-palanga-03.jpg', caption: 'Palanga town', location: 'Palanga, Lithuania' },
+    { lat: 55.921, lng: 21.068, src: 'photos/2026-08-06-palanga-01.jpg', caption: 'Palanga town', location: 'Palanga, Lithuania' },
     // Map photo pins — add as you go (trip order; lightbox sorts via photoTripSortKey in index.html)
     // { lat: 0.0, lng: 0.0, src: 'photos/2026-XX-XX-city.jpg', caption: 'Caption', location: 'City' }
   ]
