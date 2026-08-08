@@ -5,14 +5,21 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 5,           // segment id: 5 — Estonia → Baltics
-  currentCity: 'Klaipėda, Lithuania',
-  dayNumber: 45,
+  currentCity: 'Vilnius, Lithuania',
+  dayNumber: 46,
   kmRidden: 1856,
   countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia', 'Latvia', 'Lithuania'],
-  lat: 55.712753,                   // precise current lat (preferred over city fallback)
-  lng: 21.135047,                   // precise current lng
-  lastUpdated: '2026-08-07',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 54.687046,                   // precise current lat (preferred over city fallback)
+  lng: 25.282911,                   // precise current lng
+  lastUpdated: '2026-08-08',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-08-08T18:00:41.239Z',
+      lat: 54.687046,
+      lng: 25.282911,
+      location: 'Vilnius, Lithuania',
+      note: 'Klaipėda → Vilnius by train.',
+    },
     {
       at: '2026-08-07T18:00:00.000Z',
       lat: 55.712753,
@@ -336,6 +343,14 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-08-08',
+      location: 'Vilnius, Lithuania',
+      text: 'Klaipėda → Vilnius by train.',
+      photo: 'photos/2026-08-08-vilnius-03.jpg',
+      lat: 54.687046,
+      lng: 25.282911
+    },
     {
       date: '2026-08-07',
       location: 'Klaipėda, Lithuania',
@@ -732,6 +747,9 @@ const tripStatus = {
     { lat: 55.927, lng: 21.048, src: 'photos/2026-08-06-palanga-04.jpg', caption: 'Palanga beach', location: 'Palanga, Lithuania' },
     { lat: 55.921, lng: 21.068, src: 'photos/2026-08-06-palanga-03.jpg', caption: 'Palanga town', location: 'Palanga, Lithuania' },
     { lat: 55.921, lng: 21.068, src: 'photos/2026-08-06-palanga-01.jpg', caption: 'Palanga town', location: 'Palanga, Lithuania' },
+    { lat: 54.6869, lng: 25.2908, src: 'photos/2026-08-08-vilnius-01.jpg', caption: 'Vilnius Old Town', location: 'Vilnius, Lithuania' },
+    { lat: 54.6895, lng: 25.2780, src: 'photos/2026-08-08-vilnius-02.jpg', caption: 'Neris River', location: 'Vilnius, Lithuania' },
+    { lat: 54.6782, lng: 25.2868, src: 'photos/2026-08-08-vilnius-03.jpg', caption: 'The Portal', location: 'Vilnius, Lithuania' },
     // Map photo pins — add as you go (trip order; lightbox sorts via photoTripSortKey in index.html)
     // { lat: 0.0, lng: 0.0, src: 'photos/2026-XX-XX-city.jpg', caption: 'Caption', location: 'City' }
   ]
