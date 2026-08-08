@@ -1278,6 +1278,9 @@ function getTrailBikeRoutes() {
   if (trailBikeRoutes.nicaPalanga && trailBikeRoutes.nicaPalanga.length > 1) {
     routes.push(trailBikeRoutes.nicaPalanga);
   }
+  if (trailBikeRoutes.palangaKlaipeda && trailBikeRoutes.palangaKlaipeda.length > 1) {
+    routes.push(trailBikeRoutes.palangaKlaipeda);
+  }
   return routes;
 }
 
@@ -1479,6 +1482,17 @@ function getAinaziVilkumuizaTrailRouteIfBothOnPath(from, to) {
   return null;
 }
 
+function getPalangaKlaipedaTrailRouteIfBothOnPath(from, to) {
+  const route = trailBikeRoutes.palangaKlaipeda;
+  if (!route || route.length < 2) return null;
+  const fromNR = nearestOnRoute(route, from.lat, from.lng);
+  const toNR = nearestOnRoute(route, to.lat, to.lng);
+  if (fromNR.dist <= TRAIL_ROUTE_CORRIDOR_DEG && toNR.dist <= TRAIL_ROUTE_CORRIDOR_DEG) {
+    return route;
+  }
+  return null;
+}
+
 function getNicaPalangaTrailRouteIfBothOnPath(from, to) {
   const route = trailBikeRoutes.nicaPalanga;
   if (!route || route.length < 2) return null;
@@ -1546,6 +1560,8 @@ function getJurmalaTalsiTrailRouteIfBothOnPath(from, to) {
 }
 
 function findBestTrailRoute(from, to) {
+  const forcedPalangaKlaipeda = getPalangaKlaipedaTrailRouteIfBothOnPath(from, to);
+  if (forcedPalangaKlaipeda) return forcedPalangaKlaipeda;
   const forcedNicaPalanga = getNicaPalangaTrailRouteIfBothOnPath(from, to);
   if (forcedNicaPalanga) return forcedNicaPalanga;
   const forcedLiepajaNica = getLiepajaNicaTrailRouteIfBothOnPath(from, to);
@@ -2428,7 +2444,8 @@ function loadTrailBikeRoutes() {
     fetch('kuldiga-jurkalne-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
     fetch('jurkalne-liepaja-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
     fetch('liepaja-nica-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
-    fetch('nica-palanga-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
+    fetch('nica-palanga-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
+    fetch('palanga-klaipeda-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
   ]).then(function(results) {
     if (results[0] && results[0].length > 1) trailBikeRoutes.gothenburgAlingsas = results[0];
     if (results[1] && results[1].length > 1) trailBikeRoutes.alingsasNittaCamp = results[1];
@@ -2459,7 +2476,8 @@ function loadTrailBikeRoutes() {
     if (results[26] && results[26].length > 1) trailBikeRoutes.jurkalneliepaja = results[26];
     if (results[27] && results[27].length > 1) trailBikeRoutes.liepajaNica = results[27];
     if (results[28] && results[28].length > 1) trailBikeRoutes.nicaPalanga = results[28];
-    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp || trailBikeRoutes.jonkopingOdeshog || trailBikeRoutes.odeshogLinkoping || trailBikeRoutes.linkopingNorrkoping || trailBikeRoutes.norrkopingCamp || trailBikeRoutes.nykopingCamp || trailBikeRoutes.sodertalje || trailBikeRoutes.stockholm || trailBikeRoutes.archipelagoCamp || trailBikeRoutes.norrtaljeGrisslehamn || trailBikeRoutes.eckeroCamp || trailBikeRoutes.eckeroMariehamn || trailBikeRoutes.mariehamnLangnas || trailBikeRoutes.hellsoKokarCamp || trailBikeRoutes.korpoTurku || trailBikeRoutes.turkuSalo || trailBikeRoutes.saloLohja || trailBikeRoutes.lohjaHelsinki || trailBikeRoutes.tallinnEstonia || trailBikeRoutes.estoniaHaapsalu || trailBikeRoutes.haapsaluParnu || trailBikeRoutes.ainaziVilkumuiza || trailBikeRoutes.jurmalaTalsi || trailBikeRoutes.talsiKuldiga || trailBikeRoutes.kuldigaJurkalne || trailBikeRoutes.jurkalneliepaja || trailBikeRoutes.liepajaNica || trailBikeRoutes.nicaPalanga) {
+    if (results[29] && results[29].length > 1) trailBikeRoutes.palangaKlaipeda = results[29];
+    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp || trailBikeRoutes.jonkopingOdeshog || trailBikeRoutes.odeshogLinkoping || trailBikeRoutes.linkopingNorrkoping || trailBikeRoutes.norrkopingCamp || trailBikeRoutes.nykopingCamp || trailBikeRoutes.sodertalje || trailBikeRoutes.stockholm || trailBikeRoutes.archipelagoCamp || trailBikeRoutes.norrtaljeGrisslehamn || trailBikeRoutes.eckeroCamp || trailBikeRoutes.eckeroMariehamn || trailBikeRoutes.mariehamnLangnas || trailBikeRoutes.hellsoKokarCamp || trailBikeRoutes.korpoTurku || trailBikeRoutes.turkuSalo || trailBikeRoutes.saloLohja || trailBikeRoutes.lohjaHelsinki || trailBikeRoutes.tallinnEstonia || trailBikeRoutes.estoniaHaapsalu || trailBikeRoutes.haapsaluParnu || trailBikeRoutes.ainaziVilkumuiza || trailBikeRoutes.jurmalaTalsi || trailBikeRoutes.talsiKuldiga || trailBikeRoutes.kuldigaJurkalne || trailBikeRoutes.jurkalneliepaja || trailBikeRoutes.liepajaNica || trailBikeRoutes.nicaPalanga || trailBikeRoutes.palangaKlaipeda) {
       rebuildPhotoLayer();
       overlayActualStage2Route();
     }

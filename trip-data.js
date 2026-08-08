@@ -5,14 +5,21 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 5,           // segment id: 5 — Estonia → Baltics
-  currentCity: 'Palanga, Lithuania',
-  dayNumber: 44,
-  kmRidden: 1828,
+  currentCity: 'Klaipėda, Lithuania',
+  dayNumber: 45,
+  kmRidden: 1856,
   countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia', 'Latvia', 'Lithuania'],
-  lat: 55.922982,                   // precise current lat (preferred over city fallback)
-  lng: 21.068266,                   // precise current lng
-  lastUpdated: '2026-08-06',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 55.712753,                   // precise current lat (preferred over city fallback)
+  lng: 21.135047,                   // precise current lng
+  lastUpdated: '2026-08-07',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-08-07T18:00:00.000Z',
+      lat: 55.712753,
+      lng: 21.135047,
+      location: 'Klaipėda, Lithuania',
+      note: 'Palanga → Klaipėda (~28 km). Coastal route the whole way — paved cycle lanes.',
+    },
     {
       at: '2026-08-06T14:35:41.104Z',
       lat: 55.922982,
@@ -329,6 +336,13 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-08-07',
+      location: 'Klaipėda, Lithuania',
+      text: 'Palanga → Klaipėda (~28 km). Coastal route the whole way — paved cycle lanes.',
+      lat: 55.712753,
+      lng: 21.135047
+    },
     {
       date: '2026-08-06',
       location: 'Palanga, Lithuania',
