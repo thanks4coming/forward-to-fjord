@@ -587,14 +587,13 @@ const segments = [
   {
     id: 8,
     title: "Krak\u00f3w \u2192 Vienna \u2192 Croatian Coast \u2192 Dubrovnik",
-    routeName: "EuroVelo 9 + Adriatic Coast (Jadrolinija ferry shortcut Rijeka\u2192Split)",
+    routeName: "EuroVelo 9 + Adriatic Coast (EuroVelo 8)",
     color: "#ec4899",
     transport: "bike",
-    transportSecondary: "ferry",
-    distance: "~1,550 km cycling + ferry",
-    days: "24\u201330 days",
-    schengenDays: "24\u201330",
-    description: "From Krak\u00f3w south through Czechia, Austria, and Slovenia to Croatia\u2019s Istrian coast, then down the entire Adriatic to Dubrovnik. A Jadrolinija ferry from Rijeka to Split saves ~5 cycling days and keeps your Schengen count manageable. Ends at Dubrovnik \u2014 gateway to Montenegro and the Balkans. ALL SCHENGEN.",
+    distance: "~2,000 km cycling",
+    days: "30\u201338 days",
+    schengenDays: "30\u201338",
+    description: "From Krak\u00f3w south through Czechia, Austria, and Slovenia to Croatia\u2019s Istrian coast, then the full Adriatic Highway / EuroVelo 8 south through Dalmatia to Dubrovnik \u2014 gateway to Montenegro and the Balkans. ALL SCHENGEN. \u26a0\ufe0f The Rijeka\u2192Split coastal stretch is real cycling (no mainland ferry shortcut): expect wind, traffic, and heat; plan shorter days along Velebit.",
     stages: [
       { name: "Krak\u00f3w \u2192 O\u015bwi\u0119cim \u2192 Czech border", dist: "~150 km, 2\u20133 days (~4.5 hrs/day)", desc: "West from Krak\u00f3w through Silesia. O\u015bwi\u0119cim (Auschwitz) is directly on-route \u2014 plan a full day. Cross into Czech Republic near \u010cesk\u00fd T\u011b\u0161\u00edn." },
       { name: "Czech Republic: Olomouc \u2192 Brno", dist: "~200 km, 3 days (~4 hrs/day)", desc: "Through Moravia. Olomouc: stunning baroque town with UNESCO Holy Trinity Column, massively underrated. Brno: Czech Republic\u2019s second city, lively student scene, Tugendhat Villa (Mies van der Rohe, UNESCO)." },
@@ -602,14 +601,15 @@ const segments = [
       { name: "Vienna \u2192 Graz (Thermenradweg)", dist: "~200 km, 3\u20134 days (~5 hrs/day)", desc: "The Thermenradweg (Spas Cycle Route) south through Lower Austria and Styria. Baden: thermal baths. Wiener Neustadt. \u26a0\ufe0f First real mountain test of the trip \u2014 the Semmering area (approaching ~800\u2013900m from ~270m at Wiener Neustadt) is a genuine climb unlike anything in the previous 2,000 km. Total ascent over these days: ~1,500\u20132,000m. Battery range will drop noticeably for the first time. Plan charging stops in Wiener Neustadt and Mürzzuschlag before the descent into Styria. Once over the top, green rolling countryside eases you into Graz: red rooftops, Schlossberg hill, Kunsthaus. Spend a rest day \u2014 you\u2019ve earned it." },
       { name: "Graz \u2192 Maribor \u2192 Ljubljana", dist: "~250 km, 3\u20134 days (~5 hrs/day)", desc: "Cross into Slovenia at Bad Radkersburg. Maribor: oldest vine in the world (400+ years). Ljubljana: Europe\u2019s greenest capital, dragon bridge, castle on the hill, car-free old town, incredible food scene. Spend a rest day." },
       { name: "Ljubljana \u2192 Postojna \u2192 Rovinj", dist: "~200 km, 3\u20134 days (~5 hrs/day)", desc: "Through the Karst region. Postojna Cave (one of the world\u2019s largest show caves, train ride underground). \u0160kocjan Caves (UNESCO, even more dramatic). Cross into Croatia\u2019s Istria. Pula: Roman amphitheatre, 2,000 years old. Rovinj: Venetian jewel on the Adriatic." },
-      { name: "Rovinj \u2192 Rijeka", dist: "~100 km, 1\u20132 days (~6.5 hrs)", desc: "North along the Istrian coast past Vrsar and Pore\u010d (6th-century Euphrasian Basilica, UNESCO). Through Novigrad to Umag, then along the Kvarner coast to Rijeka. Croatia\u2019s third-largest city, underrated \u2014 the 2020 European Capital of Culture. Catch the Jadrolinija ferry." },
-      { name: "Ferry: Rijeka \u2192 Split (Jadrolinija)", dist: "~390 km, 1 day (~10 hr ferry)", desc: "Jadrolinija coastal ferry threads through the Dalmatian islands. Overnight or daytime sailing past Rab, Zadar, and \u0160ibenik. Bike goes on the car deck (~\u20AC10 bike fee). Saves 5+ cycling days and a huge amount of Schengen time. One of the most scenic ferry routes in Europe." },
-      { name: "Split \u2192 Makarska \u2192 Dubrovnik", dist: "~230 km, 3\u20134 days (~4.5 hrs/day)", desc: "Split: Diocletian\u2019s Palace (a living Roman ruin, people live inside it), Riva promenade. Ride the Adriatic Highway south through Omi\u0161 canyon, the Makarska Riviera (Biokovo mountain meets turquoise sea), Plo\u010de, and the Neretva delta. Cross the Pelje\u0161ac Bridge. Final stretch into Dubrovnik \u2014 walk the city walls." }
+      { name: "Rovinj \u2192 Rijeka", dist: "~100 km, 1\u20132 days (~6.5 hrs)", desc: "North along the Istrian coast past Vrsar and Pore\u010d (6th-century Euphrasian Basilica, UNESCO). Through Novigrad to Umag, then along the Kvarner coast to Rijeka. Croatia\u2019s third-largest city, underrated \u2014 the 2020 European Capital of Culture." },
+      { name: "Rijeka \u2192 Senj \u2192 Zadar", dist: "~250 km, 4\u20135 days (~4 hrs/day)", desc: "Join EuroVelo 8 / the Adriatic Highway south under Velebit. Senj: historic wind capital (the bura can shut the road \u2014 check forecasts). Coastal rollers, tunnels, and sea views the whole way into Zadar: Roman forum, sea organ, sunset cult. This is the stretch a ferry used to skip \u2014 ride it; start early and keep days shorter if the wind picks up." },
+      { name: "Zadar \u2192 \u0160ibenik \u2192 Split", dist: "~160 km, 2\u20133 days (~5 hrs/day)", desc: "Continue EV8 through the Dalmatian coast. \u0160ibenik: UNESCO cathedral, gateway to Krka. Split: Diocletian\u2019s Palace (a living Roman ruin, people live inside it), Riva promenade. Spend a rest day." },
+      { name: "Split \u2192 Makarska \u2192 Dubrovnik", dist: "~230 km, 3\u20134 days (~4.5 hrs/day)", desc: "Ride the Adriatic Highway south through Omi\u0161 canyon, the Makarska Riviera (Biokovo mountain meets turquoise sea), Plo\u010de, and the Neretva delta. Cross the Pelje\u0161ac Bridge. Final stretch into Dubrovnik \u2014 walk the city walls." }
     ],
     detours: [
       { name: "Wachau Valley (Danube)", dist: "+100 km detour from Vienna", time: "1\u20132 days", desc: "If approaching Vienna from the west, ride the famous Danube Cycle Path through the Wachau Valley. Terraced vineyards, medieval castles, Melk Abbey. One of Europe\u2019s most iconic cycle paths.", verdict: "highly", lat: 48.3660, lng: 15.4180 },
       { name: "\u0160kocjan Caves", dist: "+10 km detour", time: "Half day", desc: "UNESCO World Heritage. Massive underground canyon, river flowing through caverns. Less crowded and more dramatic than Postojna. Basically on-route between Ljubljana and the coast.", verdict: "must", lat: 45.6630, lng: 13.9910 },
-      { name: "Krka National Park", dist: "+40 km detour from Split area", time: "Full day", desc: "Jaw-dropping series of waterfalls you can actually swim in. Skradinski Buk: a curtain of cascades flowing into emerald pools. Visovac monastery on a tiny island in the river. Reachable from \u0160ibenik (if you break the ferry at \u0160ibenik) or as a detour from Split.", verdict: "must", lat: 43.8010, lng: 15.9620 },
+      { name: "Krka National Park", dist: "+40 km detour from \u0160ibenik / Split", time: "Full day", desc: "Jaw-dropping series of waterfalls you can actually swim in. Skradinski Buk: a curtain of cascades flowing into emerald pools. Visovac monastery on a tiny island in the river. Best as a day from \u0160ibenik or a short detour off the Zadar\u2192Split stage.", verdict: "must", lat: 43.8010, lng: 15.9620 },
       { name: "Pelje\u0161ac Peninsula", dist: "+60 km loop", time: "1 day", desc: "Croatia\u2019s best-kept secret. Wine region (Dinga\u010d, Postup \u2014 world-class reds from steep coastal vineyards), oyster farms at Ston (taste them fresh at the harbour), and the 5.5 km Walls of Ston \u2014 second longest fortification in the world after the Great Wall. Accessible via the new Pelje\u0161ac Bridge.", verdict: "highly", lat: 42.9200, lng: 17.2500 },
       { name: "Dubrovnik City Walls", dist: "2 km walk", time: "Half day", desc: "Walk the full 2 km circuit of medieval walls encircling the Old Town. One of Europe\u2019s most spectacular urban experiences. Views over terracotta rooftops and the Adriatic. Do this on your final day before crossing into Montenegro.", verdict: "must", lat: 42.6410, lng: 18.1080 }
     ],
@@ -626,18 +626,21 @@ const segments = [
       { name: "Postojna Cave", lat: 45.7830, lng: 14.2044, type: "stop" },
       { name: "Pula", lat: 44.8666, lng: 13.8496, type: "stop" },
       { name: "Rovinj", lat: 45.0812, lng: 13.6387, type: "stop" },
-      { name: "Rijeka", lat: 45.3271, lng: 14.4420, type: "ferry" },
-      { name: "Split", lat: 43.5081, lng: 16.4402, type: "ferry" },
+      { name: "Rijeka", lat: 45.3271, lng: 14.4420, type: "stop" },
+      { name: "Senj", lat: 44.9894, lng: 14.9031, type: "stop" },
+      { name: "Zadar", lat: 44.1194, lng: 15.2314, type: "stop" },
+      { name: "\u0160ibenik", lat: 43.7350, lng: 15.8952, type: "stop" },
+      { name: "Split", lat: 43.5081, lng: 16.4402, type: "stop" },
       { name: "Makarska", lat: 43.2965, lng: 17.0179, type: "stop" },
       { name: "Dubrovnik", lat: 42.6507, lng: 18.0944, type: "end" }
     ],
     route: [
       [50.0647,19.9450],[50.0344,19.2097],[49.7462,18.6270],[49.5938,17.2509],
       [49.1951,16.6068],[48.2082,16.3738],[47.0707,15.4395],[46.5547,15.6459],
-      [46.0569,14.5058],[45.7830,14.2044],[44.8666,13.8496],[45.0812,13.6387],[45.3271,14.4420]
-    ],
-    ferryRoute: [[45.3271,14.4420],[44.75,14.60],[44.05,15.25],[43.73,15.90],[43.5081,16.4402]],
-    bikeRoute2: [[43.5081,16.4402],[43.2965,17.0179],[43.05,17.40],[42.6507,18.0944]]
+      [46.0569,14.5058],[45.7830,14.2044],[44.8666,13.8496],[45.0812,13.6387],
+      [45.3271,14.4420],[44.9894,14.9031],[44.55,15.00],[44.1194,15.2314],
+      [43.7350,15.8952],[43.5081,16.4402],[43.2965,17.0179],[43.05,17.40],[42.6507,18.0944]
+    ]
   },
   {
     id: 9,
