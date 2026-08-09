@@ -2124,8 +2124,29 @@ function sortedTripPhotos(photos) {
   });
 }
 
+function photoPathToThumb(path) {
+  if (!path) return path;
+  if (path.indexOf('/thumbs/') !== -1) return path;
+  return path.replace(/^(photos\/)/, 'photos/thumbs/');
+}
+
+function mediaFullSrc(p) {
+  return p.src || null;
+}
+
+function mediaThumbSrc(p) {
+  if (p.thumb) return p.thumb;
+  var base = p.poster || p.src;
+  if (!base) return null;
+  if (/\.(mp4|webm)(\?|$)/i.test(base)) {
+    return p.poster ? mediaThumbSrc({ src: p.poster }) : null;
+  }
+  if (base.indexOf('/thumbs/') !== -1) return base;
+  return base.replace(/^(photos\/)/, 'photos/thumbs/');
+}
+
 function mediaPinSrc(p) {
-  return p.poster || p.src;
+  return mediaThumbSrc(p) || p.poster || p.src;
 }
 
 function mediaVideoSrc(p) {
@@ -2184,7 +2205,7 @@ function lbRender() {
     vid.style.display = 'none';
     vid.removeAttribute('src');
     img.style.display = 'block';
-    img.src = mediaPinSrc(p);
+    img.src = mediaFullSrc(p) || mediaPinSrc(p);
     img.alt = p.caption || '';
   }
   document.getElementById('lb-caption').textContent = p.caption || '';
@@ -2240,7 +2261,7 @@ function rebuildPhotoLayer() {
     var play = mediaVideoSrc(p) ? '<span class="photo-pin-play" aria-hidden="true">\u25B6</span>' : '';
     var icon = L.divIcon({
       className: '',
-      html: '<div class="photo-pin-wrap"><img src="' + thumb + '" alt="' + (p.caption||'') + '">' + play + '</div>',
+      html: '<div class="photo-pin-wrap"><img src="' + thumb + '" alt="' + (p.caption||'') + '" loading="lazy" decoding="async">' + play + '</div>',
       iconSize: [53, 69],
       iconAnchor: [26, 69]
     });
@@ -2461,7 +2482,7 @@ function renderUpdatesFeed() {
     bodyHtml = '<div class="updates-empty">No updates yet \u2014 check back once the trip starts!</div>';
   } else {
     bodyHtml = updates.map(function(u) {
-      var photoHtml = u.photo ? '<div class="uc-img"><img src="' + u.photo + '" alt="" onclick="window.open(this.src)"></div>' : '';
+      var photoHtml = u.photo ? '<div class="uc-img"><img src="' + photoPathToThumb(u.photo) + '" alt="" loading="lazy" decoding="async" onclick="window.open(\'' + u.photo + '\')"></div>' : '';
       return '<div class="update-card">' +
         '<div class="uc-meta"><span class="uc-date">' + u.date + '</span><span class="uc-loc">' + u.location + '</span></div>' +
         '<div class="uc-text">' + u.text + '</div>' +
@@ -2607,7 +2628,7 @@ loadRealRoutes();
 
   function getNodeIcon(item) {
     if (item.type === 'update') {
-      if (item.photo) return '<img class="dock-node-thumb" src="' + item.photo + '" alt="" loading="lazy">';
+      if (item.photo) return '<img class="dock-node-thumb" src="' + photoPathToThumb(item.photo) + '" alt="" loading="lazy" decoding="async">';
       return '<span class="dock-node-icon">📍</span>';
     }
     return '<span class="dock-node-icon">' + item.icon + '</span>';
@@ -2636,7 +2657,7 @@ loadRealRoutes();
 
   function renderDetailUpdate(item) {
     var inner = document.getElementById('dock-detail-inner');
-    var photoHtml = item.photo ? '<img class="dock-detail-photo" src="' + item.photo + '" alt="" onclick="window.open(this.src)">' : '';
+    var photoHtml = item.photo ? '<img class="dock-detail-photo" src="' + photoPathToThumb(item.photo) + '" alt="" loading="lazy" decoding="async" onclick="window.open(\'' + item.photo + '\')">' : '';
     inner.innerHTML = photoHtml +
       '<div class="dock-detail-meta">' +
         '<span class="dock-detail-badge update">Update</span>' +
