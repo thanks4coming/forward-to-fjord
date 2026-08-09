@@ -11,3 +11,4 @@ Never assume which photo is which based on filename sequence or album order.
 2. Assign captions and pin coordinates based on timestamp order and any context the user provides about what was photographed where
 3. When the user corrects a caption, pin location, or photo order — fix it immediately and commit without asking for confirmation or explanation
 4. Add explicit `photoTripSortKey` entries in `index.html` for all new photos to lock lightbox order
+5. After adding any new `photos/*.jpg` (or poster still), generate a compressed map thumb at `photos/thumbs/<same-filename>` (~240px max edge, JPEG quality ~70). Map pins and feed cards use thumbs; the lightbox loads the full `photos/` original on click. Bump `sw.js` and precache the new thumb path (not the full original).
