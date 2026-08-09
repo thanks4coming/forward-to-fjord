@@ -1743,7 +1743,8 @@ function trailNoteText(from, to) {
 }
 
 function isTrainTrailLeg(from, to) {
-  if ((to && to.transport) === 'train' || (from && from.transport) === 'train') return true;
+  if (to && to.transport === 'train') return true;
+  if (to && to.transport && to.transport !== 'train') return false;
   const note = trailNoteText(from, to).toLowerCase();
   if (note.indexOf('by train') !== -1) return true;
   const fromLoc = ((from && from.location) || '').toLowerCase();
@@ -1752,7 +1753,8 @@ function isTrainTrailLeg(from, to) {
 }
 
 function isBusTrailLeg(from, to) {
-  if ((to && to.transport) === 'bus' || (from && from.transport) === 'bus') return true;
+  if (to && to.transport === 'bus') return true;
+  if (to && to.transport && to.transport !== 'bus') return false;
   const note = trailNoteText(from, to).toLowerCase();
   if (note.indexOf('by overnight bus') !== -1 || note.indexOf('by bus') !== -1) return true;
   const fromLoc = ((from && from.location) || '').toLowerCase();
