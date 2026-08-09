@@ -19,6 +19,7 @@ const tripStatus = {
       lng: 21.006725,
       location: 'Warsaw, Poland',
       note: 'Vilnius → Warsaw by overnight bus. Arrived 5am and rode around the city all day on no sleep.',
+      transport: 'bus',
     },
     {
       at: '2026-08-08T18:00:41.239Z',
@@ -26,6 +27,7 @@ const tripStatus = {
       lng: 25.282911,
       location: 'Vilnius, Lithuania',
       note: 'Klaipėda → Vilnius by train.',
+      transport: 'train',
     },
     {
       at: '2026-08-07T18:00:00.000Z',
