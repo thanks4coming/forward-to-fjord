@@ -82,6 +82,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
 .badge{display:inline-flex;padding:1px 6px;border-radius:3px;font-size:9px;font-weight:700;text-transform:uppercase}
 .b-bike{background:#1e3a5f;color:#60a5fa}
 .b-train{background:#3b1764;color:#c084fc}
+.b-bus{background:#0c4a6e;color:#38bdf1}
 .b-ferry{background:#134e4a;color:#5eead4}
 .detour-card{background:rgba(26,26,46,.8);border:1px solid rgba(245,158,11,.2);border-radius:6px;padding:8px 10px;margin-bottom:6px}
 .detour-hdr{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;margin-bottom:3px}
@@ -498,22 +499,22 @@ const segments = [
   },
   {
     id: 6,
-    title: "Tallinn \u2192 Baltic Coast \u2192 Klaip\u0117da + Train (via Vilnius overnight) to Warsaw",
-    routeName: "EuroVelo 10 (Baltic Sea Cycle Route) + Train Klaip\u0117da\u2192Vilnius\u2192Warsaw",
+    title: "Tallinn \u2192 Baltic Coast \u2192 Klaip\u0117da + Train/Bus (via Vilnius overnight) to Warsaw",
+    routeName: "EuroVelo 10 (Baltic Sea Cycle Route) + Train Klaip\u0117da\u2192Vilnius + Bus Vilnius\u2192Warsaw",
     color: "#ef4444",
     transport: "bike",
-    distance: "~710 km cycling + train",
+    distance: "~710 km cycling + train + bus",
     days: "13\u201315 days",
     schengenDays: "13\u201315",
-    description: "Down the eastern Baltic coast through Estonia and Latvia to Lithuania via EuroVelo 10, then a 2-day train journey from Klaip\u0117da to Warsaw with an overnight stop in Vilnius \u2014 skipping the Kaliningrad-adjacent section entirely and arriving directly in Warsaw to begin the Poland cycling leg. Vilnius is a genuine highlight: one of Europe\u2019s best-preserved Baroque old towns, UNESCO listed, and very cheap. Terrain is flat throughout. Signage excellent in Estonia, patchy in Latvia. GPS/GPX essential.",
+    description: "Down the eastern Baltic coast through Estonia and Latvia to Lithuania via EuroVelo 10, then train Klaip\u0117da\u2192Vilnius and overnight bus Vilnius\u2192Warsaw \u2014 skipping the Kaliningrad-adjacent section and arriving in Warsaw to begin the Poland cycling leg. Vilnius is a genuine highlight: one of Europe\u2019s best-preserved Baroque old towns, UNESCO listed, and very cheap. Terrain is flat throughout. Signage excellent in Estonia, patchy in Latvia. GPS/GPX essential.",
     stages: [
       { name: "Tallinn \u2192 P\u00e4rnu", dist: "~130 km, 2 days (~3.5 hrs/day)", desc: "Leave Tallinn Old Town (UNESCO \u2014 spend a full day exploring first). Coastal road south. Option: direct route via Highway 4 (faster, less scenic) or coastal route via Haapsalu (+80 km, much nicer). P\u00e4rnu: Estonia\u2019s summer capital, wide beach, Red Tower, Museum of New Art." },
       { name: "P\u00e4rnu \u2192 Latvian Border (Ainaži)", dist: "~60 km, 1 day (~3.5 hrs)", desc: "Quiet coastal roads through pine forest. Cross into Latvia at Ainaži. Easy border crossing (both Schengen, no checks)." },
       { name: "Ainaži \u2192 R\u012bga", dist: "~180 km, 2\u20133 days (~3.5 hrs/day)", desc: "Latvian coast: Salacgr\u012bva fishing village, Saulkrasti white sand dunes. Through J\u016brmala beach resort (wooden Art Nouveau villas \u2014 ride the 25 km seafront bike path). R\u012bga: Art Nouveau district (800+ buildings \u2014 the best collection in Europe), Central Market in former Zeppelin hangars, medieval Old Town." },
       { name: "R\u012bga \u2192 Liep\u0101ja", dist: "~220 km, 3\u20134 days (~3.5 hrs/day)", desc: "West along the coast. Through Tukums, Talsi. Ventspils: clean Blue Flag beach, cow parade sculptures. Liep\u0101ja: Karosta district (former Soviet naval base \u2014 abandoned prison, military architecture, genuinely eerie and fascinating)." },
       { name: "Liep\u0101ja \u2192 Klaip\u0117da", dist: "~110 km, 2 days (~3 hrs/day)", desc: "Cross into Lithuania. Through Palanga: amber museum in a botanical garden, sunset from the 470m pier. Klaip\u0117da: Old Town, Theatre Square. End of the cycling leg for this segment." },
-      { name: "Train: Klaip\u0117da \u2192 Vilnius (overnight)", dist: "~310 km, 1 day (~4.5 hrs travel)", desc: "LTG Link InterCity \u2014 modern renovated carriages, power outlets, café/trolley service, dedicated bike spaces. Book bike spot in advance (~45% of ticket price). Depart afternoon, arrive Vilnius early evening. Vilnius overnight: one of Europe\u2019s most underrated cities. Baroque Old Town is UNESCO listed, cathedral square, Gediminas Castle, Gate of Dawn. Extremely cheap \u2014 dinner and a beer for under \u20AC15. Stay in the Old Town." },
-      { name: "Train: Vilnius \u2192 Warsaw", dist: "~650 km, 1 day (~7.5 hrs travel)", desc: "LTG Link cross-border service \u2014 modern carriages, power outlets, tables, comfortable seats, dedicated bike spaces. Book bike spot in advance (~45% of ticket price). Arrive Warsaw Central Station and head directly into the Poland cycling leg. No onward connection needed. Total cost: ~\u20AC60\u201370 including bike. Warsaw is a great city to overnight if arriving late \u2014 postwar rebuilt old town, vibrant food scene, very affordable." }
+      { name: "Train: Klaip\u0117da \u2192 Vilnius", dist: "~310 km, 1 day (~4.5 hrs travel)", desc: "LTG Link InterCity \u2014 modern renovated carriages, power outlets, café/trolley service, dedicated bike spaces. Book bike spot in advance. Arrive Vilnius evening. Vilnius overnight: one of Europe\u2019s most underrated cities. Baroque Old Town is UNESCO listed, cathedral square, Gediminas Castle, Gate of Dawn. Extremely cheap \u2014 dinner and a beer for under \u20AC15. Stay in the Old Town." },
+      { name: "Bus: Vilnius \u2192 Warsaw", dist: "~450 km, overnight (~9 hrs)", desc: "Lux Express overnight coach with bike ticket. Arrive Warsaw early morning and head into the Poland cycling leg. Warsaw overnight if arriving late \u2014 postwar rebuilt old town, vibrant food scene, very affordable." }
     ],
     detours: [
       { name: "Saaremaa & Hiiumaa Islands", dist: "+300 km, 4\u20135 extra days", time: "4\u20135 days", desc: "From P\u00e4rnu or Haapsalu, ferry to Estonia\u2019s western islands. Saaremaa: Kuressaare medieval castle, Kaali meteorite crater (3,500 years old), dramatic cliffs. Hiiumaa: K\u00f5pu lighthouse (one of the world\u2019s oldest, operating since 1531). Flat, empty, wildly beautiful. Free inter-island ferries. This is Estonia\u2019s best cycling.", verdict: "highly", lat: 58.4200, lng: 22.1000 },
@@ -534,8 +535,8 @@ const segments = [
       { name: "Liep\u0101ja", lat: 56.5047, lng: 21.0109, type: "stop" },
       { name: "Palanga", lat: 55.9200, lng: 21.0680, type: "stop" },
       { name: "Klaip\u0117da", lat: 55.7033, lng: 21.1443, type: "train" },
-      { name: "Vilnius (overnight)", lat: 54.6892, lng: 25.2798, type: "stop" },
-      { name: "Warsaw", lat: 52.2297, lng: 21.0122, type: "train" }
+      { name: "Vilnius (overnight)", lat: 54.6892, lng: 25.2798, type: "train" },
+      { name: "Warsaw", lat: 52.2297, lng: 21.0122, type: "bus" }
     ],
     route: [
       [59.4370,24.7536],[58.9430,23.5410],[58.3859,24.4967],[57.8630,24.3540],
@@ -543,7 +544,10 @@ const segments = [
       [56.5047,21.0109],[55.9200,21.0680],[55.7033,21.1443]
     ],
     trainRoute: [
-      [55.7033,21.1443],[54.6892,25.2798],[52.2297,21.0122]
+      [55.7033,21.1443],[54.6892,25.2798]
+    ],
+    busRoute: [
+      [54.6892,25.2798],[52.2297,21.0122]
     ]
   },
   {
@@ -701,8 +705,8 @@ map.createPane('trailPane');
 map.getPane('trailPane').style.zIndex = 450;
 
 function mkIcon(color, type) {
-  const sz = type==='start'||type==='end'?14:type==='ferry'||type==='train'?11:7;
-  const sym = type==='start'?'\u25B6':type==='end'?'\u2605':type==='ferry'?'\u26F4':type==='train'?'\u{1F686}':'';
+  const sz = type==='start'||type==='end'?14:type==='ferry'||type==='train'||type==='bus'?11:7;
+  const sym = type==='start'?'\u25B6':type==='end'?'\u2605':type==='ferry'?'\u26F4':type==='train'?'\u{1F686}':type==='bus'?'\u{1F68C}':'';
   return L.divIcon({
     className:'',
     html:`<div style="width:${sz*2}px;height:${sz*2}px;background:${color};border-radius:50%;border:2px solid rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;font-size:${sz}px;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.5)">${sym}</div>`,
@@ -857,10 +861,11 @@ segments.forEach(seg => {
   _trackPl(seg.bikeRoute2, {color:seg.color,weight:3,opacity:.8});
   _trackPl(seg.ferryRoute2, {color:'#5eead4',weight:2.5,opacity:.7,dashArray:'6,10'});
   _trackPl(seg.trainRoute, {color:'#a855f7',weight:3,opacity:.8,dashArray:'10,8'});
+  _trackPl(seg.busRoute, {color:'#38bdf1',weight:3,opacity:.8,dashArray:'10,8'});
 
   seg.waypoints.forEach(wp => {
     const m = L.marker([wp.lat, wp.lng], {icon:mkIcon(seg.color, wp.type)}).addTo(g);
-    const tl = wp.type==='start'?'Start':wp.type==='end'?'Finish':wp.type==='ferry'?'Ferry':wp.type==='train'?'Train':'Stop';
+    const tl = wp.type==='start'?'Start':wp.type==='end'?'Finish':wp.type==='ferry'?'Ferry':wp.type==='train'?'Train':wp.type==='bus'?'Bus':'Stop';
     m.bindPopup(`<div class="pt" style="color:${seg.color}">${tl} &mdash; Seg ${seg.id}</div><b>${wp.name}</b>`);
   });
 
@@ -1128,6 +1133,7 @@ leg.onAdd = function(){
     <div style="font-size:9.5px;color:#94a3b8;display:flex;flex-direction:column;gap:4px">
       <div style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:16px;height:3px;background:#3b82f6;border-radius:2px"></span>Cycling</div>
       <div style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:16px;height:0;border-bottom:2px dashed #a855f7"></span>Train</div>
+      <div style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:16px;height:0;border-bottom:2px dashed #38bdf1"></span>Bus</div>
       <div style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:16px;height:0;border-bottom:2px dashed #5eead4"></span>Ferry</div>
       <div style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:16px;height:0;border-bottom:2px dashed #f97316"></span>Uber</div>
       <div style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:10px;height:10px;background:#f59e0b;transform:rotate(45deg);flex-shrink:0;margin-left:3px"></span>Detour</div>
@@ -1732,6 +1738,26 @@ function isEstoniaCheckin(h) {
   return h.lat >= 57.5 && h.lat < 59.8 && h.lng >= 21.5 && h.lng <= 28.5;
 }
 
+function trailNoteText(from, to) {
+  return ((to && to.note) || '') + ' ' + ((from && from.note) || '');
+}
+
+function isTrainTrailLeg(from, to) {
+  const note = trailNoteText(from, to).toLowerCase();
+  if (note.indexOf('by train') !== -1) return true;
+  const fromLoc = ((from && from.location) || '').toLowerCase();
+  const toLoc = ((to && to.location) || '').toLowerCase();
+  return fromLoc.indexOf('klaip') !== -1 && toLoc.indexOf('vilnius') !== -1;
+}
+
+function isBusTrailLeg(from, to) {
+  const note = trailNoteText(from, to).toLowerCase();
+  if (note.indexOf('by overnight bus') !== -1 || note.indexOf('by bus') !== -1) return true;
+  const fromLoc = ((from && from.location) || '').toLowerCase();
+  const toLoc = ((to && to.location) || '').toLowerCase();
+  return fromLoc.indexOf('vilnius') !== -1 && (toLoc.indexOf('warsaw') !== -1 || toLoc.indexOf('warszawa') !== -1);
+}
+
 const TRAIL_ON_ROUTE_DEG = 0.004;      // ~400 m — on the cycling path
 const TRAIL_ROUTE_CORRIDOR_DEG = 0.15; // ~15 km — still snap to the planned route
 
@@ -1784,6 +1810,8 @@ function shouldUseBikeRoute(from, to, route) {
 function buildTrailSegmentPaths(chronological) {
   const bikePaths = [];
   const ferryPaths = [];
+  const trainPaths = [];
+  const busPaths = [];
   const gbgRoute = getGothenburgAlingsasTrailRoute();
   for (let i = 0; i < chronological.length - 1; i++) {
     const from = chronological[i];
@@ -1847,6 +1875,16 @@ function buildTrailSegmentPaths(chronological) {
       const bikeRoute = findBestTrailRoute(from, to);
       if (bikeRoute) bikePaths.push(buildPathAlongRoute(fromPt, toPt, bikeRoute));
       else bikePaths.push([fromPt, toPt]);
+    } else if (isTrainTrailLeg(from, to)) {
+      trainPaths.push({
+        path: [fromPt, toPt],
+        label: ((from.location || 'Train') + ' \u2192 ' + (to.location || '')).replace(/,\s*[^,]+$/, '') || 'Train'
+      });
+    } else if (isBusTrailLeg(from, to)) {
+      busPaths.push({
+        path: [fromPt, toPt],
+        label: ((from.location || 'Bus') + ' \u2192 ' + (to.location || '')).replace(/,\s*[^,]+$/, '') || 'Bus'
+      });
     } else if (isPreTripCheckin(from) || isPreTripCheckin(to)) {
       continue; // suppress any line touching a pre-trip pin
     } else {
@@ -1862,7 +1900,13 @@ function buildTrailSegmentPaths(chronological) {
       routedBikePaths.push(path);
     }
   });
-  return { bikePaths: routedBikePaths, ferryPaths: ferryPaths, osrmSegments: osrmSegments };
+  return {
+    bikePaths: routedBikePaths,
+    ferryPaths: ferryPaths,
+    trainPaths: trainPaths,
+    busPaths: busPaths,
+    osrmSegments: osrmSegments
+  };
 }
 
 function photoLatLng(p) {
@@ -2263,7 +2307,29 @@ function rebuildTrailLayer() {
         L.polyline(path, {
           color: '#5eead4', weight: 3, opacity: 0.8, dashArray: '6,10', lineCap: 'round',
           pane: 'trailPane'
-        }).bindPopup('<b>Grisslehamn \u2192 Ecker\u00f6 ferry</b>')
+        }).bindPopup('<b>Ferry</b>')
+          .addTo(trailGroup);
+      }
+    });
+    (trailPaths.trainPaths || []).forEach(function(seg) {
+      var path = seg.path || seg;
+      var label = seg.label || 'Train';
+      if (path.length > 1) {
+        L.polyline(path, {
+          color: '#a855f7', weight: 3, opacity: 0.85, dashArray: '10,8', lineCap: 'round',
+          pane: 'trailPane'
+        }).bindPopup('<b>' + label + '</b><br><span style="font-size:10px;color:#94a3b8">Train</span>')
+          .addTo(trailGroup);
+      }
+    });
+    (trailPaths.busPaths || []).forEach(function(seg) {
+      var path = seg.path || seg;
+      var label = seg.label || 'Bus';
+      if (path.length > 1) {
+        L.polyline(path, {
+          color: '#38bdf1', weight: 3, opacity: 0.85, dashArray: '10,8', lineCap: 'round',
+          pane: 'trailPane'
+        }).bindPopup('<b>' + label + '</b><br><span style="font-size:10px;color:#94a3b8">Bus</span>')
           .addTo(trailGroup);
       }
     });
