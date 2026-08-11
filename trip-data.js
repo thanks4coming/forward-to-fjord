@@ -21,14 +21,6 @@ const tripStatus = {
       note: 'Rode to Auschwitz today via Zator.',
     },
     {
-      at: '2026-08-10T18:00:00.000Z',
-      lat: 50.061947,
-      lng: 19.936856,
-      location: 'Kraków, Poland',
-      note: 'Warsaw → Kraków by train.',
-      transport: 'train',
-    },
-    {
       at: '2026-08-09T16:59:21.466Z',
       lat: 52.231958,
       lng: 21.006725,
