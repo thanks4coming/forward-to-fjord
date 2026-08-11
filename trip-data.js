@@ -19,6 +19,15 @@ const tripStatus = {
       lng: 19.26008,
       location: 'Oświęcim, Poland',
       note: 'Rode to Auschwitz today via Zator.',
+      transport: 'bike',
+    },
+    {
+      at: '2026-08-10T18:00:00.000Z',
+      lat: 50.061947,
+      lng: 19.936856,
+      location: 'Kraków, Poland',
+      note: 'Warsaw → Kraków by train.',
+      transport: 'train',
     },
     {
       at: '2026-08-09T16:59:21.466Z',
@@ -366,6 +375,13 @@ const tripStatus = {
       photo: 'photos/2026-08-11-zator-01.jpg',
       lat: 50.033671,
       lng: 19.26008
+    },
+    {
+      date: '2026-08-10',
+      location: 'Kraków, Poland',
+      text: 'Warsaw → Kraków by train.',
+      lat: 50.061947,
+      lng: 19.936856
     },
     {
       date: '2026-08-09',

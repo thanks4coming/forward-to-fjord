@@ -1742,7 +1742,11 @@ function isEstoniaCheckin(h) {
 }
 
 function trailNoteText(from, to) {
-  return ((to && to.note) || '') + ' ' + ((from && from.note) || '');
+  // Only the arrival ("to") entry's note describes how that leg was travelled.
+  // Never mix in the "from" entry's note — it describes the leg before this one
+  // and can contain unrelated transport words (e.g. "...by train") that would
+  // otherwise leak into this leg's classification.
+  return ((to && to.note) || '');
 }
 
 function isTrainTrailLeg(from, to) {
