@@ -4,15 +4,30 @@
 // ============================================================
 const tripStatus = {
   active: true,               // set true when the trip starts
-  currentSegment: 5,           // segment id: 5 — Estonia → Baltics
-  currentCity: 'Warsaw, Poland',
-  dayNumber: 47,
-  kmRidden: 1856,
+  currentSegment: 8,           // segment id: 8 — Kraków → Adriatic
+  currentCity: 'Oświęcim, Poland',
+  dayNumber: 49,
+  kmRidden: 1921,
   countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia', 'Latvia', 'Lithuania', 'Poland'],
-  lat: 52.231958,                   // precise current lat (preferred over city fallback)
-  lng: 21.006725,                   // precise current lng
-  lastUpdated: '2026-08-09',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 50.033671,                   // precise current lat (preferred over city fallback)
+  lng: 19.26008,                   // precise current lng
+  lastUpdated: '2026-08-11',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-08-11T17:49:12.026Z',
+      lat: 50.033671,
+      lng: 19.26008,
+      location: 'Oświęcim, Poland',
+      note: 'Rode to Auschwitz today via Zator.',
+    },
+    {
+      at: '2026-08-10T18:00:00.000Z',
+      lat: 50.061947,
+      lng: 19.936856,
+      location: 'Kraków, Poland',
+      note: 'Warsaw → Kraków by train.',
+      transport: 'train',
+    },
     {
       at: '2026-08-09T16:59:21.466Z',
       lat: 52.231958,
@@ -352,6 +367,14 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-08-11',
+      location: 'Oświęcim, Poland',
+      text: 'Rode to Auschwitz today via Zator.',
+      photo: 'photos/2026-08-11-zator-01.jpg',
+      lat: 50.033671,
+      lng: 19.26008
+    },
     {
       date: '2026-08-09',
       location: 'Warsaw, Poland',
@@ -770,6 +793,12 @@ const tripStatus = {
     { lat: 52.2412, lng: 21.0134, src: 'photos/2026-08-09-warsaw-01.jpg', caption: 'Piłsudski Square', location: 'Warsaw, Poland' },
     { lat: 52.2316, lng: 21.0062, src: 'photos/2026-08-09-warsaw-02.jpg', caption: 'Palace of Culture and Science', location: 'Warsaw, Poland' },
     { lat: 52.2320, lng: 21.0070, src: 'photos/2026-08-09-warsaw-03.jpg', caption: 'Mirror room', location: 'Warsaw, Poland' },
+    { lat: 49.996706, lng: 19.437949, src: 'photos/2026-08-11-zator-01.jpg', caption: 'Carp sculpture — Dolina Karpia', location: 'Zator, Poland' },
+    { lat: 49.996706, lng: 19.437949, src: 'photos/2026-08-11-zator-02.jpg', caption: 'Rynek', location: 'Zator, Poland' },
+    { lat: 49.999396, lng: 19.409816, src: 'photos/2026-08-11-zator-energylandia-01.jpg', caption: 'Energylandia on the horizon', location: 'Zator, Poland' },
+    { lat: 50.036127, lng: 19.237987, src: 'photos/2026-08-11-oswiecim-01.jpg', caption: 'Church of St Maximilian Kolbe', location: 'Oświęcim, Poland' },
+    { lat: 50.038524, lng: 19.221766, src: 'photos/2026-08-11-oswiecim-02.jpg', caption: 'Loaded bike in the square', location: 'Oświęcim, Poland' },
+    { lat: 50.038524, lng: 19.221766, src: 'photos/2026-08-11-oswiecim-03.jpg', caption: 'Evening in town', location: 'Oświęcim, Poland' },
     // Map photo pins — add as you go (trip order; lightbox sorts via photoTripSortKey in index.html)
     // { lat: 0.0, lng: 0.0, src: 'photos/2026-XX-XX-city.jpg', caption: 'Caption', location: 'City' }
   ]
