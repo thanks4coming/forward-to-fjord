@@ -2497,7 +2497,7 @@ function renderUpdatesFeed() {
     bodyHtml = '<div class="updates-empty">No updates yet \u2014 check back once the trip starts!</div>';
   } else {
     bodyHtml = updates.map(function(u) {
-      var photoHtml = u.photo ? '<div class="uc-img"><img src="' + photoPathToThumb(u.photo) + '" alt="" loading="lazy" decoding="async" onclick="window.open(\'' + u.photo + '\')"></div>' : '';
+      var photoHtml = u.photo ? '<div class="uc-img"><img src="' + u.photo + '" alt="" loading="lazy" decoding="async" onclick="window.open(\'' + u.photo + '\')"></div>' : '';
       return '<div class="update-card">' +
         '<div class="uc-meta"><span class="uc-date">' + u.date + '</span><span class="uc-loc">' + u.location + '</span></div>' +
         '<div class="uc-text">' + u.text + '</div>' +
