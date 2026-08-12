@@ -321,8 +321,16 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
 </div>
 
 <script>
-/** Total planned cycling distance (km) — used for live progress bar; keep in sync with route totals. */
-const TRIP_TOTAL_KM = 5025;
+/**
+ * Total planned CYCLING distance (km) — used for live progress bar.
+ * Sum of each segment's cycling-only km (excludes ferry crossings and the
+ * Klaipėda→Vilnius→Warsaw train/bus, which were never meant to be ridden).
+ * Segment 7 (Warsaw→Łódź→Kraków, ~400 km) is excluded entirely: it was
+ * actually skipped via train, so it no longer needs to be ridden.
+ * 620 (seg1) + 350 (seg3) + 284 (seg4) + 710 (seg6) + 2000 (seg8, post
+ * ferry-fix) + 1500 (seg9) = 5464. Keep in sync with route/segment totals.
+ */
+const TRIP_TOTAL_KM = 5464;
 
 const GRISSLEHAMN_LATLNG = [60.1088, 18.8237];
 const ECKERO_FERRY_LATLNG = [60.2253, 19.5479];
