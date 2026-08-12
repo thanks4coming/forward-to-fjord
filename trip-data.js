@@ -5,14 +5,22 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 8,           // segment id: 8 — Kraków → Adriatic
-  currentCity: 'Oświęcim, Poland',
-  dayNumber: 49,
-  kmRidden: 1921,
+  currentCity: 'Bielsko-Biała, Poland',
+  dayNumber: 50,
+  kmRidden: 1955,
   countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia', 'Latvia', 'Lithuania', 'Poland'],
-  lat: 50.033671,                   // precise current lat (preferred over city fallback)
-  lng: 19.26008,                   // precise current lng
-  lastUpdated: '2026-08-11',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 49.822118,                   // precise current lat (preferred over city fallback)
+  lng: 19.044894,                   // precise current lng
+  lastUpdated: '2026-08-12',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-08-12T12:41:34.718Z',
+      lat: 49.822118,
+      lng: 19.044894,
+      location: 'Bielsko-Biała, Poland',
+      note: 'Oświęcim → Bielsko-Biała (~34 km). The hills are back which is a good push.',
+      transport: 'bike',
+    },
     {
       at: '2026-08-11T17:49:12.026Z',
       lat: 50.033671,
@@ -368,6 +376,14 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-08-12',
+      location: 'Bielsko-Biała, Poland',
+      text: 'Oświęcim → Bielsko-Biała (~34 km). The hills are back which is a good push.',
+      photo: 'photos/2026-08-12-farmland-01.jpg',
+      lat: 49.822118,
+      lng: 19.044894
+    },
     {
       date: '2026-08-11',
       location: 'Oświęcim, Poland',
@@ -807,6 +823,9 @@ const tripStatus = {
     { lat: 50.036127, lng: 19.237987, src: 'photos/2026-08-11-oswiecim-01.jpg', caption: 'Church of St Maximilian Kolbe', location: 'Oświęcim, Poland' },
     { lat: 50.038524, lng: 19.221766, src: 'photos/2026-08-11-oswiecim-02.jpg', caption: 'Loaded bike in the square', location: 'Oświęcim, Poland' },
     { lat: 50.038524, lng: 19.221766, src: 'photos/2026-08-11-oswiecim-03.jpg', caption: 'Evening in town', location: 'Oświęcim, Poland' },
+    { lat: 49.907052, lng: 19.149865, src: 'photos/2026-08-12-farmland-01.jpg', caption: 'Farmland, hills back on the horizon', location: 'Oświęcim → Bielsko-Biała' },
+    { lat: 49.821163, lng: 19.042707, src: 'photos/2026-08-12-bielsko-biala-01.jpg', caption: 'Frog fountain, Rynek', location: 'Bielsko-Biała, Poland' },
+    { lat: 49.826409, lng: 19.048522, src: 'photos/2026-08-12-bielsko-biala-02.jpg', caption: 'Bolek i Lolek monument', location: 'Bielsko-Biała, Poland' },
     // Map photo pins — add as you go (trip order; lightbox sorts via photoTripSortKey in index.html)
     // { lat: 0.0, lng: 0.0, src: 'photos/2026-XX-XX-city.jpg', caption: 'Caption', location: 'City' }
   ]
