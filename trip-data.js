@@ -858,7 +858,7 @@ const tripStatus = {
     { lat: 49.821163, lng: 19.042707, src: 'photos/2026-08-12-bielsko-biala-01.jpg', caption: 'Frog fountain, Rynek', location: 'Bielsko-Biała, Poland' },
     { lat: 49.826409, lng: 19.048522, src: 'photos/2026-08-12-bielsko-biala-02.jpg', caption: 'Bolek i Lolek monument', location: 'Bielsko-Biała, Poland' },
     { lat: 49.721017, lng: 18.470024, src: 'photos/2026-08-14-zermanice-dam-01.jpg', caption: 'Dam crest — Žermanice reservoir', location: 'Žermanice dam (via Havířov)' },
-    { lat: 49.642166, lng: 18.155624, src: 'photos/2026-08-14-pribor-approach-01.jpg', caption: 'Gravel approach in the heat', location: 'Near Příbor, Czech Republic' },
+    { lat: 49.656144, lng: 18.201392, src: 'photos/2026-08-14-pribor-approach-01.jpg', caption: 'Gravel approach in the heat', location: 'Near Příbor, Czech Republic' },
     // Map photo pins — add as you go (trip order; lightbox sorts via photoTripSortKey in index.html)
     // { lat: 0.0, lng: 0.0, src: 'photos/2026-XX-XX-city.jpg', caption: 'Caption', location: 'City' }
   ]
