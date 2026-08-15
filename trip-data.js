@@ -5,14 +5,30 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 8,           // segment id: 8 — Kraków → Adriatic
-  currentCity: 'Bielsko-Biała, Poland',
-  dayNumber: 50,
-  kmRidden: 1955,
-  countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia', 'Latvia', 'Lithuania', 'Poland'],
-  lat: 49.822118,                   // precise current lat (preferred over city fallback)
-  lng: 19.044894,                   // precise current lng
-  lastUpdated: '2026-08-12',           // e.g. '2026-06-08' — shown in live banner when set
+  currentCity: 'Příbor, Czech Republic',
+  dayNumber: 53,
+  kmRidden: 2035,
+  countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia', 'Latvia', 'Lithuania', 'Poland', 'Czech Republic'],
+  lat: 49.640109,                   // precise current lat (preferred over city fallback)
+  lng: 18.143806,                   // precise current lng
+  lastUpdated: '2026-08-15',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-08-14T16:00:00.000Z',
+      lat: 49.640109,
+      lng: 18.143806,
+      location: 'Příbor, Czech Republic',
+      note: 'Cieszyn → Příbor (~42 km). I have heat exhaustion again so waiting g out the heat in pribor / novy jicin for a couple days.',
+      transport: 'bike',
+    },
+    {
+      at: '2026-08-13T17:00:00.000Z',
+      lat: 49.7462,
+      lng: 18.627,
+      location: 'Cieszyn, Poland',
+      note: 'Bielsko-Biała → Cieszyn (~38 km).',
+      transport: 'bike',
+    },
     {
       at: '2026-08-12T12:41:34.718Z',
       lat: 49.822118,
@@ -376,6 +392,21 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-08-14',
+      location: 'Příbor, Czech Republic',
+      text: 'Cieszyn → Příbor (~42 km). I have heat exhaustion again so waiting g out the heat in pribor / novy jicin for a couple days.',
+      photo: 'photos/2026-08-14-zermanice-dam-01.jpg',
+      lat: 49.640109,
+      lng: 18.143806
+    },
+    {
+      date: '2026-08-13',
+      location: 'Cieszyn, Poland',
+      text: 'Bielsko-Biała → Cieszyn (~38 km).',
+      lat: 49.7462,
+      lng: 18.627
+    },
     {
       date: '2026-08-12',
       location: 'Bielsko-Biała, Poland',
@@ -826,6 +857,8 @@ const tripStatus = {
     { lat: 49.907052, lng: 19.149865, src: 'photos/2026-08-12-farmland-01.jpg', caption: 'Farmland, hills back on the horizon', location: 'Oświęcim → Bielsko-Biała' },
     { lat: 49.821163, lng: 19.042707, src: 'photos/2026-08-12-bielsko-biala-01.jpg', caption: 'Frog fountain, Rynek', location: 'Bielsko-Biała, Poland' },
     { lat: 49.826409, lng: 19.048522, src: 'photos/2026-08-12-bielsko-biala-02.jpg', caption: 'Bolek i Lolek monument', location: 'Bielsko-Biała, Poland' },
+    { lat: 49.719395, lng: 18.467394, src: 'photos/2026-08-14-zermanice-dam-01.jpg', caption: 'Dam crest — Žermanice reservoir', location: 'Cieszyn → Příbor' },
+    { lat: 49.642166, lng: 18.155624, src: 'photos/2026-08-14-pribor-approach-01.jpg', caption: 'Gravel approach in the heat', location: 'Near Příbor, Czech Republic' },
     // Map photo pins — add as you go (trip order; lightbox sorts via photoTripSortKey in index.html)
     // { lat: 0.0, lng: 0.0, src: 'photos/2026-XX-XX-city.jpg', caption: 'Caption', location: 'City' }
   ]
