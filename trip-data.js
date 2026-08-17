@@ -5,14 +5,22 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 8,           // segment id: 8 — Kraków → Adriatic
-  currentCity: 'Příbor, Czech Republic',
-  dayNumber: 53,
-  kmRidden: 2058,
+  currentCity: 'Přerov, Czech Republic',
+  dayNumber: 54,
+  kmRidden: 2124,
   countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia', 'Latvia', 'Lithuania', 'Poland', 'Czech Republic'],
-  lat: 49.640109,                   // precise current lat (preferred over city fallback)
-  lng: 18.143806,                   // precise current lng
-  lastUpdated: '2026-08-15',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 49.455378,                   // precise current lat (preferred over city fallback)
+  lng: 17.450862,                   // precise current lng
+  lastUpdated: '2026-08-17',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-08-17T16:49:44.721Z',
+      lat: 49.455378,
+      lng: 17.450862,
+      location: 'Přerov, Czech Republic',
+      note: 'Příbor → Přerov (~66 km).',
+      transport: 'bike',
+    },
     {
       at: '2026-08-14T16:00:00.000Z',
       lat: 49.640109,
@@ -392,6 +400,13 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-08-17',
+      location: 'Přerov, Czech Republic',
+      text: 'Příbor → Přerov (~66 km).',
+      lat: 49.455378,
+      lng: 17.450862
+    },
     {
       date: '2026-08-14',
       location: 'Příbor, Czech Republic',
