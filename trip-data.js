@@ -5,14 +5,30 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 8,           // segment id: 8 — Kraków → Adriatic
-  currentCity: 'Přerov, Czech Republic',
-  dayNumber: 54,
-  kmRidden: 2124,
+  currentCity: 'Brno, Czech Republic',
+  dayNumber: 57,
+  kmRidden: 2207,
   countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia', 'Latvia', 'Lithuania', 'Poland', 'Czech Republic'],
-  lat: 49.455378,                   // precise current lat (preferred over city fallback)
-  lng: 17.450862,                   // precise current lng
-  lastUpdated: '2026-08-17',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 49.192244,                   // precise current lat (preferred over city fallback)
+  lng: 16.611338,                   // precise current lng
+  lastUpdated: '2026-08-20',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-08-19T18:00:00.000Z',
+      lat: 49.192244,
+      lng: 16.611338,
+      location: 'Brno, Czech Republic',
+      note: 'Chropyně → Brno (~67 km).',
+      transport: 'bike',
+    },
+    {
+      at: '2026-08-18T18:00:00.000Z',
+      lat: 49.356709,
+      lng: 17.36447,
+      location: 'Chropyně, Czech Republic',
+      note: 'Přerov → Chropyně (~16 km).',
+      transport: 'bike',
+    },
     {
       at: '2026-08-17T16:49:44.721Z',
       lat: 49.455378,
@@ -400,6 +416,21 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-08-19',
+      location: 'Brno, Czech Republic',
+      text: 'Chropyně → Brno (~67 km).',
+      photo: 'photos/2026-08-19-brno-zelny-trh-01.jpg',
+      lat: 49.192244,
+      lng: 16.611338
+    },
+    {
+      date: '2026-08-18',
+      location: 'Chropyně, Czech Republic',
+      text: 'Přerov → Chropyně (~16 km).',
+      lat: 49.356709,
+      lng: 17.36447
+    },
     {
       date: '2026-08-17',
       location: 'Přerov, Czech Republic',
@@ -874,6 +905,9 @@ const tripStatus = {
     { lat: 49.826409, lng: 19.048522, src: 'photos/2026-08-12-bielsko-biala-02.jpg', caption: 'Bolek i Lolek monument', location: 'Bielsko-Biała, Poland' },
     { lat: 49.721017, lng: 18.470024, src: 'photos/2026-08-14-zermanice-dam-01.jpg', caption: 'Dam crest — Žermanice reservoir', location: 'Žermanice dam (via Havířov)' },
     { lat: 49.656144, lng: 18.201392, src: 'photos/2026-08-14-pribor-approach-01.jpg', caption: 'Gravel approach in the heat', location: 'Near Příbor, Czech Republic' },
+    { lat: 49.325206, lng: 17.235049, src: 'photos/2026-08-19-chropyne-track-01.jpg', caption: 'Cycle track, ~15 km out of Chropyně', location: 'Chropyně → Brno' },
+    { lat: 49.192391, lng: 16.609, src: 'photos/2026-08-19-brno-zelny-trh-01.jpg', caption: 'Zelný trh', location: 'Brno, Czech Republic' },
+    { lat: 49.1909, lng: 16.6072, src: 'photos/2026-08-19-brno-petrov-01.jpg', caption: 'Petrov from the stairs', location: 'Brno, Czech Republic' },
     // Map photo pins — add as you go (trip order; lightbox sorts via photoTripSortKey in index.html)
     // { lat: 0.0, lng: 0.0, src: 'photos/2026-XX-XX-city.jpg', caption: 'Caption', location: 'City' }
   ]
