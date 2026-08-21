@@ -1319,6 +1319,9 @@ function getTrailBikeRoutes() {
   if (trailBikeRoutes.chropyneBrno && trailBikeRoutes.chropyneBrno.length > 1) {
     routes.push(trailBikeRoutes.chropyneBrno);
   }
+  if (trailBikeRoutes.brnoMikulov && trailBikeRoutes.brnoMikulov.length > 1) {
+    routes.push(trailBikeRoutes.brnoMikulov);
+  }
   return routes;
 }
 
@@ -2162,7 +2165,11 @@ function photoTripSortKey(p) {
     '2026-08-14-pribor-approach-01.jpg': 2026081402,
     '2026-08-19-chropyne-track-01.jpg': 2026081901,
     '2026-08-19-brno-zelny-trh-01.jpg': 2026081902,
-    '2026-08-19-brno-petrov-01.jpg': 2026081903
+    '2026-08-19-brno-petrov-01.jpg': 2026081903,
+    '2026-08-21-mikulov-namesti-01.jpg': 2026082101,
+    '2026-08-21-mikulov-castle-01.jpg': 2026082102,
+    '2026-08-21-mikulov-view-01.jpg': 2026082103,
+    '2026-08-21-mikulov-holy-hill-01.jpg': 2026082104
   };
   if (known[src] != null) return known[src];
   var dm = src.match(/^(\d{4}-\d{2}-\d{2})/);
@@ -2601,7 +2608,8 @@ function loadTrailBikeRoutes() {
     fetch('cieszyn-pribor-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
     fetch('pribor-prerov-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
     fetch('prerov-chropyne-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
-    fetch('chropyne-brno-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
+    fetch('chropyne-brno-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
+    fetch('brno-mikulov-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
   ]).then(function(results) {
     if (results[0] && results[0].length > 1) trailBikeRoutes.gothenburgAlingsas = results[0];
     if (results[1] && results[1].length > 1) trailBikeRoutes.alingsasNittaCamp = results[1];
@@ -2640,7 +2648,8 @@ function loadTrailBikeRoutes() {
     if (results[34] && results[34].length > 1) trailBikeRoutes.priborPrerov = results[34];
     if (results[35] && results[35].length > 1) trailBikeRoutes.prerovChropyne = results[35];
     if (results[36] && results[36].length > 1) trailBikeRoutes.chropyneBrno = results[36];
-    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp || trailBikeRoutes.jonkopingOdeshog || trailBikeRoutes.odeshogLinkoping || trailBikeRoutes.linkopingNorrkoping || trailBikeRoutes.norrkopingCamp || trailBikeRoutes.nykopingCamp || trailBikeRoutes.sodertalje || trailBikeRoutes.stockholm || trailBikeRoutes.archipelagoCamp || trailBikeRoutes.norrtaljeGrisslehamn || trailBikeRoutes.eckeroCamp || trailBikeRoutes.eckeroMariehamn || trailBikeRoutes.mariehamnLangnas || trailBikeRoutes.hellsoKokarCamp || trailBikeRoutes.korpoTurku || trailBikeRoutes.turkuSalo || trailBikeRoutes.saloLohja || trailBikeRoutes.lohjaHelsinki || trailBikeRoutes.tallinnEstonia || trailBikeRoutes.estoniaHaapsalu || trailBikeRoutes.haapsaluParnu || trailBikeRoutes.ainaziVilkumuiza || trailBikeRoutes.jurmalaTalsi || trailBikeRoutes.talsiKuldiga || trailBikeRoutes.kuldigaJurkalne || trailBikeRoutes.jurkalneliepaja || trailBikeRoutes.liepajaNica || trailBikeRoutes.nicaPalanga || trailBikeRoutes.palangaKlaipeda || trailBikeRoutes.krakowOswiecim || trailBikeRoutes.oswiecimBielsko || trailBikeRoutes.bielskoCieszyn || trailBikeRoutes.cieszynPribor || trailBikeRoutes.priborPrerov || trailBikeRoutes.prerovChropyne || trailBikeRoutes.chropyneBrno) {
+    if (results[37] && results[37].length > 1) trailBikeRoutes.brnoMikulov = results[37];
+    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp || trailBikeRoutes.jonkopingOdeshog || trailBikeRoutes.odeshogLinkoping || trailBikeRoutes.linkopingNorrkoping || trailBikeRoutes.norrkopingCamp || trailBikeRoutes.nykopingCamp || trailBikeRoutes.sodertalje || trailBikeRoutes.stockholm || trailBikeRoutes.archipelagoCamp || trailBikeRoutes.norrtaljeGrisslehamn || trailBikeRoutes.eckeroCamp || trailBikeRoutes.eckeroMariehamn || trailBikeRoutes.mariehamnLangnas || trailBikeRoutes.hellsoKokarCamp || trailBikeRoutes.korpoTurku || trailBikeRoutes.turkuSalo || trailBikeRoutes.saloLohja || trailBikeRoutes.lohjaHelsinki || trailBikeRoutes.tallinnEstonia || trailBikeRoutes.estoniaHaapsalu || trailBikeRoutes.haapsaluParnu || trailBikeRoutes.ainaziVilkumuiza || trailBikeRoutes.jurmalaTalsi || trailBikeRoutes.talsiKuldiga || trailBikeRoutes.kuldigaJurkalne || trailBikeRoutes.jurkalneliepaja || trailBikeRoutes.liepajaNica || trailBikeRoutes.nicaPalanga || trailBikeRoutes.palangaKlaipeda || trailBikeRoutes.krakowOswiecim || trailBikeRoutes.oswiecimBielsko || trailBikeRoutes.bielskoCieszyn || trailBikeRoutes.cieszynPribor || trailBikeRoutes.priborPrerov || trailBikeRoutes.prerovChropyne || trailBikeRoutes.chropyneBrno || trailBikeRoutes.brnoMikulov) {
       rebuildPhotoLayer();
       overlayActualStage2Route();
     }

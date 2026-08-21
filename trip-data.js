@@ -5,14 +5,22 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 8,           // segment id: 8 — Kraków → Adriatic
-  currentCity: 'Brno, Czech Republic',
-  dayNumber: 57,
-  kmRidden: 2207,
+  currentCity: 'Mikulov, Czech Republic',
+  dayNumber: 58,
+  kmRidden: 2258,
   countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia', 'Latvia', 'Lithuania', 'Poland', 'Czech Republic'],
-  lat: 49.192244,                   // precise current lat (preferred over city fallback)
-  lng: 16.611338,                   // precise current lng
-  lastUpdated: '2026-08-20',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 48.806858,                   // precise current lat (preferred over city fallback)
+  lng: 16.638391,                   // precise current lng
+  lastUpdated: '2026-08-21',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-08-21T16:19:16.211Z',
+      lat: 48.806858,
+      lng: 16.638391,
+      location: 'Mikulov, Czech Republic',
+      note: 'Brno → Mikulov (~51 km).',
+      transport: 'bike',
+    },
     {
       at: '2026-08-19T18:00:00.000Z',
       lat: 49.192244,
@@ -416,6 +424,14 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-08-21',
+      location: 'Mikulov, Czech Republic',
+      text: 'Brno → Mikulov (~51 km).',
+      photo: 'photos/2026-08-21-mikulov-castle-01.jpg',
+      lat: 48.806858,
+      lng: 16.638391
+    },
     {
       date: '2026-08-19',
       location: 'Brno, Czech Republic',
@@ -908,6 +924,10 @@ const tripStatus = {
     { lat: 49.325206, lng: 17.235049, src: 'photos/2026-08-19-chropyne-track-01.jpg', caption: 'Cycle track, ~15 km out of Chropyně', location: 'Chropyně → Brno' },
     { lat: 49.192391, lng: 16.609, src: 'photos/2026-08-19-brno-zelny-trh-01.jpg', caption: 'Zelný trh', location: 'Brno, Czech Republic' },
     { lat: 49.1909, lng: 16.6072, src: 'photos/2026-08-19-brno-petrov-01.jpg', caption: 'Petrov from the stairs', location: 'Brno, Czech Republic' },
+    { lat: 48.806296, lng: 16.638247, src: 'photos/2026-08-21-mikulov-namesti-01.jpg', caption: 'Náměstí — Holy Trinity column', location: 'Mikulov, Czech Republic' },
+    { lat: 48.80713, lng: 16.636642, src: 'photos/2026-08-21-mikulov-castle-01.jpg', caption: 'Mikulov Castle and gardens', location: 'Mikulov, Czech Republic' },
+    { lat: 48.806802, lng: 16.648117, src: 'photos/2026-08-21-mikulov-view-01.jpg', caption: 'Mikulov and the castle from Svatý kopeček', location: 'Mikulov, Czech Republic' },
+    { lat: 48.806406, lng: 16.646223, src: 'photos/2026-08-21-mikulov-holy-hill-01.jpg', caption: 'Chapel of St Sebastian, Svatý kopeček', location: 'Mikulov, Czech Republic' },
     // Map photo pins — add as you go (trip order; lightbox sorts via photoTripSortKey in index.html)
     // { lat: 0.0, lng: 0.0, src: 'photos/2026-XX-XX-city.jpg', caption: 'Caption', location: 'City' }
   ]
