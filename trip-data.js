@@ -5,14 +5,22 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 8,           // segment id: 8 — Kraków → Adriatic
-  currentCity: 'Kettlasbrunn, Austria',
-  dayNumber: 59,
-  kmRidden: 2305,
+  currentCity: 'Vienna, Austria',
+  dayNumber: 60,
+  kmRidden: 2365,
   countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia', 'Latvia', 'Lithuania', 'Poland', 'Czech Republic', 'Austria'],
-  lat: 48.564767,                   // precise current lat (preferred over city fallback)
-  lng: 16.652843,                   // precise current lng
-  lastUpdated: '2026-08-22',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 48.18285,                   // precise current lat (preferred over city fallback)
+  lng: 16.37864,                   // precise current lng
+  lastUpdated: '2026-08-23',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-08-23T22:01:31.207Z',
+      lat: 48.18285,
+      lng: 16.37864,
+      location: 'Vienna, Austria',
+      note: 'Kettlasbrunn → Vienna (~60 km).',
+      transport: 'bike',
+    },
     {
       at: '2026-08-22T16:33:13.103Z',
       lat: 48.564767,
@@ -432,6 +440,14 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-08-23',
+      location: 'Vienna, Austria',
+      text: 'Kettlasbrunn → Vienna (~60 km).',
+      photo: 'photos/2026-08-23-sunflowers-01.jpg',
+      lat: 48.18285,
+      lng: 16.37864
+    },
     {
       date: '2026-08-22',
       location: 'Kettlasbrunn, Austria',
@@ -946,6 +962,7 @@ const tripStatus = {
     { lat: 48.806406, lng: 16.646223, src: 'photos/2026-08-21-mikulov-holy-hill-01.jpg', caption: 'Chapel of St Sebastian, Svatý kopeček', location: 'Mikulov, Czech Republic' },
     { lat: 48.724008, lng: 16.612191, src: 'photos/2026-08-22-weinviertel-fields-01.jpg', caption: 'Weinviertel fields, castle hill on the horizon', location: 'Mikulov → Kettlasbrunn' },
     { lat: 48.724008, lng: 16.612191, src: 'photos/2026-08-22-kettlasbrunn-road-01.jpg', caption: 'Loaded bike on the country road', location: 'Mikulov → Kettlasbrunn' },
+    { lat: 48.369549, lng: 16.487144, src: 'photos/2026-08-23-sunflowers-01.jpg', caption: 'Sunflowers on the cycle path', location: 'Kettlasbrunn → Vienna' },
     // Map photo pins — add as you go (trip order; lightbox sorts via photoTripSortKey in index.html)
     // { lat: 0.0, lng: 0.0, src: 'photos/2026-XX-XX-city.jpg', caption: 'Caption', location: 'City' }
   ]
