@@ -5,14 +5,30 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 8,           // segment id: 8 — Kraków → Adriatic
-  currentCity: 'Bratislava, Slovakia',
-  dayNumber: 63,
-  kmRidden: 2439,
+  currentCity: 'Komárno, Slovakia',
+  dayNumber: 65,
+  kmRidden: 2542,
   countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia', 'Latvia', 'Lithuania', 'Poland', 'Czech Republic', 'Austria', 'Slovakia'],
-  lat: 48.1415,                   // precise current lat (preferred over city fallback)
-  lng: 17.1098,                   // precise current lng
-  lastUpdated: '2026-08-26',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 47.757408,                   // precise current lat (preferred over city fallback)
+  lng: 18.129825,                   // precise current lng
+  lastUpdated: '2026-08-28',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-08-28T11:04:00.000Z',
+      lat: 47.757408,
+      lng: 18.129825,
+      location: 'Komárno, Slovakia',
+      note: 'Veľký Meder → Komárno (~34 km).',
+      transport: 'bike',
+    },
+    {
+      at: '2026-08-27T18:00:00.000Z',
+      lat: 47.855781,
+      lng: 17.769367,
+      location: 'Veľký Meder, Slovakia',
+      note: 'Bratislava → Veľký Meder (~69 km).',
+      transport: 'bike',
+    },
     {
       at: '2026-08-26T19:08:16.221Z',
       lat: 48.1415,
@@ -448,6 +464,20 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-08-28',
+      location: 'Komárno, Slovakia',
+      text: 'Veľký Meder → Komárno (~34 km).',
+      lat: 47.757408,
+      lng: 18.129825
+    },
+    {
+      date: '2026-08-27',
+      location: 'Veľký Meder, Slovakia',
+      text: 'Bratislava → Veľký Meder (~69 km).',
+      lat: 47.855781,
+      lng: 17.769367
+    },
     {
       date: '2026-08-26',
       location: 'Bratislava, Slovakia',
