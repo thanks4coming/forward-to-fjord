@@ -1047,6 +1047,7 @@ const tripStatus = {
     { lat: 47.7965, lng: 18.7180, src: 'photos/2026-08-30-sturovo-esztergom-01.jpg', caption: 'Esztergom Basilica from the cycle path', location: 'Štúrovo, Slovakia' },
     { lat: 47.810971, lng: 18.979610, src: 'photos/2026-08-30-nomad-beach-01.jpg', caption: 'Nomád Bár beach', location: 'Nagymaros, Hungary' },
     { lat: 47.810971, lng: 18.979610, src: 'photos/2026-08-30-nomad-friend-01.jpg', caption: 'Unexpected new friend', location: 'Nomád Bár, Nagymaros' },
+    { lat: 47.810971, lng: 18.979610, src: 'photos/2026-08-30-nomad-cat-poster.jpg', video: 'photos/2026-08-30-nomad-cat.mp4', caption: 'Unexpected new friend', location: 'Nomád Bár, Nagymaros' },
     { lat: 47.802537, lng: 19.101195, src: 'photos/2026-08-30-vac-boar-sign-01.jpg', caption: 'Wild boar warning', location: 'Just outside Vác' },
     { lat: 47.802537, lng: 19.101195, src: 'photos/2026-08-30-vac-bridge-sign-01.jpg', caption: 'Cycle path bridge closed — detour to Vác', location: 'Just outside Vác' },
     // Map photo pins — add as you go (trip order; lightbox sorts via photoTripSortKey in index.html)
