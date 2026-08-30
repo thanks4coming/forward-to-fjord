@@ -7,7 +7,7 @@ const tripStatus = {
   currentSegment: 8,           // segment id: 8 — Kraków → Adriatic
   currentCity: 'Vác, Hungary',
   dayNumber: 67,
-  kmRidden: 2643,
+  kmRidden: 2638,
   countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia', 'Latvia', 'Lithuania', 'Poland', 'Czech Republic', 'Austria', 'Slovakia', 'Hungary'],
   lat: 47.778287,                   // precise current lat (preferred over city fallback)
   lng: 19.127829,                   // precise current lng
@@ -18,7 +18,7 @@ const tripStatus = {
       lat: 47.778287,
       lng: 19.127829,
       location: 'Vác, Hungary',
-      note: 'Štúrovo → Vác (~49 km). Met an unexpected new friend.',
+      note: 'Štúrovo → Vác (~44 km). Met an unexpected new friend.',
       transport: 'bike',
     },
     {
@@ -483,7 +483,7 @@ const tripStatus = {
     {
       date: '2026-08-30',
       location: 'Vác, Hungary',
-      text: 'Štúrovo → Vác (~49 km). Met an unexpected new friend.',
+      text: 'Štúrovo → Vác (~44 km). Met an unexpected new friend.',
       photo: 'photos/2026-08-30-nomad-friend-01.jpg',
       lat: 47.778287,
       lng: 19.127829
@@ -1047,8 +1047,8 @@ const tripStatus = {
     { lat: 47.7965, lng: 18.7180, src: 'photos/2026-08-30-sturovo-esztergom-01.jpg', caption: 'Esztergom Basilica from the cycle path', location: 'Štúrovo, Slovakia' },
     { lat: 47.810971, lng: 18.979610, src: 'photos/2026-08-30-nomad-beach-01.jpg', caption: 'Nomád Bár beach', location: 'Nagymaros, Hungary' },
     { lat: 47.810971, lng: 18.979610, src: 'photos/2026-08-30-nomad-friend-01.jpg', caption: 'Unexpected new friend', location: 'Nomád Bár, Nagymaros' },
-    { lat: 47.80345, lng: 19.10294, src: 'photos/2026-08-30-vac-boar-sign-01.jpg', caption: 'Wild boar warning', location: 'Just outside Vác' },
-    { lat: 47.80345, lng: 19.10294, src: 'photos/2026-08-30-vac-bridge-sign-01.jpg', caption: 'Cycle path bridge closed — detour to Vác', location: 'Just outside Vác' },
+    { lat: 47.802537, lng: 19.101195, src: 'photos/2026-08-30-vac-boar-sign-01.jpg', caption: 'Wild boar warning', location: 'Just outside Vác' },
+    { lat: 47.802537, lng: 19.101195, src: 'photos/2026-08-30-vac-bridge-sign-01.jpg', caption: 'Cycle path bridge closed — detour to Vác', location: 'Just outside Vác' },
     // Map photo pins — add as you go (trip order; lightbox sorts via photoTripSortKey in index.html)
     // { lat: 0.0, lng: 0.0, src: 'photos/2026-XX-XX-city.jpg', caption: 'Caption', location: 'City' }
   ]
