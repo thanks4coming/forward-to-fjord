@@ -1337,6 +1337,12 @@ function getTrailBikeRoutes() {
   if (trailBikeRoutes.velkyMederKomarno && trailBikeRoutes.velkyMederKomarno.length > 1) {
     routes.push(trailBikeRoutes.velkyMederKomarno);
   }
+  if (trailBikeRoutes.komarnoSturovo && trailBikeRoutes.komarnoSturovo.length > 1) {
+    routes.push(trailBikeRoutes.komarnoSturovo);
+  }
+  if (trailBikeRoutes.sturovoVac && trailBikeRoutes.sturovoVac.length > 1) {
+    routes.push(trailBikeRoutes.sturovoVac);
+  }
   return routes;
 }
 
@@ -2190,7 +2196,12 @@ function photoTripSortKey(p) {
     '2026-08-23-sunflowers-01.jpg': 2026082301,
     '2026-08-25-belvedere-01.jpg': 2026082501,
     '2026-08-25-belvedere-gardens-01.jpg': 2026082502,
-    '2026-08-26-bratislava-theatre-01.jpg': 2026082601
+    '2026-08-26-bratislava-theatre-01.jpg': 2026082601,
+    '2026-08-30-sturovo-esztergom-01.jpg': 2026083001,
+    '2026-08-30-nomad-beach-01.jpg': 2026083002,
+    '2026-08-30-nomad-friend-01.jpg': 2026083003,
+    '2026-08-30-vac-boar-sign-01.jpg': 2026083004,
+    '2026-08-30-vac-bridge-sign-01.jpg': 2026083005
   };
   if (known[src] != null) return known[src];
   var dm = src.match(/^(\d{4}-\d{2}-\d{2})/);
@@ -2635,7 +2646,9 @@ function loadTrailBikeRoutes() {
     fetch('kettlasbrunn-vienna-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
     fetch('vienna-bratislava-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
     fetch('bratislava-velky-meder-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
-    fetch('velky-meder-komarno-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
+    fetch('velky-meder-komarno-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
+    fetch('komarno-sturovo-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
+    fetch('sturovo-vac-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
   ]).then(function(results) {
     if (results[0] && results[0].length > 1) trailBikeRoutes.gothenburgAlingsas = results[0];
     if (results[1] && results[1].length > 1) trailBikeRoutes.alingsasNittaCamp = results[1];
@@ -2680,7 +2693,9 @@ function loadTrailBikeRoutes() {
     if (results[40] && results[40].length > 1) trailBikeRoutes.viennaBratislava = results[40];
     if (results[41] && results[41].length > 1) trailBikeRoutes.bratislavaVelkyMeder = results[41];
     if (results[42] && results[42].length > 1) trailBikeRoutes.velkyMederKomarno = results[42];
-    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp || trailBikeRoutes.jonkopingOdeshog || trailBikeRoutes.odeshogLinkoping || trailBikeRoutes.linkopingNorrkoping || trailBikeRoutes.norrkopingCamp || trailBikeRoutes.nykopingCamp || trailBikeRoutes.sodertalje || trailBikeRoutes.stockholm || trailBikeRoutes.archipelagoCamp || trailBikeRoutes.norrtaljeGrisslehamn || trailBikeRoutes.eckeroCamp || trailBikeRoutes.eckeroMariehamn || trailBikeRoutes.mariehamnLangnas || trailBikeRoutes.hellsoKokarCamp || trailBikeRoutes.korpoTurku || trailBikeRoutes.turkuSalo || trailBikeRoutes.saloLohja || trailBikeRoutes.lohjaHelsinki || trailBikeRoutes.tallinnEstonia || trailBikeRoutes.estoniaHaapsalu || trailBikeRoutes.haapsaluParnu || trailBikeRoutes.ainaziVilkumuiza || trailBikeRoutes.jurmalaTalsi || trailBikeRoutes.talsiKuldiga || trailBikeRoutes.kuldigaJurkalne || trailBikeRoutes.jurkalneliepaja || trailBikeRoutes.liepajaNica || trailBikeRoutes.nicaPalanga || trailBikeRoutes.palangaKlaipeda || trailBikeRoutes.krakowOswiecim || trailBikeRoutes.oswiecimBielsko || trailBikeRoutes.bielskoCieszyn || trailBikeRoutes.cieszynPribor || trailBikeRoutes.priborPrerov || trailBikeRoutes.prerovChropyne || trailBikeRoutes.chropyneBrno || trailBikeRoutes.brnoMikulov || trailBikeRoutes.mikulovKettlasbrunn || trailBikeRoutes.kettlasbrunnVienna || trailBikeRoutes.viennaBratislava || trailBikeRoutes.bratislavaVelkyMeder || trailBikeRoutes.velkyMederKomarno) {
+    if (results[43] && results[43].length > 1) trailBikeRoutes.komarnoSturovo = results[43];
+    if (results[44] && results[44].length > 1) trailBikeRoutes.sturovoVac = results[44];
+    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp || trailBikeRoutes.jonkopingOdeshog || trailBikeRoutes.odeshogLinkoping || trailBikeRoutes.linkopingNorrkoping || trailBikeRoutes.norrkopingCamp || trailBikeRoutes.nykopingCamp || trailBikeRoutes.sodertalje || trailBikeRoutes.stockholm || trailBikeRoutes.archipelagoCamp || trailBikeRoutes.norrtaljeGrisslehamn || trailBikeRoutes.eckeroCamp || trailBikeRoutes.eckeroMariehamn || trailBikeRoutes.mariehamnLangnas || trailBikeRoutes.hellsoKokarCamp || trailBikeRoutes.korpoTurku || trailBikeRoutes.turkuSalo || trailBikeRoutes.saloLohja || trailBikeRoutes.lohjaHelsinki || trailBikeRoutes.tallinnEstonia || trailBikeRoutes.estoniaHaapsalu || trailBikeRoutes.haapsaluParnu || trailBikeRoutes.ainaziVilkumuiza || trailBikeRoutes.jurmalaTalsi || trailBikeRoutes.talsiKuldiga || trailBikeRoutes.kuldigaJurkalne || trailBikeRoutes.jurkalneliepaja || trailBikeRoutes.liepajaNica || trailBikeRoutes.nicaPalanga || trailBikeRoutes.palangaKlaipeda || trailBikeRoutes.krakowOswiecim || trailBikeRoutes.oswiecimBielsko || trailBikeRoutes.bielskoCieszyn || trailBikeRoutes.cieszynPribor || trailBikeRoutes.priborPrerov || trailBikeRoutes.prerovChropyne || trailBikeRoutes.chropyneBrno || trailBikeRoutes.brnoMikulov || trailBikeRoutes.mikulovKettlasbrunn || trailBikeRoutes.kettlasbrunnVienna || trailBikeRoutes.viennaBratislava || trailBikeRoutes.bratislavaVelkyMeder || trailBikeRoutes.velkyMederKomarno || trailBikeRoutes.komarnoSturovo || trailBikeRoutes.sturovoVac) {
       rebuildPhotoLayer();
       overlayActualStage2Route();
     }

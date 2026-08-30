@@ -5,14 +5,30 @@
 const tripStatus = {
   active: true,               // set true when the trip starts
   currentSegment: 8,           // segment id: 8 — Kraków → Adriatic
-  currentCity: 'Komárno, Slovakia',
-  dayNumber: 65,
-  kmRidden: 2542,
-  countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia', 'Latvia', 'Lithuania', 'Poland', 'Czech Republic', 'Austria', 'Slovakia'],
-  lat: 47.757408,                   // precise current lat (preferred over city fallback)
-  lng: 18.129825,                   // precise current lng
-  lastUpdated: '2026-08-28',           // e.g. '2026-06-08' — shown in live banner when set
+  currentCity: 'Vác, Hungary',
+  dayNumber: 67,
+  kmRidden: 2643,
+  countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia', 'Latvia', 'Lithuania', 'Poland', 'Czech Republic', 'Austria', 'Slovakia', 'Hungary'],
+  lat: 47.778287,                   // precise current lat (preferred over city fallback)
+  lng: 19.127829,                   // precise current lng
+  lastUpdated: '2026-08-30',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-08-30T14:00:00.000Z',
+      lat: 47.778287,
+      lng: 19.127829,
+      location: 'Vác, Hungary',
+      note: 'Štúrovo → Vác (~49 km). Met an unexpected new friend.',
+      transport: 'bike',
+    },
+    {
+      at: '2026-08-29T18:00:00.000Z',
+      lat: 47.7978,
+      lng: 18.715879,
+      location: 'Štúrovo, Slovakia',
+      note: 'Komárno → Štúrovo (~52 km).',
+      transport: 'bike',
+    },
     {
       at: '2026-08-28T11:04:00.000Z',
       lat: 47.757408,
@@ -464,6 +480,22 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-08-30',
+      location: 'Vác, Hungary',
+      text: 'Štúrovo → Vác (~49 km). Met an unexpected new friend.',
+      photo: 'photos/2026-08-30-nomad-friend-01.jpg',
+      lat: 47.778287,
+      lng: 19.127829
+    },
+    {
+      date: '2026-08-29',
+      location: 'Štúrovo, Slovakia',
+      text: 'Komárno → Štúrovo (~52 km).',
+      photo: 'photos/2026-08-30-sturovo-esztergom-01.jpg',
+      lat: 47.7978,
+      lng: 18.715879
+    },
     {
       date: '2026-08-28',
       location: 'Komárno, Slovakia',
@@ -1012,6 +1044,11 @@ const tripStatus = {
     { lat: 48.1914, lng: 16.3810, src: 'photos/2026-08-25-belvedere-01.jpg', caption: 'Upper Belvedere and the reflecting pool', location: 'Vienna, Austria' },
     { lat: 48.1920, lng: 16.3804, src: 'photos/2026-08-25-belvedere-gardens-01.jpg', caption: 'Belvedere gardens, sphinx and the city', location: 'Vienna, Austria' },
     { lat: 48.1415, lng: 17.1098, src: 'photos/2026-08-26-bratislava-theatre-01.jpg', caption: 'Loaded bike, Hviezdoslavovo námestie', location: 'Bratislava, Slovakia' },
+    { lat: 47.7965, lng: 18.7180, src: 'photos/2026-08-30-sturovo-esztergom-01.jpg', caption: 'Esztergom Basilica from the cycle path', location: 'Štúrovo, Slovakia' },
+    { lat: 47.810971, lng: 18.979610, src: 'photos/2026-08-30-nomad-beach-01.jpg', caption: 'Nomád Bár beach', location: 'Nagymaros, Hungary' },
+    { lat: 47.810971, lng: 18.979610, src: 'photos/2026-08-30-nomad-friend-01.jpg', caption: 'Unexpected new friend', location: 'Nomád Bár, Nagymaros' },
+    { lat: 47.80345, lng: 19.10294, src: 'photos/2026-08-30-vac-boar-sign-01.jpg', caption: 'Wild boar warning', location: 'Just outside Vác' },
+    { lat: 47.80345, lng: 19.10294, src: 'photos/2026-08-30-vac-bridge-sign-01.jpg', caption: 'Cycle path bridge closed — detour to Vác', location: 'Just outside Vác' },
     // Map photo pins — add as you go (trip order; lightbox sorts via photoTripSortKey in index.html)
     // { lat: 0.0, lng: 0.0, src: 'photos/2026-XX-XX-city.jpg', caption: 'Caption', location: 'City' }
   ]
