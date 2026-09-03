@@ -127,6 +127,11 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
 .trip-banner{margin:10px 12px 6px;padding:10px 14px;background:linear-gradient(135deg,#0a2040,#0f2a4a);border:1px solid #1e4a7a;border-radius:10px}
 .trip-banner .tb-top{display:flex;align-items:center;gap:8px;margin-bottom:2px}
 .trip-banner .tb-badge{padding:2px 8px;border-radius:10px;font-size:9px;font-weight:700;background:#22c55e22;color:#22c55e;border:1px solid #22c55e44;flex-shrink:0;animation:here-pulse 2s infinite}
+.trip-banner .tb-badge.tb-finished{animation:none;background:#94a3b822;color:#cbd5e1;border:1px solid #94a3b844}
+.hud-live.hud-finished{color:#94a3b8}
+.hud-live.hud-finished .hud-live-dot{background:#94a3b8;box-shadow:none;animation:none}
+.yah-wrap.yah-finished .yah-ring{animation:none;background:rgba(148,163,184,.3)}
+.yah-wrap.yah-finished .yah-dot{background:#64748b;box-shadow:0 0 8px rgba(100,116,139,.6)}
 .trip-banner .tb-city{font-size:13px;font-weight:700;color:#f8fafc}
 .trip-banner .tb-sub{font-size:10px;color:#64748b;line-height:1.5}
 .live-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;margin:0 12px 8px;background:#0f172a;border-radius:8px;overflow:hidden;border:1px solid #1e293b}
@@ -331,6 +336,21 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0f172
  * ferry-fix) + 1500 (seg9) = 5464. Keep in sync with route/segment totals.
  */
 const TRIP_TOTAL_KM = 5464;
+
+function tripHasProgress() {
+  return !!(tripStatus && (tripStatus.active || tripStatus.finished));
+}
+function segmentRideStatus(seg) {
+  if (tripStatus.finished) {
+    return seg.id <= tripStatus.currentSegment ? 'done' : 'upcoming';
+  }
+  if (tripStatus.active) {
+    if (seg.id < tripStatus.currentSegment) return 'done';
+    if (seg.id === tripStatus.currentSegment) return 'current';
+    return 'upcoming';
+  }
+  return 'upcoming';
+}
 
 const GRISSLEHAMN_LATLNG = [60.1088, 18.8237];
 const ECKERO_FERRY_LATLNG = [60.2253, 19.5479];
@@ -1038,10 +1058,7 @@ segments.forEach(seg => {
   const bc = seg.transport==='train'?'b-train':seg.transport==='ferry'?'b-ferry':'b-bike';
   const bt = seg.transport==='train'?'Train':seg.transport==='ferry'?'Ferry':'Cycling';
   const sb = seg.transportSecondary?`<span class="badge b-ferry">Ferry</span>`:'';
-  const segSt = tripStatus.active
-    ? (seg.id < tripStatus.currentSegment ? 'done'
-      : seg.id === tripStatus.currentSegment ? 'current' : 'upcoming')
-    : 'upcoming';
+  const segSt = segmentRideStatus(seg);
   if (segSt === 'done') div.classList.add('seg-done');
   if (segSt === 'current') div.classList.add('seg-current');
   const statusBadge = segSt === 'done'
@@ -1342,6 +1359,9 @@ function getTrailBikeRoutes() {
   }
   if (trailBikeRoutes.sturovoVac && trailBikeRoutes.sturovoVac.length > 1) {
     routes.push(trailBikeRoutes.sturovoVac);
+  }
+  if (trailBikeRoutes.vacBudapest && trailBikeRoutes.vacBudapest.length > 1) {
+    routes.push(trailBikeRoutes.vacBudapest);
   }
   return routes;
 }
@@ -2498,7 +2518,9 @@ if (trailCb.checked && (tripStatus.locationHistory || []).length) map.addLayer(t
 
 // --- TRIP STATUS RENDERING ---
 function initTripStatus() {
-  if (!tripStatus.active) return;
+  if (!tripHasProgress()) return;
+
+  var finished = !!tripStatus.finished;
 
   // Status banner
   var banner = document.getElementById('trip-status-banner');
@@ -2507,9 +2529,12 @@ function initTripStatus() {
   var curSeg = segments.find(function(s){ return s.id === tripStatus.currentSegment; });
   if (curSeg) segName = curSeg.title;
   var lastUpd = tripStatus.lastUpdated ? ' \u00b7 Updated ' + tripStatus.lastUpdated : '';
+  var badge = finished
+    ? '<span class="tb-badge tb-finished">Finished</span>'
+    : '<span class="tb-badge">\u25CF Live</span>';
   banner.innerHTML =
     '<div class="trip-banner">' +
-    '<div class="tb-top"><span class="tb-badge">\u25CF Live</span><span class="tb-city">' + tripStatus.currentCity + '</span></div>' +
+    '<div class="tb-top">' + badge + '<span class="tb-city">' + tripStatus.currentCity + '</span></div>' +
     '<div class="tb-sub">Day ' + tripStatus.dayNumber + (segName ? ' \u00b7 ' + segName : '') +
     (tripStatus.countries.length ? ' \u00b7 ' + tripStatus.countries.join(', ') : '') + lastUpd + '</div>' +
     '</div>';
@@ -2517,7 +2542,6 @@ function initTripStatus() {
   // Live stats bar
   var statsWrap = document.getElementById('live-stats-wrap');
   statsWrap.style.display = 'block';
-  var completedSegs = tripStatus.currentSegment - 1;
   statsWrap.innerHTML =
     '<div class="live-stats">' +
     '<div class="live-stat"><div class="ls-val">' + tripStatus.kmRidden.toLocaleString() + '</div><div class="ls-lbl">km ridden</div></div>' +
@@ -2528,18 +2552,26 @@ function initTripStatus() {
   // Progress bar
   var progWrap = document.getElementById('live-prog-wrap');
   progWrap.style.display = 'block';
-  var pct = Math.round((tripStatus.kmRidden / TRIP_TOTAL_KM) * 100);
-  pct = Math.min(pct, 100);
-  progWrap.innerHTML =
-    '<div class="prog-wrap">' +
-    '<div class="prog-lbl"><span>Trip progress</span><span>' + pct + '% \u00b7 ' + Math.max(0, TRIP_TOTAL_KM - tripStatus.kmRidden) + ' km remaining</span></div>' +
-    '<div class="prog-track"><div class="prog-fill" style="width:' + pct + '%"></div></div>' +
-    '</div>';
+  if (finished) {
+    progWrap.innerHTML =
+      '<div class="prog-wrap">' +
+      '<div class="prog-lbl"><span>Trip complete</span><span>' + tripStatus.kmRidden.toLocaleString() + ' km</span></div>' +
+      '<div class="prog-track"><div class="prog-fill" style="width:100%"></div></div>' +
+      '</div>';
+  } else {
+    var pct = Math.round((tripStatus.kmRidden / TRIP_TOTAL_KM) * 100);
+    pct = Math.min(pct, 100);
+    progWrap.innerHTML =
+      '<div class="prog-wrap">' +
+      '<div class="prog-lbl"><span>Trip progress</span><span>' + pct + '% \u00b7 ' + Math.max(0, TRIP_TOTAL_KM - tripStatus.kmRidden) + ' km remaining</span></div>' +
+      '<div class="prog-track"><div class="prog-fill" style="width:' + pct + '%"></div></div>' +
+      '</div>';
+  }
 
   // Updates feed
   renderUpdatesFeed();
 
-  // Where I Am Now map marker
+  // Map marker
   var pinLat = tripStatus.lat;
   var pinLng = tripStatus.lng;
   if (!pinLat && curSeg) {
@@ -2550,13 +2582,17 @@ function initTripStatus() {
   if (pinLat && pinLng) {
     var yahIcon = L.divIcon({
       className: '',
-      html: '<div class="yah-wrap"><div class="yah-ring"></div><div class="yah-dot"></div></div>',
+      html: finished
+        ? '<div class="yah-wrap yah-finished"><div class="yah-ring"></div><div class="yah-dot"></div></div>'
+        : '<div class="yah-wrap"><div class="yah-ring"></div><div class="yah-dot"></div></div>',
       iconSize: [22, 22],
       iconAnchor: [11, 11]
     });
     var yahMarker = L.marker([pinLat, pinLng], {icon: yahIcon, zIndexOffset: 1000});
     yahMarker.bindPopup(
-      '<div class="pt" style="color:#60a5fa">\u25CF You Are Here</div>' +
+      (finished
+        ? '<div class="pt" style="color:#94a3b8">Ended here</div>'
+        : '<div class="pt" style="color:#60a5fa">\u25CF You Are Here</div>') +
       '<b>' + tripStatus.currentCity + '</b><br>' +
       'Day ' + tripStatus.dayNumber + ' \u00b7 ' + tripStatus.kmRidden + ' km ridden'
     );
@@ -2649,7 +2685,8 @@ function loadTrailBikeRoutes() {
     fetch('bratislava-velky-meder-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
     fetch('velky-meder-komarno-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
     fetch('komarno-sturovo-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
-    fetch('sturovo-vac-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
+    fetch('sturovo-vac-route.json').then(function(resp) { return resp.ok ? resp.json() : null; }),
+    fetch('vac-budapest-route.json').then(function(resp) { return resp.ok ? resp.json() : null; })
   ]).then(function(results) {
     if (results[0] && results[0].length > 1) trailBikeRoutes.gothenburgAlingsas = results[0];
     if (results[1] && results[1].length > 1) trailBikeRoutes.alingsasNittaCamp = results[1];
@@ -2696,7 +2733,8 @@ function loadTrailBikeRoutes() {
     if (results[42] && results[42].length > 1) trailBikeRoutes.velkyMederKomarno = results[42];
     if (results[43] && results[43].length > 1) trailBikeRoutes.komarnoSturovo = results[43];
     if (results[44] && results[44].length > 1) trailBikeRoutes.sturovoVac = results[44];
-    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp || trailBikeRoutes.jonkopingOdeshog || trailBikeRoutes.odeshogLinkoping || trailBikeRoutes.linkopingNorrkoping || trailBikeRoutes.norrkopingCamp || trailBikeRoutes.nykopingCamp || trailBikeRoutes.sodertalje || trailBikeRoutes.stockholm || trailBikeRoutes.archipelagoCamp || trailBikeRoutes.norrtaljeGrisslehamn || trailBikeRoutes.eckeroCamp || trailBikeRoutes.eckeroMariehamn || trailBikeRoutes.mariehamnLangnas || trailBikeRoutes.hellsoKokarCamp || trailBikeRoutes.korpoTurku || trailBikeRoutes.turkuSalo || trailBikeRoutes.saloLohja || trailBikeRoutes.lohjaHelsinki || trailBikeRoutes.tallinnEstonia || trailBikeRoutes.estoniaHaapsalu || trailBikeRoutes.haapsaluParnu || trailBikeRoutes.ainaziVilkumuiza || trailBikeRoutes.jurmalaTalsi || trailBikeRoutes.talsiKuldiga || trailBikeRoutes.kuldigaJurkalne || trailBikeRoutes.jurkalneliepaja || trailBikeRoutes.liepajaNica || trailBikeRoutes.nicaPalanga || trailBikeRoutes.palangaKlaipeda || trailBikeRoutes.krakowOswiecim || trailBikeRoutes.oswiecimBielsko || trailBikeRoutes.bielskoCieszyn || trailBikeRoutes.cieszynPribor || trailBikeRoutes.priborPrerov || trailBikeRoutes.prerovChropyne || trailBikeRoutes.chropyneBrno || trailBikeRoutes.brnoMikulov || trailBikeRoutes.mikulovKettlasbrunn || trailBikeRoutes.kettlasbrunnVienna || trailBikeRoutes.viennaBratislava || trailBikeRoutes.bratislavaVelkyMeder || trailBikeRoutes.velkyMederKomarno || trailBikeRoutes.komarnoSturovo || trailBikeRoutes.sturovoVac) {
+    if (results[45] && results[45].length > 1) trailBikeRoutes.vacBudapest = results[45];
+    if (trailBikeRoutes.gothenburgAlingsas || trailBikeRoutes.alingsasNittaCamp || trailBikeRoutes.jonkopingOdeshog || trailBikeRoutes.odeshogLinkoping || trailBikeRoutes.linkopingNorrkoping || trailBikeRoutes.norrkopingCamp || trailBikeRoutes.nykopingCamp || trailBikeRoutes.sodertalje || trailBikeRoutes.stockholm || trailBikeRoutes.archipelagoCamp || trailBikeRoutes.norrtaljeGrisslehamn || trailBikeRoutes.eckeroCamp || trailBikeRoutes.eckeroMariehamn || trailBikeRoutes.mariehamnLangnas || trailBikeRoutes.hellsoKokarCamp || trailBikeRoutes.korpoTurku || trailBikeRoutes.turkuSalo || trailBikeRoutes.saloLohja || trailBikeRoutes.lohjaHelsinki || trailBikeRoutes.tallinnEstonia || trailBikeRoutes.estoniaHaapsalu || trailBikeRoutes.haapsaluParnu || trailBikeRoutes.ainaziVilkumuiza || trailBikeRoutes.jurmalaTalsi || trailBikeRoutes.talsiKuldiga || trailBikeRoutes.kuldigaJurkalne || trailBikeRoutes.jurkalneliepaja || trailBikeRoutes.liepajaNica || trailBikeRoutes.nicaPalanga || trailBikeRoutes.palangaKlaipeda || trailBikeRoutes.krakowOswiecim || trailBikeRoutes.oswiecimBielsko || trailBikeRoutes.bielskoCieszyn || trailBikeRoutes.cieszynPribor || trailBikeRoutes.priborPrerov || trailBikeRoutes.prerovChropyne || trailBikeRoutes.chropyneBrno || trailBikeRoutes.brnoMikulov || trailBikeRoutes.mikulovKettlasbrunn || trailBikeRoutes.kettlasbrunnVienna || trailBikeRoutes.viennaBratislava || trailBikeRoutes.bratislavaVelkyMeder || trailBikeRoutes.velkyMederKomarno || trailBikeRoutes.komarnoSturovo || trailBikeRoutes.sturovoVac || trailBikeRoutes.vacBudapest) {
       rebuildPhotoLayer();
       overlayActualStage2Route();
     }
@@ -2738,10 +2776,7 @@ loadRealRoutes();
     });
     // Segments in route order
     segments.forEach(function (seg) {
-      var st = tripStatus.active
-        ? (seg.id < tripStatus.currentSegment ? 'done'
-          : seg.id === tripStatus.currentSegment ? 'current' : 'upcoming')
-        : 'upcoming';
+      var st = segmentRideStatus(seg);
       var icon = seg.transport === 'train' ? '🚆' : seg.transport === 'ferry' ? '⛴' : '🚴';
       items.push({ type: 'segment', seg: seg, status: st, icon: icon });
     });
@@ -2901,7 +2936,9 @@ loadRealRoutes();
 
     // Progress fill: fraction of segments done
     var totalSegs = segments.length;
-    var doneSegs = tripStatus.active ? Math.max(0, tripStatus.currentSegment - 1) : 0;
+    var doneSegs = tripStatus.finished
+      ? segments.filter(function(s) { return s.id <= tripStatus.currentSegment; }).length
+      : tripStatus.active ? Math.max(0, tripStatus.currentSegment - 1) : 0;
     var pct = totalSegs > 0 ? Math.round((doneSegs / totalSegs) * 100) : 0;
     var fill = document.getElementById('dock-progress-fill');
     if (fill) fill.style.width = pct + '%';
@@ -2926,9 +2963,11 @@ loadRealRoutes();
       track.appendChild(btn);
     });
 
-    // Auto-select current segment if trip is active, else first segment
+    // Auto-select finish update, current segment, or first segment
     var autoIdx = 0;
-    if (tripStatus.active) {
+    if (tripStatus.finished) {
+      autoIdx = 0;
+    } else if (tripStatus.active) {
       var updCount = (tripStatus.updates || []).length;
       // updates come first; current segment follows at updCount + (currentSegment - 1 index in segments array)
       var segIdx = segments.findIndex(function (s) { return s.id === tripStatus.currentSegment; });
@@ -2942,19 +2981,23 @@ loadRealRoutes();
     if (nodes[autoIdx]) {
       setTimeout(function () {
         nodes[autoIdx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-        nodes[autoIdx].classList.add(tripStatus.active ? 'selected' : '');
-        if (tripStatus.active) { currentDockIdx = autoIdx; selectDockNode(autoIdx); }
+        nodes[autoIdx].classList.add(tripHasProgress() ? 'selected' : '');
+        if (tripHasProgress()) { currentDockIdx = autoIdx; selectDockNode(autoIdx); }
       }, 400);
     }
   }
 
   // Update HUD live indicator
   function initHudLive() {
-    if (!tripStatus.active) return;
+    if (!tripHasProgress()) return;
     var wrap = document.getElementById('hud-live-wrap');
     var txt = document.getElementById('hud-live-text');
     if (wrap && txt) {
-      txt.textContent = tripStatus.currentCity + (tripStatus.dayNumber ? ' · Day ' + tripStatus.dayNumber : '');
+      txt.textContent = tripStatus.finished
+        ? tripStatus.currentCity + ' \u00b7 Trip complete'
+        : tripStatus.currentCity + (tripStatus.dayNumber ? ' · Day ' + tripStatus.dayNumber : '');
+      var liveEl = wrap.querySelector('.hud-live');
+      if (liveEl && tripStatus.finished) liveEl.classList.add('hud-finished');
       wrap.style.display = 'block';
     }
   }

@@ -3,16 +3,25 @@
 // See README.md for the check-in workflow.
 // ============================================================
 const tripStatus = {
-  active: true,               // set true when the trip starts
-  currentSegment: 8,           // segment id: 8 — Kraków → Adriatic
-  currentCity: 'Vác, Hungary',
-  dayNumber: 67,
-  kmRidden: 2638,
+  active: false,              // live tracking off
+  finished: true,             // ended in Budapest
+  currentSegment: 8,           // segment id: 8 — Kraków → Adriatic (ended early in Budapest)
+  currentCity: 'Budapest, Hungary',
+  dayNumber: 68,
+  kmRidden: 2677,
   countries: ['United Kingdom', 'Sweden', 'Finland', 'Estonia', 'Latvia', 'Lithuania', 'Poland', 'Czech Republic', 'Austria', 'Slovakia', 'Hungary'],
-  lat: 47.778287,                   // precise current lat (preferred over city fallback)
-  lng: 19.127829,                   // precise current lng
-  lastUpdated: '2026-08-30',           // e.g. '2026-06-08' — shown in live banner when set
+  lat: 47.497879,                   // precise current lat (preferred over city fallback)
+  lng: 19.040238,                   // precise current lng
+  lastUpdated: '2026-08-31',           // e.g. '2026-06-08' — shown in live banner when set
   locationHistory: [
+    {
+      at: '2026-08-31T16:00:00.000Z',
+      lat: 47.497879,
+      lng: 19.040238,
+      location: 'Budapest, Hungary',
+      note: 'Vác → Budapest (~39 km). This is where the trip ends.',
+      transport: 'bike',
+    },
     {
       at: '2026-08-30T14:00:00.000Z',
       lat: 47.778287,
@@ -480,6 +489,13 @@ const tripStatus = {
     // { at: '2026-06-15T14:30:00.000Z', lat: 57.7089, lng: 11.9746, location: 'Gothenburg, Sweden', note: 'optional', accuracy: 12 }
   ],
   updates: [
+    {
+      date: '2026-08-31',
+      location: 'Budapest, Hungary',
+      text: 'Vác → Budapest (~39 km). This is where the trip ends.',
+      lat: 47.497879,
+      lng: 19.040238
+    },
     {
       date: '2026-08-30',
       location: 'Vác, Hungary',
